@@ -54,9 +54,11 @@ function App() {
 
       <Routes>
         <Route path="/" element={
-         
+          // <ReveloLayout>
             <Home />
-        
+          // </ReveloLayout>
+
+
         } />
         <Route path="/home2" element={<Home2 />} />
         <Route path="/home3" element={<Home3 />} />

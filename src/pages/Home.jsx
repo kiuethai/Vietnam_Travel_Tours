@@ -50,7 +50,7 @@ function Home() {
       </section>
       {/* Hero Area End */}
     
-      {/* <Footer1 /> */}
+      <Footer1 />
     </div>
 
   )
