@@ -3,9 +3,9 @@ import Counter from "./Counter";
 
 const SectionTitle = ({
   title,
-  countValue = 34500,
-  subtitle1 = "One site",
-  subtitle2 = "most popular experience you'll remember",
+  countValue = 23500,
+  subtitle1 = "Website",
+  subtitle2 = "trải nghiệm phổ biến nhất",
   bg,
 }) => {
   return (

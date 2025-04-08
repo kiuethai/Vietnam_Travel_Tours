@@ -33,24 +33,12 @@ function Menu() {
         >
           <ul className="navigation clearfix">
             <li className="dropdown current">
-              <a href="#">Home</a>
-              <ul>
-                <li>
-                  <Link to="/">Travel Agency</Link>
-                </li>
-                <li>
-                  <Link to="index2">City Tou</Link>
-                </li>
-                <li>
-                  <Link to="index3">Tour Package</Link>
-                </li>
-              </ul>
+              <a href="/">Trang chủ</a>
               <div className="dropdown-btn">
-                <span className="far fa-angle-down" />
               </div>
             </li>
             <li>
-              <Link to="about">About</Link>
+              <Link to="/about">Giới thiệu</Link>
             </li>
             <li className="dropdown">
               <a href="#">Tours</a>
@@ -58,101 +46,20 @@ function Menu() {
                 <li>
                   <Link to="tour-list">Tour List</Link>
                 </li>
+
                 <li>
-                  <Link to="tour-grid">Tour Grid</Link>
-                </li>
-                <li>
-                  <Link to="tour-sidebar">Tour Sidebar</Link>
-                </li>
-                <li>
-                  <Link to="tour-details">Tour Details</Link>
-                </li>
-                <li>
-                  <Link to="tour-guide">Tour Guide</Link>
+                  <Link to="tour-guide">Hướng dẫn viên</Link>
                 </li>
               </ul>
               <div className="dropdown-btn">
                 <span className="far fa-angle-down" />
               </div>
             </li>
-            <li className="dropdown">
-              <a href="#">Destinations</a>
-              <ul>
-                <li>
-                  <Link to="destination1">Destination 01</Link>
-                </li>
-                <li>
-                  <Link to="destination2">Destination 02</Link>
-                </li>
-                <li>
-                  <Link to="destination-details">Destination Details</Link>
-                </li>
-              </ul>
-              <div className="dropdown-btn">
-                <span className="far fa-angle-down" />
-              </div>
+            <li>
+              <Link to="/destination">Điểm đến</Link>
             </li>
-            <li className="dropdown">
-              <a href="#">Pages</a>
-              <ul>
-                <li>
-                  <Link to="pricing">Pricing</Link>
-                </li>
-                <li>
-                  <Link to="faqs">faqs</Link>
-                </li>
-                <li className="dropdown">
-                  <a href="#">Gallery</a>
-                  <ul>
-                    <li>
-                      <Link to="gellery-grid">Gallery Grid</Link>
-                    </li>
-                    <li>
-                      <Link to="gellery-slider">Gallery Slider</Link>
-                    </li>
-                  </ul>
-                  <div className="dropdown-btn">
-                    <span className="far fa-angle-down" />
-                  </div>
-                </li>
-                <li className="dropdown">
-                  <a href="#">products</a>
-                  <ul>
-                    <li>
-                      <Link to="shop">Our Products</Link>
-                    </li>
-                    <li>
-                      <Link to="product-details">Product Details</Link>
-                    </li>
-                  </ul>
-                  <div className="dropdown-btn">
-                    <span className="far fa-angle-down" />
-                  </div>
-                </li>
-                <li>
-                  <Link to="contact">Contact Us</Link>
-                </li>
-                <li>
-                  <Link to="404">404 Error</Link>
-                </li>
-              </ul>
-              <div className="dropdown-btn">
-                <span className="far fa-angle-down" />
-              </div>
-            </li>
-            <li className="dropdown">
-              <a href="#">blog</a>
-              <ul>
-                <li>
-                  <Link to="blog">blog List</Link>
-                </li>
-                <li>
-                  <Link to="blog-details">blog details</Link>
-                </li>
-              </ul>
-              <div className="dropdown-btn">
-                <span className="far fa-angle-down" />
-              </div>
+            <li>
+              <Link to="/contact">Liên Hệ</Link>
             </li>
           </ul>
         </Accordion.Collapse>

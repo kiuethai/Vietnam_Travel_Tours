@@ -1,5 +1,4 @@
-"use client";
-import { sliderProps } from "@/utility/sliderprops";
+import { sliderProps } from "../../utility/sliderprops";
 import { Link } from 'react-router-dom';
 import Slider from "react-slick";
 
@@ -20,7 +19,7 @@ const Destination = () => {
         </div>
         <div className="content">
           <h6>
-            <Link href="destination-details">Switzerland's</Link>
+            <Link to="destination-details">Switzerland's</Link>
           </h6>
           <span className="tours">258 tours</span>
         </div>
@@ -40,7 +39,7 @@ const Destination = () => {
         </div>
         <div className="content">
           <h6>
-            <Link href="destination-details">Poland</Link>
+            <Link to="destination-details">Poland</Link>
           </h6>
           <span className="tours">258 tours</span>
         </div>
@@ -60,7 +59,7 @@ const Destination = () => {
         </div>
         <div className="content">
           <h6>
-            <Link href="destination-details">Indonesia</Link>
+            <Link to="destination-details">Indonesia</Link>
           </h6>
           <span className="tours">258 tours</span>
         </div>
@@ -80,7 +79,7 @@ const Destination = () => {
         </div>
         <div className="content">
           <h6>
-            <Link href="destination-details">Thailand</Link>
+            <Link to="destination-details">Thailand</Link>
           </h6>
           <span className="tours">258 tours</span>
         </div>
@@ -100,7 +99,7 @@ const Destination = () => {
         </div>
         <div className="content">
           <h6>
-            <Link href="destination-details">Rome, Italy</Link>
+            <Link to="destination-details">Rome, Italy</Link>
           </h6>
           <span className="tours">258 tours</span>
         </div>
@@ -120,7 +119,7 @@ const Destination = () => {
         </div>
         <div className="content">
           <h6>
-            <Link href="destination-details">Indonesia</Link>
+            <Link to="destination-details">Indonesia</Link>
           </h6>
           <span className="tours">258 tours</span>
         </div>

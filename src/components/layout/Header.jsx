@@ -17,7 +17,6 @@ const Header = ({ header }) => {
       return <Header1 sidebarClick={sidebarClick} />;
     case 2:
       return <Header2 sidebarClick={sidebarClick} />;
-
     default:
       return <Header3 sidebarClick={sidebarClick} />;
   }

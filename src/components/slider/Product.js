@@ -1,6 +1,6 @@
 "use client";
 
-import { sliderProps } from "@/utility/sliderprops";
+import { sliderProps } from "../../utility/sliderprops";
 import Link from "next/link";
 import Slider from "react-slick";
 

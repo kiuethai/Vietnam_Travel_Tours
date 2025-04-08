@@ -28,21 +28,20 @@ function Footer1() {
                   </Link>
                 </div>
                 <p>
-                  We curate bespoke itineraries tailored to your preferences,
-                  ensuring every trip is seamless and enriching hidden gems
-                  beaten
+                  Chúng tôi biên soạn các hành trình riêng biệt phù hợp với sở thích của bạn, đảm bảo mọi
+                  chuyến đi đều liền mạch và làm phong phú thêm những viên ngọc ẩn giấu
                 </p>
                 <div className="social-style-one mt-15">
-                  <Link to="contact">
+                  <Link to="https://www.facebook.com/kieuthaizz">
                     <i className="fab fa-facebook-f" />
                   </Link>
-                  <Link to="contact">
+                  <Link to="#">
                     <i className="fab fa-youtube" />
                   </Link>
-                  <Link to="contact">
+                  <Link to="#">
                     <i className="fab fa-pinterest" />
                   </Link>
-                  <Link to="contact">
+                  <Link to="#">
                     <i className="fab fa-twitter" />
                   </Link>
                 </div>
@@ -56,13 +55,13 @@ function Footer1() {
               data-aos-offset={50}
             >
               <div className="section-title counter-text-wrap mb-35">
-                <h2>Subscribe Newsletter</h2>
+                <h2>Đăng ký nhận bản tin</h2>
                 <p>
-                  One site{" "}
+                  Website{" "}
                   <span className="count-text plus">
                     <Counter end={34500} />
                   </span>{" "}
-                  most popular experience you’ll remember
+                  trải nghiệm phổ biến nhất mà bạn sẽ nhớ
                 </p>
               </div>
               <form className="newsletter-form mb-50" action="#">
@@ -76,7 +75,7 @@ function Footer1() {
                   type="submit"
                   className="theme-btn bgc-secondary style-two"
                 >
-                  <span data-hover="Subscribe">Subscribe</span>
+                  <span data-hover="Đăng ký">Đăng ký</span>
                   <i className="fal fa-arrow-right" />
                 </button>
               </form>
@@ -99,19 +98,13 @@ function Footer1() {
                 </div>
                 <ul className="list-style-three">
                   <li>
-                    <Link to="destination-details">Best Tour Guide</Link>
+                    <Link to="destination-details">Hướng dẫn viên du lịch tốt nhất</Link>
                   </li>
                   <li>
-                    <Link to="destination-details">Tour Booking</Link>
+                    <Link to="destination-details">Đặt tour</Link>
                   </li>
                   <li>
-                    <Link to="destination-details">Hotel Booking</Link>
-                  </li>
-                  <li>
-                    <Link to="destination-details">Ticket Booking</Link>
-                  </li>
-                  <li>
-                    <Link to="destination-details">Rental Services</Link>
+                    <Link to="destination-details">Đặt vé</Link>
                   </li>
                 </ul>
               </div>
@@ -125,23 +118,14 @@ function Footer1() {
             >
               <div className="footer-widget footer-links">
                 <div className="footer-title">
-                  <h5>Company</h5>
+                  <h5>Công ty</h5>
                 </div>
                 <ul className="list-style-three">
                   <li>
-                    <Link to="about">About Company</Link>
+                    <Link to="about">Giới thiệu về công ty</Link>
                   </li>
                   <li>
-                    <Link to="blog">Community Blog</Link>
-                  </li>
-                  <li>
-                    <Link to="contact">Jobs and Careers</Link>
-                  </li>
-                  <li>
-                    <Link to="blog">latest News Blog</Link>
-                  </li>
-                  <li>
-                    <Link to="contact">Contact Us</Link>
+                    <Link to="contact">Liên hệ với chúng tôi</Link>
                   </li>
                 </ul>
               </div>
@@ -155,23 +139,17 @@ function Footer1() {
             >
               <div className="footer-widget footer-links">
                 <div className="footer-title">
-                  <h5>Destinations</h5>
+                  <h5>Điểm đến</h5>
                 </div>
                 <ul className="list-style-three">
                   <li>
-                    <Link to="destination-details">African Safaris</Link>
+                    <Link to="destination-details">Miền Bắc</Link>
                   </li>
                   <li>
-                    <Link to="destination-details">Alaska &amp; Canada</Link>
+                    <Link to="destination-details">Miền Trunga</Link>
                   </li>
                   <li>
-                    <Link to="destination-details">South America</Link>
-                  </li>
-                  <li>
-                    <Link to="destination-details">Middle East</Link>
-                  </li>
-                  <li>
-                    <Link to="destination-details">South America</Link>
+                    <Link to="destination-details">Miền Nam</Link>
                   </li>
                 </ul>
               </div>
@@ -185,23 +163,17 @@ function Footer1() {
             >
               <div className="footer-widget footer-links">
                 <div className="footer-title">
-                  <h5>Categories</h5>
+                  <h5>Thể loại</h5>
                 </div>
                 <ul className="list-style-three">
                   <li>
-                    <Link to="contact">Adventure</Link>
+                    <Link to="contact">Phiêu lưu</Link>
                   </li>
                   <li>
-                    <Link to="contact">Hiking &amp; Trekking</Link>
+                    <Link to="contact">Tour gia đình</Link>
                   </li>
                   <li>
-                    <Link to="contact">Cycling Tours</Link>
-                  </li>
-                  <li>
-                    <Link to="contact">Family Tours</Link>
-                  </li>
-                  <li>
-                    <Link to="contact">Wildlife Tours</Link>
+                    <Link to="contact">Tour động vật hoang dã</Link>
                   </li>
                 </ul>
               </div>
@@ -215,25 +187,24 @@ function Footer1() {
             >
               <div className="footer-widget footer-contact">
                 <div className="footer-title">
-                  <h5>Get In Touch</h5>
+                  <h5>Liên hệ</h5>
                 </div>
                 <ul className="list-style-one">
                   <li>
-                    <i className="fal fa-map-marked-alt" /> 578 Level, D-block
-                    45 Street Melbourne, Australia
+                    <i className="fal fa-map-marked-alt" /> Kim Giang, Hoàng Mai, Hà Nội
                   </li>
                   <li>
                     <i className="fal fa-envelope" />{" "}
-                    <a href="mailto:supportrevelo@gmail.com">
-                      supportrevelo@gmail.com
+                    <a href="mailto:kieuthai093@gmail.com">
+                      kieuthai093@gmail.com
                     </a>
                   </li>
                   <li>
-                    <i className="fal fa-clock" /> Mon - Fri, 08am - 05pm
+                    <i className="fal fa-clock" /> Thứ 2 - Thứ 6, 08am - 05pm
                   </li>
                   <li>
                     <i className="fal fa-phone-volume" />{" "}
-                    <a href="callto:+88012334588">+880 (123) 345 88</a>
+                    <a href="callto:+123456789">+123456789</a>
                   </li>
                 </ul>
               </div>
@@ -247,23 +218,23 @@ function Footer1() {
             <div className="col-lg-5">
               <div className="copyright-text text-center text-lg-start">
                 <p>
-                  @Linkopy 202/4 <a href="">Ravelo</a>, All rights reserved
+                  <a href="">KTTravel</a>
                 </p>
               </div>
             </div>
             <div className="col-lg-7 text-center text-lg-end">
               <ul className="footer-bottom-nav">
                 <li>
-                  <Link to="about">Terms</Link>
+                  <Link to="about">Điều khoản</Link>
                 </li>
                 <li>
-                  <Link to="about">Privacy Policy</Link>
+                  <Link to="about">Chính sách bảo mật</Link>
                 </li>
                 <li>
-                  <Link to="about">Legal notice</Link>
+                  <Link to="about">Thông báo pháp lý</Link>
                 </li>
                 <li>
-                  <Link to="about">Accessibility</Link>
+                  <Link to="about">Khả năng truy cập</Link>
                 </li>
               </ul>
             </div>

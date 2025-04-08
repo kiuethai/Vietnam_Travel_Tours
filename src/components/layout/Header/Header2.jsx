@@ -71,10 +71,10 @@ function Header2({ sidebarClick }) {
                   <Link to="/">Travel Agency</Link>
                 </li>
                 <li>
-                  <Link to="index2">City Tou</Link>
+                  <Link to="home2">City Tou</Link>
                 </li>
                 <li>
-                  <Link to="index3">Tour Package</Link>
+                  <Link to="home3">Tour Package</Link>
                 </li>
               </ul>
               <div

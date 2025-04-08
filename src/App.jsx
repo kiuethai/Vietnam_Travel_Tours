@@ -21,8 +21,6 @@ import About from './pages/About';
 import Blog_details from './pages/Blog_details';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
-import Destination_details from './pages/Destination_details';
-import Destination1 from './pages/Destination1';
 import Destination2 from './pages/Destination2';
 import Faqs from './pages/Faqs';
 import Gellery_grid from './pages/Gellery_grid';
@@ -40,6 +38,9 @@ import Tour_guide from './pages/Tour_guide';
 import Tour_sidebar from './pages/Tour_sidebar';
 import ReveloLayout from "./components/layout/ReveloLayout";
 import Footer1 from "./components/layout/Footer/Footer1";
+import Login from "./components/layout/Header/Login";
+import Register from "./components/layout/Header/Register";
+import ForgotPassword from "./components/layout/Header/ForgotPassword";
 
 function App() {
   return (
@@ -54,29 +55,56 @@ function App() {
 
       <Routes>
         <Route path="/" element={
-          // <ReveloLayout>
+          <ReveloLayout header={1} footer={1}>
             <Home />
-          // </ReveloLayout>
+          </ReveloLayout>
 
 
         } />
+
+        <Route path="/login" element={
+          <ReveloLayout header={1} footer={1}>
+            <Login />
+          </ReveloLayout>
+
+        } />
+        <Route path="/forgot-password" element={
+          <ReveloLayout header={1} footer={1}>
+            <ForgotPassword />
+          </ReveloLayout>
+
+        } />
+        <Route path="/register" element={
+          <ReveloLayout header={1} footer={1}>
+            <Register />
+          </ReveloLayout>
+
+        } />
+
+
+
         <Route path="/home2" element={<Home2 />} />
         <Route path="/home3" element={<Home3 />} />
-        <Route path="/about" element={<About />} />
+
+        <Route path="/about" element={
+          <ReveloLayout >
+            <About />
+          </ReveloLayout>
+
+        } />
+
+
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog_details" element={<Blog_details />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/destination_details" element={<Destination_details />} />
-        <Route path="/destination1" element={<Destination1 />} />
-        <Route path="/destination2" element={<Destination2 />} />
+        <Route path="/destination" element={<Destination2 />} />
         <Route path="/faqs" element={<Faqs />} />
         <Route path="/gellery_grid" element={<Gellery_grid />} />
         <Route path="/gellery_slider" element={<Gellery_slider />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/product_details" element={<Product_details />} />
         <Route path="/shop" element={<Shop />} />
-        <Route path="/tour_details" element={<Tour_details />} />
-        <Route path="/tour_grid" element={<Tour_grid />} />
+        <Route path="/tour-list" element={<Tour_details />} />
         <Route path="/tour_guide" element={<Tour_guide />} />
         <Route path="/tour_sidebar" element={<Tour_sidebar />} />
         <Route path="*" element={<NotFound />} />

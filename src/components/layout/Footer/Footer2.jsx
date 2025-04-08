@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import ScrollToTopButton from './ScrollToTopButten';
 
 
 const FooterInstagram = () => {
@@ -121,22 +122,27 @@ function Footer2({ insta }) {
       {insta && <FooterInstagram />}
       <div className="widget-area">
         <div className="container">
+          
           <div className="row row-cols-xxl-5 row-cols-xl-4 row-cols-md-3 row-cols-2">
+
             <div
-              className="col col-small"
-              data-aos="fade-up"
+              
               data-aos-duration={1500}
               data-aos-offset={50}
+
             >
+
+
               <div className="footer-widget footer-text">
                 <div className="footer-logo mb-40">
                   <Link to="/">
                     <img src="assets/images/logos/logo.png" alt="Logo" />
                   </Link>
                 </div>
+
                 <div className="footer-map">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d96777.16150026117!2d-74.00840582560909!3d40.71171357405996!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1706508986625!5m2!1sen!2sbd"
+                    src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJF9jgvxKsNTERsnYz-SsVpzM&key=AIzaSyAJkfQLDQsEDYV99GHOlmVJwvWrImCGx0c"
                     style={{ border: 0, width: "100%" }}
                     allowFullScreen=""
                     loading="lazy"
@@ -154,20 +160,17 @@ function Footer2({ insta }) {
             >
               <div className="footer-widget footer-links ms-sm-5">
                 <div className="footer-title">
-                  <h5>Services</h5>
+                  <h5>Dịch vụ</h5>
                 </div>
                 <ul className="list-style-three">
                   <li>
-                    <Link to="destination-details">Best Tour Guide</Link>
+                    <Link to="destination-details">Hướng dẫn viên du lịch tốt nhất</Link>
                   </li>
                   <li>
-                    <Link to="destination-details">Tour Booking</Link>
+                    <Link to="destination-details">Đặt tour</Link>
                   </li>
                   <li>
-                    <Link to="destination-details">Hotel Booking</Link>
-                  </li>
-                  <li>
-                    <Link to="destination-details">Ticket Booking</Link>
+                    <Link to="destination-details">Đặt tour</Link>
                   </li>
                 </ul>
               </div>
@@ -181,20 +184,17 @@ function Footer2({ insta }) {
             >
               <div className="footer-widget footer-links ms-md-4">
                 <div className="footer-title">
-                  <h5>Company</h5>
+                  <h5>Công ty</h5>
                 </div>
                 <ul className="list-style-three">
                   <li>
-                    <Link to="about">About Company</Link>
+                    <Link to="about">Giới thiệu về công ty</Link>
                   </li>
                   <li>
-                    <Link to="blog">Community Blog</Link>
+                    <Link to="contact">Việc làm và nghề nghiệp</Link>
                   </li>
                   <li>
-                    <Link to="contact">Jobs and Careers</Link>
-                  </li>
-                  <li>
-                    <Link to="blog">latest News Blog</Link>
+                    <Link to="contact">Liên hệ với chúng tôi</Link>
                   </li>
                 </ul>
               </div>
@@ -208,20 +208,17 @@ function Footer2({ insta }) {
             >
               <div className="footer-widget footer-links ms-lg-4">
                 <div className="footer-title">
-                  <h5>Destinations</h5>
+                  <h5>Điểm đến</h5>
                 </div>
                 <ul className="list-style-three">
                   <li>
-                    <Link to="destination-details">African Safaris</Link>
+                    <Link to="destination-details">Miền Bắc</Link>
                   </li>
                   <li>
-                    <Link to="destination-details">Alaska &amp; Canada</Link>
+                    <Link to="destination-details">Miền Trung</Link>
                   </li>
                   <li>
-                    <Link to="destination-details">South America</Link>
-                  </li>
-                  <li>
-                    <Link to="destination-details">Middle East</Link>
+                    <Link to="destination-details">Miền Nam</Link>
                   </li>
                 </ul>
               </div>
@@ -235,22 +232,21 @@ function Footer2({ insta }) {
             >
               <div className="footer-widget footer-contact">
                 <div className="footer-title">
-                  <h5>Get In Touch</h5>
+                  <h5>Liên hệ</h5>
                 </div>
                 <ul className="list-style-one">
                   <li>
-                    <i className="fal fa-map-marked-alt" /> 578 Level, D-block
-                    45 Street Melbourne, Australia
+                    <i className="fal fa-map-marked-alt" /> Kim Giang, Hoàng Mai, Hà Nội
                   </li>
                   <li>
                     <i className="fal fa-envelope" />{" "}
-                    <a href="mailto:supportrevelo@gmail.com">
-                      supportrevelo @gmail.com
+                    <a href="mailto:kieuthai093@gmail.com">
+                      kieuthai093@gmail.com
                     </a>
                   </li>
                   <li>
                     <i className="fal fa-phone-volume" />{" "}
-                    <a href="callto:+88012334588">+880 (123) 345 88</a>
+                    <a href="callto:+123456789">+123456789</a>
                   </li>
                 </ul>
               </div>
@@ -258,35 +254,38 @@ function Footer2({ insta }) {
           </div>
         </div>
       </div>
-      <div className="footer-bottom bg-transparent pt-20 pb-5">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-5">
-              <div className="copyright-text text-center text-lg-start">
-                <p>
-                  <a href="">KTTravel</a>
-                </p>
-              </div>
-            </div>
-            <div className="col-lg-7 text-center text-lg-end">
-              <ul className="footer-bottom-nav">
-                <li>
-                  <Link to="about">Terms</Link>
-                </li>
-                <li>
-                  <Link to="about">Privacy Policy</Link>
-                </li>
-                <li>
-                  <Link to="about">Legal notice</Link>
-                </li>
-                <li>
-                  <Link to="about">Accessibility</Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <div className="footer-bottom pt-20 pb-5">
+           <div className="container">
+             <div className="row">
+               <div className="col-lg-5">
+                 <div className="copyright-text text-center text-lg-start">
+                   <p>
+                     <a href="#">KTTravel</a>
+                   </p>
+                 </div>
+               </div>
+               <div className="col-lg-7 text-center text-lg-end">
+                 <ul className="footer-bottom-nav">
+                   <li>
+                     <Link to="/about">Điều khoản</Link>
+                   </li>
+                   <li>
+                     <Link to="/about">Chính sách bảo mật</Link>
+                   </li>
+                   <li>
+                     <Link to="/about">Thông báo pháp lý</Link>
+                   </li>
+                   <li>
+                     <Link to="/about">Khả năng truy cập</Link>
+                   </li>
+                 </ul>
+               </div>
+             </div>
+             {/* Scroll Top Button */}
+             <ScrollToTopButton />
+           </div>
+         </div>
     </footer>
   );
 }

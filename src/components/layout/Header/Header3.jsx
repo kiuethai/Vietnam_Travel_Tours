@@ -2,8 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { Fragment } from "react";
 import Menu from './Menu';
+import SideBar from './SideBar';
 
 function Header3({ sidebarClick }) {
+
+
   return (
     <Fragment>
       <header className="main-header header-one">
@@ -50,7 +53,7 @@ function Header3({ sidebarClick }) {
         </div>
         {/*End Header Upper*/}
       </header>
-      <Sidebar sidebarClick={sidebarClick} />
+      <SideBar sidebarClick={sidebarClick} />
     </Fragment>
   );
 }

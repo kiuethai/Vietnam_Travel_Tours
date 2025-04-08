@@ -1,5 +1,4 @@
-"use client";
-import { sliderProps } from "@/utility/sliderprops";
+import { sliderProps } from "../../utility/sliderprops";
 import Slider from "react-slick";
 
 const Client = () => {
