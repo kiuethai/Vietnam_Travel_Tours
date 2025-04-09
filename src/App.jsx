@@ -18,8 +18,7 @@ import "./assets/css/style.css"; // File CSS chính của bạn
 
 // Import your page components here
 import About from './pages/About';
-import Blog_details from './pages/Blog_details';
-import Blog from './pages/Blog';
+
 import Contact from './pages/Contact';
 import Destination2 from './pages/Destination2';
 import Faqs from './pages/Faqs';
@@ -92,19 +91,28 @@ function App() {
           </ReveloLayout>
 
         } />
+        <Route path="/tour-list" element={<Tour_details />} />
 
 
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog_details" element={<Blog_details />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/destination" element={<Destination2 />} />
+        <Route path="/contact" element={
+          <ReveloLayout insta>
+            <Contact />
+          </ReveloLayout>
+        } />
+
+
+        <Route path="/destination" element={
+          <ReveloLayout>
+            <Destination2 />
+          </ReveloLayout>
+        } />
         <Route path="/faqs" element={<Faqs />} />
         <Route path="/gellery_grid" element={<Gellery_grid />} />
         <Route path="/gellery_slider" element={<Gellery_slider />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/product_details" element={<Product_details />} />
         <Route path="/shop" element={<Shop />} />
-        <Route path="/tour-list" element={<Tour_details />} />
+
         <Route path="/tour_guide" element={<Tour_guide />} />
         <Route path="/tour_sidebar" element={<Tour_sidebar />} />
         <Route path="*" element={<NotFound />} />

@@ -40,13 +40,10 @@ function Header3({ sidebarClick }) {
                   <i className="fal fa-arrow-right" />
                 </Link>
                 {/* menu sidbar */}
-                <div className="menu-sidebar" onClick={() => sidebarClick()}>
-                  <button className="bg-transparent">
-                    <span className="icon-bar" />
-                    <span className="icon-bar" />
-                    <span className="icon-bar" />
-                  </button>
-                </div>
+                <Link to="/login" className="theme-btn ms-1">
+                  <span data-hover="Login">Login</span>
+                  <i className="fal fa-user" />
+                </Link>
               </div>
             </div>
           </div>

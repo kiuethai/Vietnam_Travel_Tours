@@ -19,7 +19,7 @@ function About() {
               data-aos-duration={1500}
               data-aos-offset={50}
             >
-              <span className="subtitle mb-35">About Company</span>
+              <span className="subtitle mb-35">Về chúng tôi</span>
             </div>
             <div className="col-xl-9">
               <div
@@ -32,36 +32,33 @@ function About() {
                   <div className="col-lg-8 pe-lg-5 me-lg-5">
                     <div className="section-title mb-25">
                       <h2>
-                        Experience and Professional Tours &amp; Travel Agency in
-                        the World
+                        Kinh nghiệm và công ty du lịch chuyên nghiệp ở Việt Nam
                       </h2>
                     </div>
                   </div>
                   <div className="col-md-4">
                     <div className="experience-years rmb-20">
                       <span className="title bgc-secondary">
-                        Years Of Experience
+                        Năm kinh nghiệm
                       </span>
-                      <span className="text">We have</span>
-                      <span className="years">28+</span>
+                      <span className="text">Chúng tôi</span>
+                      <span className="years">5+</span>
                     </div>
                   </div>
                   <div className="col-md-8">
                     <p>
-                      We specialize in crafting unforgettable city experiences
-                      for travelers seeking discover the heart and soul of urban
-                      landscapes. Our expertly guided tours take journey through
-                      vibrant streets, historic landmarks, and hidden gems of
-                      each city.
+                      Chúng tôi chuyên tạo ra những trải nghiệm thành phố khó quên cho du khách muốn khám phá
+                      trái tim và tâm hồn của cảnh quan đô thị. Các tour du lịch có hướng dẫn viên chuyên
+                      nghiệp của chúng tôi sẽ đưa du khách qua những con phố sôi động, các địa danh lịch sử và những viên ngọc ẩn giấu của mỗi thành phố.
                     </p>
                     <ul className="list-style-two mt-35">
-                      <li>Experience Agency</li>
-                      <li>Professional Team</li>
-                      <li>Low Cost Travel</li>
-                      <li>Online Support 24/7</li>
+                      <li>Cơ quan Trải nghiệm</li>
+                      <li>Đội ngũ Chuyên nghiệp</li>
+                      <li>Du lịch Chi phí Thấp</li>
+                      <li>Hỗ trợ Trực tuyến 24/7</li>
                     </ul>
                     <Link to="about" className="theme-btn style-three mt-30">
-                      <span data-hover="Explore Tours">Explore Tours</span>
+                      <span data-hover="Khám phá Tours">Khám phá Tours</span>
                       <i className="fal fa-arrow-right" />
                     </Link>
                   </div>
@@ -72,6 +69,7 @@ function About() {
         </div>
       </section>
       {/* About Area end */}
+
       {/* Features Area start */}
       <section className="about-features-area">
         <div className="container">
@@ -112,14 +110,13 @@ function About() {
                     </div>
                     <h5>
                       <Link to="destination-details">
-                        We Are Award Winning Company
+                        Chúng tôi là công ty đạt giải thưởng
                       </Link>
                     </h5>
                   </div>
                   <div className="content">
                     <p>
-                      At Pinnacle Business Solutions commitment to excellence
-                      and innovation earned
+                      Tại Pinnacle Business Solutions cam kết về sự xuất sắc và đổi mới đã đạt được
                     </p>
                   </div>
                 </div>
@@ -130,15 +127,13 @@ function About() {
                     </div>
                     <h5>
                       <Link to="destination-details">
-                        5000+ Popular tour destinations
+                        500+ Điểm đến du lịch phổ biến
                       </Link>
                     </h5>
                   </div>
                   <div className="content">
-                    <p>
-                      Our team of experts is dedicate developing cutting-edge
-                      strategies drive success
-                    </p>
+                    <p>Đội ngũ chuyên gia của chúng tôi tận tâm phát triển các chiến lược tiên tiến thúc đẩy
+                      thành công</p>
                   </div>
                 </div>
               </div>
@@ -147,6 +142,8 @@ function About() {
         </div>
       </section>
       {/* Features Area end */}
+
+
       {/* About Us Area start */}
       <section className="about-us-area pt-70 pb-100 rel z-1">
         <div className="container">
@@ -160,21 +157,19 @@ function About() {
               >
                 <div className="section-title mb-25">
                   <h2>
-                    Travel with Confidence Top Reasons to Choose Our Agency
+                    Du lịch với sự tự tin Lý do hàng đầu để chọn công ty của chúng tôi
                   </h2>
                 </div>
-                <p>
-                  We work closely with our clients to understand challenges and
-                  objectives, providing customized solutions to enhance
-                  efficiency boost profitability, and foster sustainable growth.
-                </p>
+                <p>Chúng tôi hợp tác chặt chẽ với khách hàng để hiểu rõ những thách thức và mục tiêu, cung
+                  cấp các giải pháp tùy chỉnh để nâng cao hiệu quả, tăng lợi nhuận và thúc đẩy tăng trưởng bền
+                  vững.</p>
                 <div className="row pt-25">
                   <div className="col-6">
                     <div className="counter-item counter-text-wrap">
                       <span className="count-text k-plus">
                         <Counter end={3} />
                       </span>
-                      <span className="counter-title">Popular Destination</span>
+                      <span className="counter-title">Điểm đến phổ biến</span>
                     </div>
                   </div>
                   <div className="col-6">
@@ -182,7 +177,7 @@ function About() {
                       <span className="count-text m-plus">
                         <Counter end={9} />
                       </span>
-                      <span className="counter-title">Satisfied Clients</span>
+                      <span className="counter-title">Khách hàng hài lòng</span>
                     </div>
                   </div>
                 </div>
@@ -191,7 +186,7 @@ function About() {
                   className="theme-btn mt-10 style-two"
                 >
                   <span data-hover="Explore Destinations">
-                    Explore Destinations
+                    Khám phá các điểm đến
                   </span>
                   <i className="fal fa-arrow-right" />
                 </Link>
@@ -211,6 +206,8 @@ function About() {
         </div>
       </section>
       {/* About Us Area end */}
+
+
       {/* Team Area start */}
       <section className="about-team-area pb-70 rel z-1">
         <div className="container">
@@ -222,7 +219,7 @@ function About() {
                 data-aos-duration={1500}
                 data-aos-offset={50}
               >
-                <SectionTitle title={"Meet Our Experience Travel Guides"} />
+                <SectionTitle title={"Gặp gỡ những hướng dẫn viên du lịch giàu kinh nghiệm của chúng tôi"} />
               </div>
             </div>
           </div>
@@ -236,16 +233,16 @@ function About() {
               >
                 <img src="assets/images/team/guide1.jpg" alt="Guide" />
                 <div className="content">
-                  <h6>John L. Simmons</h6>
-                  <span className="designation">Co-founder</span>
+                  <h6>Kiều Văn Thái<i></i></h6>
+                  <span className="designation">Founder</span>
                   <div className="social-style-one inner-content">
-                    <Link to="contact">
+                    <Link to="#">
                       <i className="fab fa-twitter" />
                     </Link>
-                    <Link to="contact">
+                    <Link to="https://www.facebook.com/kieuthaizz">
                       <i className="fab fa-facebook-f" />
                     </Link>
-                    <Link to="contact">
+                    <Link to="#">
                       <i className="fab fa-instagram" />
                     </Link>
                     <a href="#">
@@ -253,99 +250,15 @@ function About() {
                     </a>
                   </div>
                 </div>
+
               </div>
             </div>
-            <div className="col-xl-3 col-lg-4 col-sm-6">
-              <div
-                className="team-item hover-content"
-                data-aos="fade-up"
-                data-aos-delay={50}
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <img src="assets/images/team/guide2.jpg" alt="Guide" />
-                <div className="content">
-                  <h6>Andrew K. Manley</h6>
-                  <span className="designation">Senior Guide</span>
-                  <div className="social-style-one inner-content">
-                    <Link to="contact">
-                      <i className="fab fa-twitter" />
-                    </Link>
-                    <Link to="contact">
-                      <i className="fab fa-facebook-f" />
-                    </Link>
-                    <Link to="contact">
-                      <i className="fab fa-instagram" />
-                    </Link>
-                    <a href="#">
-                      <i className="fab fa-pinterest-p" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-xl-3 col-lg-4 col-sm-6">
-              <div
-                className="team-item hover-content"
-                data-aos="fade-up"
-                data-aos-delay={100}
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <img src="assets/images/team/guide3.jpg" alt="Guide" />
-                <div className="content">
-                  <h6>Drew J. Bridges</h6>
-                  <span className="designation">Travel Guide</span>
-                  <div className="social-style-one inner-content">
-                    <Link to="contact">
-                      <i className="fab fa-twitter" />
-                    </Link>
-                    <Link to="contact">
-                      <i className="fab fa-facebook-f" />
-                    </Link>
-                    <Link to="contact">
-                      <i className="fab fa-instagram" />
-                    </Link>
-                    <a href="#">
-                      <i className="fab fa-pinterest-p" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-xl-3 col-lg-4 col-sm-6">
-              <div
-                className="team-item hover-content"
-                data-aos="fade-up"
-                data-aos-delay={150}
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <img src="assets/images/team/guide4.jpg" alt="Guide" />
-                <div className="content">
-                  <h6>Byron F. Simpson</h6>
-                  <span className="designation">Travel Guide</span>
-                  <div className="social-style-one inner-content">
-                    <Link to="contact">
-                      <i className="fab fa-twitter" />
-                    </Link>
-                    <Link to="contact">
-                      <i className="fab fa-facebook-f" />
-                    </Link>
-                    <Link to="contact">
-                      <i className="fab fa-instagram" />
-                    </Link>
-                    <a href="#">
-                      <i className="fab fa-pinterest-p" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </section>
       {/* Team Area end */}
+
       {/* Features Area start */}
       <section className="about-feature-two bgc-black pt-100 pb-45 rel z-1">
         <div className="container">
@@ -355,7 +268,7 @@ function About() {
             data-aos-duration={1500}
             data-aos-offset={50}
           >
-            <SectionTitle title={"How to Benefit Our Ravelo Tours & Travels"} />
+            <SectionTitle title={"Làm thế nào để hưởng lợi từ các chuyến du lịch của chúng tôi"} />
           </div>
           <div className="row">
             <div
@@ -370,9 +283,9 @@ function About() {
                 </div>
                 <div className="content">
                   <h5>
-                    <Link to="destination-details">Best Rate Guarantee</Link>
+                    <Link to="tour">Đảm bảo giá tốt nhất</Link>
                   </h5>
-                  <p>Tent camping is wonderful way to connect with nature</p>
+                  <p>Cam kết giá ưu đãi nhất, giúp bạn tiết kiệm tối đa chi phí du lịch.</p>
                 </div>
               </div>
             </div>
@@ -389,10 +302,10 @@ function About() {
                 </div>
                 <div className="content">
                   <h5>
-                    <Link to="destination-details">Diverse Destinations</Link>
+                    <Link to="tour">Điểm đến đa dạng</Link>
                   </h5>
                   <p>
-                    Mountain biking is exhilarat sport that physical fitness
+                    Hàng nghìn điểm đến hấp dẫn, phù hợp mọi sở thích và phong cách du lịch.
                   </p>
                 </div>
               </div>
@@ -410,10 +323,10 @@ function About() {
                 </div>
                 <div className="content">
                   <h5>
-                    <Link to="destination-details">Fast Booking</Link>
+                    <Link to="tour">Đặt chỗ nhanh</Link>
                   </h5>
-                  <p>Kayaking is a thrilling outdoor activity that adventure</p>
-                </div>
+                  <p>Quy trình đặt chỗ đơn giản, nhanh chóng, đảm bảo chuyến đi suôn sẻ.
+                  </p>                </div>
               </div>
             </div>
             <div
@@ -429,9 +342,9 @@ function About() {
                 </div>
                 <div className="content">
                   <h5>
-                    <Link to="destination-details">Best Travel Guide</Link>
+                    <Link to="destination-details">Hướng dẫn du lịch tốt</Link>
                   </h5>
-                  <p>Fishing and boat quintessent activities that bring</p>
+                  <p>Đội ngũ hướng dẫn tận tâm, giàu kinh nghiệm, đồng hành cùng bạn mọi hành trình.</p>
                 </div>
               </div>
             </div>
@@ -442,98 +355,9 @@ function About() {
         </div>
       </section>
       {/* Features Area end */}
-      {/* Video Area start */}
-      <div className="video-area pt-25 rel z-1">
-        <div className="container">
-          <div
-            className="video-wrap"
-            data-aos="zoom-in"
-            data-aos-duration={1500}
-            data-aos-offset={50}
-          >
-            <img src="assets/images/video/video-bg.jpg" alt="Video" />
-            <a
-              href="https://www.youtube.com/watch?v=9Y7ma241N8k"
-              className="mfp-iframe video-play"
-              tabIndex={-1}
-            >
-              <i className="fas fa-play" />
-            </a>
-          </div>
-        </div>
-        <div className="for-bg bgc-black">
-          <div className="shape">
-            <img src="assets/images/video/shape2.png" alt="shape" />
-          </div>
-        </div>
-      </div>
-      {/* Video Area end */}
-      {/* Testimonials Area start */}
-      <section className="testimonials-area py-100 rel z-1">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-6">
-              <div
-                className="testimonial-left-content rmb-50"
-                data-aos="fade-right"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <img
-                  src="assets/images/testimonials/testimonial-left2.png"
-                  alt="Testimonial"
-                />
-                <div className="happy-customer text-white bgc-primary">
-                  <h6>850K+ Happy Customer</h6>
-                  <div className="feature-authors mb-15">
-                    <img
-                      src="assets/images/features/feature-author1.jpg"
-                      alt="Author"
-                    />
-                    <img
-                      src="assets/images/features/feature-author2.jpg"
-                      alt="Author"
-                    />
-                    <img
-                      src="assets/images/features/feature-author3.jpg"
-                      alt="Author"
-                    />
-                    <span>4k+</span>
-                  </div>
-                  <hr />
-                  <p>Positive Reviews</p>
-                  <div className="testi-header">
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div
-                className="testimonial-right-content"
-                data-aos="fade-left"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="section-title mb-55">
-                  <h2>
-                    <span>5280</span> Global Clients Say About Us Services
-                  </h2>
-                </div>
-                <Testimonial />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Testimonials Area end */}
-    
+
+     
+
     </div>
   )
 }
