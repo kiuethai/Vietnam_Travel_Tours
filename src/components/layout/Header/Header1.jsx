@@ -76,7 +76,7 @@ function Header1({ sidebarClick }) {
                   to="contact"
                   className="theme-btn style-two bgc-secondary"
                 >
-                  <span data-hover="Book Now">Book Now</span>
+                  <span data-hover="Đặt ngay">Đặt ngay</span>
                   <i className="fal fa-arrow-right" />
                 </Link>
                 {/* User profile or login/register button */}
@@ -84,8 +84,8 @@ function Header1({ sidebarClick }) {
                   <Profiles />
                 ) : (
                   <Link to={isLoginPage ? "/register" : "/login"} className="theme-btn ms-1">
-                    <span data-hover={isLoginPage ? "Register" : "Login"}>
-                      {isLoginPage ? "Register" : "Login"}
+                    <span data-hover={isLoginPage ? "Đăng kí" : "Đăng nhập"}>
+                      {isLoginPage ? "Đăng kí" : "Đăng nhập"}
                     </span>
                     <i className="fal fa-user" />
                   </Link>

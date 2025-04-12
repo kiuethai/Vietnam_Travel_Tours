@@ -8,7 +8,7 @@ import Avatar from '@mui/material/Avatar'
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
 import PersonAdd from '@mui/icons-material/PersonAdd'
-import Settings from '@mui/icons-material/Settings'
+import CardTravelIcon from '@mui/icons-material/CardTravel';
 import Logout from '@mui/icons-material/Logout'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentUser, logoutUserAPI } from '~/redux/user/userSlice'
@@ -31,9 +31,9 @@ function Profiles() {
   const confirmLogout = useConfirm()
   const handleLogout = () => {
     confirmLogout({
-      title: 'Log out of your account?',
-      confirmationText: 'Confirm',
-      cancellationText: 'Cancel'
+      title: 'Đăng xuất khỏi tài khoản của bạn?',
+      confirmationText: 'Xác nhận',
+      cancellationText: 'Hủy'
     }).then(() => {
       // Gọi API đăng xuất người dùng
       dispatch(logoutUserAPI())
@@ -80,13 +80,13 @@ function Profiles() {
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
-          Add another account
+          Thông tin cá nhân
         </MenuItem>
         <MenuItem >
           <ListItemIcon>
-            <Settings fontSize="small" />
+            <CardTravelIcon fontSize="small" />
           </ListItemIcon>
-          Settings
+          Tour đã đặt
         </MenuItem>
         <MenuItem onClick={handleLogout} sx={{
           '&:hover': {

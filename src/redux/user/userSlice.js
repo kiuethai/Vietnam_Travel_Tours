@@ -13,7 +13,8 @@ export const loginUserAPI = createAsyncThunk(
   async (data) => {
     const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/login`, data)
     // Lưu ý: axios sẽ trả kết quả về qua property của nó là data
-    // console.log('🚀 ~ data:', data)
+     
+
     return response.data
   }
 )
@@ -48,8 +49,9 @@ export const userSlice = createSlice({
     builder.addCase(loginUserAPI.fulfilled, (state, action) => {
       // action.payload ở đây chính là cái responce.data trả về ở trên
       const user = action.payload
-      console.log('user',user)
+      // console.log('user',user)
       state.currentUser = user
+      toast.success('Hello') 
     })
     builder.addCase(logoutUserAPI.fulfilled, (state) => {
       /*

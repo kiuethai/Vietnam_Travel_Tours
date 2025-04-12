@@ -41,7 +41,7 @@ function Header3({ sidebarClick }) {
                   href="contact"
                   className="theme-btn style-two bgc-secondary"
                 >
-                  <span data-hover="Book Now">Book Now</span>
+                  <span data-hover="Đặt ngay">Đặt ngay</span>
                   <i className="fal fa-arrow-right" />
                 </Link>
                 {/* User profile or login button */}

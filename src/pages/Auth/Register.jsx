@@ -83,7 +83,7 @@ export default function Register() {
                     alignItems: 'center'
                   }}>
                     <Avatar sx={{ bgcolor: 'primary.main', mb: 1 }}><LockIcon /></Avatar>
-                    <Typography component="h1" variant="h5">Create Your Account</Typography>
+                    <Typography component="h1" variant="h5">Tạo tài khoản của bạn</Typography>
                   </Box>
                   
 
@@ -176,7 +176,7 @@ export default function Register() {
                           {...register('agreeTerms', { required: 'You must agree to the terms' })}
                         />
                       }
-                      label={<>I agree to the <Link to="#" style={{ color: '#38b5fe' }}>Terms & Conditions</Link></>}
+                      label={<>Tôi đồng ý với <Link to="#" style={{ color: '#38b5fe' }}>Điều khoản & Điều kiện</Link></>}
                     />
                     <FieldErrorAlert errors={errors} fieldName={'agreeTerms'} />
                   </Box>
@@ -195,9 +195,9 @@ export default function Register() {
                   </CardActions>
                   
                   <Box sx={{ textAlign: 'center' }}>
-                    <Typography>Already have an account?</Typography>
+                    <Typography>Bạn đã có tài khoản?</Typography>
                     <Link to="/login" style={{ textDecoration: 'none' }}>
-                      <Typography sx={{ color: '#38b5fe', '&:hover': { color: '#ffbb39' } }}>Login</Typography>
+                      <Typography sx={{ color: '#38b5fe', '&:hover': { color: '#ffbb39' } }}>Đăng nhập</Typography>
                     </Link>
                   </Box>
                 </MuiCard>

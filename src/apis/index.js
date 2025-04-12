@@ -6,17 +6,30 @@ import { toast } from 'react-toastify'
 /** Users */
 export const registerUserAPI = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/register`, data)
-  toast.success('Account created successfully! Please check and verify your account before logging in!', { theme: 'colored' })
+  toast.success('Tài khoản đã được tạo thành công! Vui lòng kiểm tra và xác minh tài khoản của bạn trước khi đăng nhập', { theme: 'colored' })
   return response.data
 }
 
 export const verifyUserAPI = async (data) => {
   const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/verify`, data)
-  toast.success('Account verified successfully! Now you can login to enjoy our services! Have a good day!', { theme: 'colored' })
+  toast.success('Tài khoản đã được xác minh thành công! Bây giờ bạn có thể Đặt ngay để tận hưởng dịch vụ của chúng tôi! Chúc bạn một ngày tốt lành!', { theme: 'colored' })
   return response.data
 }
 
 export const refreshTokenAPI = async () => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/users/refresh_token`)
+  return response.data
+}
+
+
+export const requestPasswordResetAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/password-reset/request`, data)
+  toast.success('Link đặt lại mật khẩu đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư và làm theo hướng dẫn.', { theme: 'colored' })
+  return response.data
+}
+
+export const resetPasswordAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/password-reset/reset`, data)
+  toast.success('Mật khẩu của bạn đã được đặt lại thành công. Bây giờ bạn có thể đăng nhập bằng mật khẩu mới.', { theme: 'colored' })
   return response.data
 }

@@ -33,9 +33,10 @@ import Tour_sidebar from './pages/Tour_sidebar';
 import ReveloLayout from "./components/layout/ReveloLayout";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
-import ForgotPassword from "./components/layout/Header/ForgotPassword";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
 import Auth from "./pages/Auth/Auth";
 import AccountVerification from "./pages/Auth/AccountVerification";
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   return (
@@ -71,20 +72,25 @@ function App() {
         } />
 
         <Route path='/account/verification' element={
-
-          <AccountVerification />}
-          
-          />
+          <ReveloLayout header={1} footer={1}>
+            <AccountVerification />
+          </ReveloLayout>
+        }
+        />
 
         <Route path="/forgot-password" element={
           <ReveloLayout header={1} footer={1}>
             <ForgotPassword />
           </ReveloLayout>
+        }
+        />
 
-        } />
-
-
-
+        <Route path="/account/reset-password" element={
+          <ReveloLayout header={1} footer={1}>
+            <ResetPassword />
+          </ReveloLayout>
+        }
+        />
 
 
         <Route path="/home2" element={<Home2 />} />

@@ -228,7 +228,7 @@ function Header2({ sidebarClick }) {
             to="contact"
             className="theme-btn style-two style-three mt-15 mb-55"
           >
-            <span data-hover="Book Now">Book Now</span>
+            <span data-hover="Đặt ngay">Đặt ngay</span>
             <i className="fal fa-arrow-right" />
           </Link>
           {/* Login/Register button if not logged in */}

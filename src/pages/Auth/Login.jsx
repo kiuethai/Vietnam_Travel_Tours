@@ -72,7 +72,7 @@ export default function Login() {
       />
       <div className="container position-relative">
         <div className="row justify-content-center">
-          <div className="col-lg-10">
+          <div className="col-lg-15">
             <form onSubmit={handleSubmit(submitLogIn)}>
               <Zoom in={true} style={{ transitionDelay: '200ms' }}>
                 <MuiCard sx={{ minWidth: 380, maxWidth: 500, margin: '0 auto', padding: '2em' }}>
@@ -85,21 +85,21 @@ export default function Login() {
                     <Avatar sx={{ bgcolor: 'primary.main' }}><LockIcon /></Avatar>
                   </Box>
                   <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center' }}>
-                    <Typography variant="h5" component="h1">Login to Your Account</Typography>
+                    <Typography variant="h5" component="h1">Đăng nhập vào tài khoản của bạn</Typography>
                   </Box>
                   <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 1em' }}>
                     {verifiedEmail && (
                       <Alert severity="success" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
                         Your email&nbsp;
                         <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{verifiedEmail}</Typography>
-                        &nbsp;has been verified.<br />Now you can login to enjoy our services! Have a good day!
+                        &nbsp;đã được xác minh<br />Bây giờ bạn có thể đăng nhập để tận hưởng dịch vụ của chúng tôi! Chúc bạn một ngày tốt lành!
                       </Alert>
                     )}
                     {registeredEmail && (
                       <Alert severity="info" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
                         An email has been sent to&nbsp;
                         <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{registeredEmail}</Typography>
-                        <br />Please check and verify your account before logging in!
+                        <br />Vui lòng kiểm tra và xác minh tài khoản của bạn trước khi đăng nhập!
                       </Alert>
                     )}
                   </Box>
@@ -164,7 +164,7 @@ export default function Login() {
                           Remember Me
                         </label>
                       </Box>
-                      <Link to="/forgot-password">Forgot Password?</Link>
+                      <Link to="/forgot-password">Quên mật khẩu?</Link>
                     </Box>
                   </Box>
                   <CardActions sx={{ padding: '0 1em 1em 1em' }}>
@@ -181,9 +181,9 @@ export default function Login() {
                     </Button>
                   </CardActions>
                   <Box sx={{ padding: '0 1em 1em 1em', textAlign: 'center' }}>
-                    <Typography>Don't have an account?</Typography>
+                    <Typography>Bạn chưa có tài khoản?</Typography>
                     <Link to="/register" style={{ textDecoration: 'none' }}>
-                      <Typography sx={{ color: 'primary.main', '&:hover': { color: '#ffbb39' } }}>Register Now</Typography>
+                      <Typography sx={{ color: 'primary.main', '&:hover': { color: '#ffbb39' } }}>Đăng ký ngay</Typography>
                     </Link>
                   </Box>
                 </MuiCard>
