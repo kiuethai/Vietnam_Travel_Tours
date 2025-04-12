@@ -2,7 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { Fragment, useState } from "react";
 import SideBar from './SideBar';
-
+import Profiles from '../../Menus/Profiles';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../../redux/user/userSlice';
 
 function Header2({ sidebarClick }) {
   const [activeMenu, setActiveMenu] = useState("");
@@ -15,6 +17,10 @@ function Header2({ sidebarClick }) {
     setMultiMenu(multiMenu === value ? "" : value),
     multiMenuActiveLi = (value) =>
       value === multiMenu ? { display: "block" } : { display: "none" };
+
+  // Check if user is logged in
+  const currentUser = useSelector(selectCurrentUser);
+  const isLoggedIn = !!currentUser;
 
   return (
     <Fragment>
@@ -36,6 +42,8 @@ function Header2({ sidebarClick }) {
               </div>
               {/* Menu Button */}
               <div className="menu-btns py-10">
+                {/* User profile if logged in */}
+                {isLoggedIn && <Profiles />}
                 {/* menu sidbar */}
                 <div className="menu-sidebar" onClick={() => sidebarClick()}>
                   <button className="bg-transparent">
@@ -223,6 +231,16 @@ function Header2({ sidebarClick }) {
             <span data-hover="Book Now">Book Now</span>
             <i className="fal fa-arrow-right" />
           </Link>
+          {/* Login/Register button if not logged in */}
+          {!isLoggedIn && (
+            <Link
+              to="/login"
+              className="theme-btn style-two style-three mb-55"
+            >
+              <span data-hover="Login">Login</span>
+              <i className="fal fa-user" />
+            </Link>
+          )}
           <hr className="mb-65" />
           <h6>Social Media</h6>
           {/*Social Icons*/}

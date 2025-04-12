@@ -41,14 +41,14 @@ function Menu() {
               <Link to="/about">Giới thiệu</Link>
             </li>
             <li className="dropdown">
-              <a href="#">Tours</a>
+              <a href="/tour">Tours</a>
               <ul>
                 <li>
-                  <Link to="tour-list">Tour List</Link>
+                  <Link to="/tour">Tour List</Link>
                 </li>
 
                 <li>
-                  <Link to="tour-guide">Hướng dẫn viên</Link>
+                  <Link to="/tour_guide">Hướng dẫn viên</Link>
                 </li>
               </ul>
               <div className="dropdown-btn">

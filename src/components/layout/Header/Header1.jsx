@@ -1,17 +1,29 @@
 import React from 'react'
 import useClickOutside from "../../../utility/useClickOutside";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Fragment, useState } from "react";
 import { Accordion } from "react-bootstrap";
 import Menu from './Menu';
 import SideBar from './SideBar';
-import Login from './Login';
+import Login from '../../../pages/Auth/Login';
+import Profiles from '../../Menus/Profiles';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../../redux/user/userSlice';
 
 function Header1({ sidebarClick }) {
   const [toggleSearch, setToggleSearch] = useState(false);
   const domNode = useClickOutside(() => {
     setToggleSearch(false);
   });
+
+  // Get current location to check if we're on login page
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login";
+
+  // Check if user is logged in
+  const currentUser = useSelector(selectCurrentUser);
+  const isLoggedIn = !!currentUser;
+
   return (
     <Fragment>
       <header className="main-header header-one white-menu menu-absolute fixed-header">
@@ -67,11 +79,17 @@ function Header1({ sidebarClick }) {
                   <span data-hover="Book Now">Book Now</span>
                   <i className="fal fa-arrow-right" />
                 </Link>
-                {/* menu sidbar */}
-                <Link to="/login" className="theme-btn ms-1">
-                  <span data-hover="Login">Login</span>
-                  <i className="fal fa-user" />
-                </Link>
+                {/* User profile or login/register button */}
+                {isLoggedIn ? (
+                  <Profiles />
+                ) : (
+                  <Link to={isLoginPage ? "/register" : "/login"} className="theme-btn ms-1">
+                    <span data-hover={isLoginPage ? "Register" : "Login"}>
+                      {isLoginPage ? "Register" : "Login"}
+                    </span>
+                    <i className="fal fa-user" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

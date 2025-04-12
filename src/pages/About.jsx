@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 function About() {
   return (
     <div>
-      <Banner pageTitle={"About Us"} />
+      <Banner pageTitle={"Về chúng tôi"} />
       {/* About Area start */}
       <section className="about-area-two py-100 rel z-1">
         <div className="container">
@@ -182,10 +182,10 @@ function About() {
                   </div>
                 </div>
                 <Link
-                  href="destination-details"
+                  to="/tour"
                   className="theme-btn mt-10 style-two"
                 >
-                  <span data-hover="Explore Destinations">
+                  <span data-hover="Khám phá các điểm đến">
                     Khám phá các điểm đến
                   </span>
                   <i className="fal fa-arrow-right" />
@@ -356,7 +356,7 @@ function About() {
       </section>
       {/* Features Area end */}
 
-     
+
 
     </div>
   )

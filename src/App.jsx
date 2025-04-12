@@ -21,25 +21,21 @@ import About from './pages/About';
 
 import Contact from './pages/Contact';
 import Destination2 from './pages/Destination2';
-import Faqs from './pages/Faqs';
-import Gellery_grid from './pages/Gellery_grid';
-import Gellery_slider from './pages/Gellery_slider';
+
 import Home from './pages/Home';
 import Home2 from './pages/Home2';
 import Home3 from './pages/Home3';
 import NotFound from './pages/NotFound';
-import Pricing from './pages/Pricing';
-import Product_details from './pages/Product_details';
-import Shop from './pages/Shop';
 import Tour_details from './pages/Tour_details';
-import Tour_grid from './pages/Tour_grid';
+import Tour_list from './pages/Tour_list';
 import Tour_guide from './pages/Tour_guide';
 import Tour_sidebar from './pages/Tour_sidebar';
 import ReveloLayout from "./components/layout/ReveloLayout";
-import Footer1 from "./components/layout/Footer/Footer1";
-import Login from "./components/layout/Header/Login";
-import Register from "./components/layout/Header/Register";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 import ForgotPassword from "./components/layout/Header/ForgotPassword";
+import Auth from "./pages/Auth/Auth";
+import AccountVerification from "./pages/Auth/AccountVerification";
 
 function App() {
   return (
@@ -63,22 +59,31 @@ function App() {
 
         <Route path="/login" element={
           <ReveloLayout header={1} footer={1}>
-            <Login />
+            <Auth />
           </ReveloLayout>
 
         } />
+
+        <Route path="/register" element={
+          <ReveloLayout header={1} footer={1}>
+            <Auth />
+          </ReveloLayout>
+        } />
+
+        <Route path='/account/verification' element={
+
+          <AccountVerification />}
+          
+          />
+
         <Route path="/forgot-password" element={
           <ReveloLayout header={1} footer={1}>
             <ForgotPassword />
           </ReveloLayout>
 
         } />
-        <Route path="/register" element={
-          <ReveloLayout header={1} footer={1}>
-            <Register />
-          </ReveloLayout>
 
-        } />
+
 
 
 
@@ -91,8 +96,13 @@ function App() {
           </ReveloLayout>
 
         } />
-        <Route path="/tour-list" element={<Tour_details />} />
 
+        <Route path="/tour" element={
+          <ReveloLayout>
+            <Tour_list />
+          </ReveloLayout>
+        } />
+        <Route path="/tour_guide" element={<Tour_guide />} />
 
         <Route path="/contact" element={
           <ReveloLayout insta>
@@ -106,15 +116,11 @@ function App() {
             <Destination2 />
           </ReveloLayout>
         } />
-        <Route path="/faqs" element={<Faqs />} />
-        <Route path="/gellery_grid" element={<Gellery_grid />} />
-        <Route path="/gellery_slider" element={<Gellery_slider />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/product_details" element={<Product_details />} />
-        <Route path="/shop" element={<Shop />} />
 
-        <Route path="/tour_guide" element={<Tour_guide />} />
+
         <Route path="/tour_sidebar" element={<Tour_sidebar />} />
+
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

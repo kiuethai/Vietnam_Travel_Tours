@@ -4,7 +4,7 @@ import Banner from "../../src/components/Banner";
 function Contact() {
   return (
     <div>
-      <Banner pageTitle={"Contact Us"} />
+      <Banner pageTitle={"Liên hệ với chúng tôi"} />
       {/* Contact Info Area start */}
       <section className="contact-info-area pt-100 rel z-1">
         <div className="container">

@@ -3,9 +3,14 @@ import { Link } from 'react-router-dom';
 import { Fragment } from "react";
 import Menu from './Menu';
 import SideBar from './SideBar';
+import Profiles from '../../Menus/Profiles';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../../redux/user/userSlice';
 
 function Header3({ sidebarClick }) {
-
+  // Check if user is logged in
+  const currentUser = useSelector(selectCurrentUser);
+  const isLoggedIn = !!currentUser;
 
   return (
     <Fragment>
@@ -39,11 +44,15 @@ function Header3({ sidebarClick }) {
                   <span data-hover="Book Now">Book Now</span>
                   <i className="fal fa-arrow-right" />
                 </Link>
-                {/* menu sidbar */}
-                <Link to="/login" className="theme-btn ms-1">
-                  <span data-hover="Login">Login</span>
-                  <i className="fal fa-user" />
-                </Link>
+                {/* User profile or login button */}
+                {isLoggedIn ? (
+                  <Profiles />
+                ) : (
+                  <Link to="/login" className="theme-btn ms-1">
+                    <span data-hover="Login">Login</span>
+                    <i className="fal fa-user" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

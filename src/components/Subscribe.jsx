@@ -19,13 +19,13 @@ const Subscribe = () => {
               data-aos-offset={50}
             >
               <div className="section-title counter-text-wrap mb-45">
-                <h2>Subscribe Our Newsletter to Get more offer &amp; Tips</h2>
+                <h2>Đăng ký nhận bản tin của chúng tôi để nhận thêm nhiều ưu đãi & mẹo</h2>
                 <p>
-                  One site{" "}
+                  Website{" "}
                   <span className="count-text plus">
                     <Counter end={34500} />
                   </span>{" "}
-                  most popular experience you'll remember
+                  trải nghiệm phổ biến nhất mà bạn sẽ nhớ
                 </p>
               </div>
               <form className="newsletter-form mb-15" action="#">
@@ -43,7 +43,7 @@ const Subscribe = () => {
                   <i className="fal fa-arrow-right" />
                 </button>
               </form>
-              <p>No credit card requirement. No commitments</p>
+              <p>Không yêu cầu thẻ tín dụng. Không cam kết</p>
             </div>
             <div
               className="newsletter-bg-image"

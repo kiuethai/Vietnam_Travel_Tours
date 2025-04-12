@@ -3,12 +3,13 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
+  define: {
+    'process.env': process.env
+  },
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      // Add this to help resolve node_modules assets
-      'rc-slider': path.resolve(__dirname, 'node_modules/rc-slider'),
+      '~': path.resolve(__dirname, 'src'),
     },
   },
   // This ensures CSS imports from node_modules work correctly

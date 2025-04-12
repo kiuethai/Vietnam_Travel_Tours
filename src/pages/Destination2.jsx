@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 function Destination2() {
   return (
     <div>
-      <Banner pageTitle={"Destination 02"} search={true} />
+      <Banner pageTitle={"Điểm đến"} search={true} />
       {/* Page Banner End */}
       {/* Popular Destinations Area start */}
       <section className="popular-destinations-area pt-100 pb-90 rel z-1">
@@ -19,15 +19,14 @@ function Destination2() {
                 data-aos-duration={1500}
                 data-aos-offset={50}
               >
-                <SectionTitle title={"Explore Popular Destinations"} />
+                <SectionTitle title={"Khám phá các điểm đến phổ biến"} />
                 <ul className="destinations-nav mt-30">
                   <li data-filter="*" className="active">
-                    Show All
+                    Tất cả
                   </li>
-                  <li data-filter=".features">Features</li>
-                  <li data-filter=".recent">Recent</li>
-                  <li data-filter=".city">City</li>
-                  <li data-filter=".rating">Rating</li>
+                  <li data-filter=".domain-b">Miền Bắc</li>
+                  <li data-filter=".domain-t">Miền Trung</li>
+                  <li data-filter=".domain-n">Miền Nam</li>
                 </ul>
               </div>
             </div>
@@ -52,10 +51,10 @@ function Destination2() {
                   </div>
                   <div className="content">
                     <h6>
-                      <Link to="destination-details">Thailand beach</Link>
+                      <Link to="destination-details">Biển Đà Nẵng</Link>
                     </h6>
                     <span className="time">
-                      5352+ tours &amp; 856+ Activity
+                      5352+ tours &amp; 856+ Hoạt động
                     </span>
                     <a href="#" className="more">
                       <i className="fas fa-chevron-right" />
@@ -85,7 +84,7 @@ function Destination2() {
                       <Link to="destination-details">Parga, Greece</Link>
                     </h6>
                     <span className="time">
-                      5352+ tours &amp; 856+ Activity
+                      5352+ tours &amp; 856+ Hoạt động
                     </span>
                     <a href="#" className="more">
                       <i className="fas fa-chevron-right" />
@@ -117,7 +116,7 @@ function Destination2() {
                       </Link>
                     </h6>
                     <span className="time">
-                      5352+ tours &amp; 856+ Activity
+                      5352+ tours &amp; 856+ Hoạt động
                     </span>
                     <a href="#" className="more">
                       <i className="fas fa-chevron-right" />
@@ -144,11 +143,11 @@ function Destination2() {
                   <div className="content">
                     <h6>
                       <Link to="destination-details">
-                        Reserve of Canada, Canada
+                        Hà Giang
                       </Link>
                     </h6>
                     <span className="time">
-                      5352+ tours &amp; 856+ Activity
+                      5352+ tours &amp; 856+ Hoạt động
                     </span>
                     <a href="#" className="more">
                       <i className="fas fa-chevron-right" />
@@ -176,11 +175,11 @@ function Destination2() {
                   <div className="content">
                     <h6>
                       <Link to="destination-details">
-                        Dubai united states
+                        HCM City, Vietnam
                       </Link>
                     </h6>
                     <span className="time">
-                      5352+ tours &amp; 856+ Activity
+                      5352+ tours &amp; 856+ Hoạt động
                     </span>
                     <a href="#" className="more">
                       <i className="fas fa-chevron-right" />
@@ -210,7 +209,7 @@ function Destination2() {
                       <Link to="destination-details">Milos, Greece</Link>
                     </h6>
                     <span className="time">
-                      5352+ tours &amp; 856+ Activity
+                      5352+ tours &amp; 856+ Hoạt động
                     </span>
                     <a href="#" className="more">
                       <i className="fas fa-chevron-right" />
@@ -223,414 +222,11 @@ function Destination2() {
         </div>
       </section>
       {/* Popular Destinations Area end */}
-      {/* Hotel Area start */}
-      <section className="hotel-area bgc-black pt-100 pb-70 rel z-1">
-        <div className="container">
-          <div className="row">
-            <div className="col-xl-4">
-              <div className="destination-left-content mb-35">
-                <div
-                  className="section-title text-white counter-text-wrap mb-45"
-                  data-aos="fade-up"
-                  data-aos-duration={1500}
-                  data-aos-offset={50}
-                >
-                  <SectionTitle
-                    title={"Discover the World's Class Top Hotel"}
-                  />
-                </div>
-                <Link
-                  href="destination1"
-                  className="theme-btn style-four mb-15"
-                >
-                  <span data-hover="Explore More Hotel">
-                    Explore More Hotel
-                  </span>
-                  <i className="fal fa-arrow-right" />
-                </Link>
-              </div>
-            </div>
-            <div className="col-xl-8">
-              <div
-                className="destination-item style-three"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <div className="ratting">
-                    <i className="fas fa-star" /> 4.8
-                  </div>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/hotel1.jpg"
-                    alt="Hotel"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Ao Nang, Thailand
-                  </span>
-                  <h5>
-                    <Link to="tour-details">
-                      The brown bench near swimming pool Hotel
-                    </Link>
-                  </h5>
-                  <ul className="list-style-one">
-                    <li>
-                      <i className="fal fa-bed-alt" /> 2 Bed room
-                    </li>
-                    <li>
-                      <i className="fal fa-hat-chef" /> 1 kitchen
-                    </li>
-                    <li>
-                      <i className="fal fa-bath" /> 2 Wash room
-                    </li>
-                    <li>
-                      <i className="fal fa-router" /> Internet
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$85.00</span>/per night
-                    </span>
-                    <Link to="tour-details" className="read-more">
-                      Book Now <i className="fal fa-angle-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="destination-item style-three"
-                data-aos="fade-up"
-                data-aos-delay={50}
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <div className="ratting">
-                    <i className="fas fa-star" /> 4.8
-                  </div>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/hotel2.jpg"
-                    alt="Hotel"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Kigali, Rwanda
-                  </span>
-                  <h5>
-                    <Link to="tour-details">
-                      Green trees and body of water Marriott Hotel
-                    </Link>
-                  </h5>
-                  <ul className="list-style-one">
-                    <li>
-                      <i className="fal fa-bed-alt" /> 2 Bed room
-                    </li>
-                    <li>
-                      <i className="fal fa-hat-chef" /> 1 kitchen
-                    </li>
-                    <li>
-                      <i className="fal fa-bath" /> 2 Wash room
-                    </li>
-                    <li>
-                      <i className="fal fa-router" /> Internet
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$85.00</span>/per night
-                    </span>
-                    <Link to="tour-details" className="read-more">
-                      Book Now <i className="fal fa-angle-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="destination-item style-three"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <div className="ratting">
-                    <i className="fas fa-star" /> 4.8
-                  </div>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/hotel3.jpg"
-                    alt="Hotel"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Ao Nang, Thailand
-                  </span>
-                  <h5>
-                    <Link to="tour-details">
-                      Painted house surrounded with trees Hotel
-                    </Link>
-                  </h5>
-                  <ul className="list-style-one">
-                    <li>
-                      <i className="fal fa-bed-alt" /> 2 Bed room
-                    </li>
-                    <li>
-                      <i className="fal fa-hat-chef" /> 1 kitchen
-                    </li>
-                    <li>
-                      <i className="fal fa-bath" /> 2 Wash room
-                    </li>
-                    <li>
-                      <i className="fal fa-router" /> Internet
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$85.00</span>/per night
-                    </span>
-                    <Link to="tour-details" className="read-more">
-                      Book Now <i className="fal fa-angle-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="destination-item style-three"
-                data-aos="fade-up"
-                data-aos-delay={50}
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <div className="ratting">
-                    <i className="fas fa-star" /> 4.8
-                  </div>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/hotel4.jpg"
-                    alt="Hotel"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Ao Nang, Thailand
-                  </span>
-                  <h5>
-                    <Link to="tour-details">
-                      house pool Jungle Pool Indonesia Hotel
-                    </Link>
-                  </h5>
-                  <ul className="list-style-one">
-                    <li>
-                      <i className="fal fa-bed-alt" /> 2 Bed room
-                    </li>
-                    <li>
-                      <i className="fal fa-hat-chef" /> 1 kitchen
-                    </li>
-                    <li>
-                      <i className="fal fa-bath" /> 2 Wash room
-                    </li>
-                    <li>
-                      <i className="fal fa-router" /> Internet
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$85.00</span>/per night
-                    </span>
-                    <Link to="tour-details" className="read-more">
-                      Book Now <i className="fal fa-angle-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Hotel Area end */}
-      {/* Hot Deals Area start */}
-      <section className="hot-deals-area pt-70 pb-50 rel z-1">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-lg-12">
-              <div
-                className="section-title text-center counter-text-wrap mb-50"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <SectionTitle title={"Discover Hot Deals"} />
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-lg-4 col-md-6">
-              <div
-                className="destination-item style-four no-border"
-                data-aos="flip-left"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <span className="badge">10% Off</span>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/hot-deal1.jpg"
-                    alt="Hot Deal"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> City of Venice,
-                    Italy
-                  </span>
-                  <h5>
-                    <Link to="tour-details">
-                      Venice Grand Canal, Metropolitan Summer in Venice
-                    </Link>
-                  </h5>
-                </div>
-                <div className="destination-footer">
-                  <span className="price">
-                    <span>$58.00</span>/person
-                  </span>
-                  <div className="ratting">
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star-half-alt" />
-                  </div>
-                </div>
-                <Link
-                  href="destination-details"
-                  className="theme-btn style-three"
-                >
-                  <span data-hover="Explore">Explore</span>
-                  <i className="fal fa-arrow-right" />
-                </Link>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div
-                className="destination-item style-four no-border"
-                data-aos="flip-left"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <span className="badge">10% Off</span>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/hot-deal2.jpg"
-                    alt="Hot Deal"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Kyoto, Japan
-                  </span>
-                  <h5>
-                    <Link to="tour-details">
-                      Japan, Kyoto, travel, and people in Kyoto, Japan by
-                      Sorasak
-                    </Link>
-                  </h5>
-                </div>
-                <div className="destination-footer">
-                  <span className="price">
-                    <span>$58.00</span>/person
-                  </span>
-                  <div className="ratting">
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star-half-alt" />
-                  </div>
-                </div>
-                <Link
-                  href="destination-details"
-                  className="theme-btn style-three"
-                >
-                  <span data-hover="Explore">Explore</span>
-                  <i className="fal fa-arrow-right" />
-                </Link>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div
-                className="destination-item style-four no-border"
-                data-aos="flip-left"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <span className="badge">10% Off</span>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/hot-deal3.jpg"
-                    alt="Hot Deal"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Tamnougalt, Morocco
-                  </span>
-                  <h5>
-                    <Link to="tour-details">
-                      Camels on desert under blue sky Morocco, Sahara.
-                    </Link>
-                  </h5>
-                </div>
-                <div className="destination-footer">
-                  <span className="price">
-                    <span>$58.00</span>/person
-                  </span>
-                  <div className="ratting">
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star-half-alt" />
-                  </div>
-                </div>
-                <Link
-                  href="destination-details"
-                  className="theme-btn style-three"
-                >
-                  <span data-hover="Explore">Explore</span>
-                  <i className="fal fa-arrow-right" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Hot Deals Area end */}
+
       {/* Newsletter Area start */}
       <Subscribe />
-      {/* Newsletter Area end */}</div>
+      {/* Newsletter Area end */}
+    </div>
   )
 }
 
