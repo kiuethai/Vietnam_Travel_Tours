@@ -13,7 +13,7 @@ export const loginUserAPI = createAsyncThunk(
   async (data) => {
     const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/login`, data)
     // Lưu ý: axios sẽ trả kết quả về qua property của nó là data
-     
+
 
     return response.data
   }
@@ -33,6 +33,7 @@ export const logoutUserAPI = createAsyncThunk(
 export const updateUserAPI = createAsyncThunk(
   'user/updateUserAPI',
   async (data) => {
+
     const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/update`, data)
     return response.data
   }
@@ -51,7 +52,7 @@ export const userSlice = createSlice({
       const user = action.payload
       // console.log('user',user)
       state.currentUser = user
-      toast.success('Hello') 
+      toast.success('Đăng nhập thành công !')
     })
     builder.addCase(logoutUserAPI.fulfilled, (state) => {
       /*
@@ -62,7 +63,10 @@ export const userSlice = createSlice({
     })
     builder.addCase(updateUserAPI.fulfilled, (state, action) => {
       const user = action.payload
+      // console.log('🚀 ~ builder.addCase ~ user:', user)
+
       state.currentUser = user
+      // console.log('🚀 ~ builder.addCase ~ state.currentUser :', state.currentUser )
     })
   }
 })

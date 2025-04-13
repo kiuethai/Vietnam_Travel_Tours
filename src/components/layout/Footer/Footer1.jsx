@@ -24,7 +24,7 @@ function Footer1() {
               <div className="footer-widget footer-text">
                 <div className="footer-logo mb-25">
                   <Link to="/">
-                    <img src="assets/images/logos/logo.png" alt="Logo" />
+                    <img src="https://res.cloudinary.com/dbkhjufja/image/upload/v1744543947/b88zgpwgvx6pd51fw4zz.png" alt="Logo" />
                   </Link>
                 </div>
                 <p>

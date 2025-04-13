@@ -21,7 +21,7 @@ import {
   FIELD_REQUIRED_MESSAGE,
   EMAIL_RULE_MESSAGE
 } from '~/utils/validators';
-import FieldErrorAlert from '~/components/From/FieldErrorAlert';
+import FieldErrorAlert from '~/components/Form/FieldErrorAlert';
 
 export default function ForgotPassword() {
   const { register, handleSubmit, formState: { errors } } = useForm();

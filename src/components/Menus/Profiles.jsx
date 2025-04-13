@@ -76,12 +76,7 @@ function Profiles() {
           </MenuItem>
         </Link>
         <Divider />
-        <MenuItem >
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Thông tin cá nhân
-        </MenuItem>
+        
         <MenuItem >
           <ListItemIcon>
             <CardTravelIcon fontSize="small" />

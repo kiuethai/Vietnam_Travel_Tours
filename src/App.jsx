@@ -1,12 +1,12 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
-// Import CSS files
+/* Import CSS files */
 import "./globals.css";
 import 'rc-slider/assets/index.css';
 
-// Import CSS từ thư mục assets
+/* Import CSS từ thư mục assets */
 import "./assets/css/aos.css";
 import "./assets/css/bootstrap.min.css";
 import "./assets/css/flaticon.min.css";
@@ -14,14 +14,12 @@ import "./assets/css/fontawesome-5.14.0.min.css";
 import "./assets/css/magnific-popup.min.css";
 import "./assets/css/nice-select.min.css";
 import "./assets/css/slick.min.css";
-import "./assets/css/style.css"; // File CSS chính của bạn
+import "./assets/css/style.css"
 
-// Import your page components here
+/* Import your page components here */
 import About from './pages/About';
-
 import Contact from './pages/Contact';
 import Destination2 from './pages/Destination2';
-
 import Home from './pages/Home';
 import Home2 from './pages/Home2';
 import Home3 from './pages/Home3';
@@ -31,14 +29,24 @@ import Tour_list from './pages/Tour_list';
 import Tour_guide from './pages/Tour_guide';
 import Tour_sidebar from './pages/Tour_sidebar';
 import ReveloLayout from "./components/layout/ReveloLayout";
-import Login from "./pages/Auth/Login";
-import Register from "./pages/Auth/Register";
-import ForgotPassword from "./pages/Auth/ForgotPassword";
+/* Auth user */
 import Auth from "./pages/Auth/Auth";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
 import AccountVerification from "./pages/Auth/AccountVerification";
 import ResetPassword from "./components/ResetPassword";
 
+
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '~/redux/user/userSlice'
+import Settings from '~/pages/Settings/Settings'
+
+const ProtectedRoute = ({ user }) => {
+  if (!user) return <Navigate to='/login' replace={true} />
+  return <Outlet />
+}
 function App() {
+  const currentUser = useSelector(selectCurrentUser)
+
   return (
     <>
       <Helmet>
@@ -50,14 +58,14 @@ function App() {
       </Helmet>
 
       <Routes>
+        {/* Redirect Route*/}
         <Route path="/" element={
           <ReveloLayout header={1} footer={1}>
             <Home />
           </ReveloLayout>
-
-
         } />
 
+        {/* Authentication */}
         <Route path="/login" element={
           <ReveloLayout header={1} footer={1}>
             <Auth />
@@ -91,6 +99,22 @@ function App() {
           </ReveloLayout>
         }
         />
+        {/* ProtectedRoute Routes */}
+        < Route element={<ProtectedRoute user={currentUser} />}>
+          {/* <Outlet /> của react-router-dom sẽ chạy vào các child route trong này */}
+
+
+          {/* User setting */}
+          <Route path='/settings/account' element={
+            <ReveloLayout header={1} footer={1}>
+              <Settings />
+            </ReveloLayout>} />
+          <Route path='/settings/security' element={
+            <ReveloLayout header={1} footer={1}>
+              <Settings />
+            </ReveloLayout>} />
+
+        </Route>
 
 
         <Route path="/home2" element={<Home2 />} />
@@ -125,6 +149,8 @@ function App() {
 
 
         <Route path="/tour_sidebar" element={<Tour_sidebar />} />
+
+
 
 
         <Route path="*" element={<NotFound />} />

@@ -26,7 +26,7 @@ import {
   FIELD_REQUIRED_MESSAGE,
   PASSWORD_RULE_MESSAGE
 } from '~/utils/validators';
-import FieldErrorAlert from '~/components/From/FieldErrorAlert';
+import FieldErrorAlert from '~/components/Form/FieldErrorAlert';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -34,25 +34,25 @@ export default function ResetPassword() {
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email');
   const token = searchParams.get('token');
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [invalidToken, setInvalidToken] = useState(!email || !token);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => event.preventDefault();
-  
+
   const handleClickShowPasswordConfirm = () => setShowPasswordConfirm(!showPasswordConfirm);
   const handleMouseDownPasswordConfirm = (event) => event.preventDefault();
 
   const submitResetPassword = (data) => {
     const { newPassword } = data;
-    
+
     if (!email || !token) {
       setInvalidToken(true);
       return;
     }
-    
+
     toast.promise(
       resetPasswordAPI({ email, token, newPassword }),
       { pending: 'Đang đặt lại mật khẩu...' }
@@ -60,7 +60,7 @@ export default function ResetPassword() {
       navigate('/login?passwordReset=true');
     });
   };
-  
+
   if (invalidToken) {
     return (
       <section className="pt-120 pb-120">
@@ -133,7 +133,7 @@ export default function ResetPassword() {
                       <TextField
                         fullWidth
                         label="Mật khẩu mới"
-                        type={showPassword ? 'text' : 'password'} 
+                        type={showPassword ? 'text' : 'password'}
                         variant="outlined"
                         error={!!errors['newPassword']}
                         {...register('newPassword', {
@@ -160,12 +160,12 @@ export default function ResetPassword() {
                       />
                       <FieldErrorAlert errors={errors} fieldName={'newPassword'} />
                     </Box>
-                    
+
                     <Box sx={{ marginTop: '1em' }}>
                       <TextField
                         fullWidth
                         label="Xác nhận mật khẩu mới"
-                        type={showPasswordConfirm ? 'text' : 'password'} 
+                        type={showPasswordConfirm ? 'text' : 'password'}
                         variant="outlined"
                         error={!!errors['confirmPassword']}
                         {...register('confirmPassword', {

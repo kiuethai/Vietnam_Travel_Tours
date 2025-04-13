@@ -29,7 +29,7 @@ import {
   PASSWORD_RULE_MESSAGE,
   EMAIL_RULE_MESSAGE
 } from '~/utils/validators';
-import FieldErrorAlert from '~/components/From/FieldErrorAlert';
+import FieldErrorAlert from '~/components/Form/FieldErrorAlert';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ export default function Login() {
   const [searchParams] = useSearchParams();
   const registeredEmail = searchParams.get('registeredEmail');
   const verifiedEmail = searchParams.get('verifiedEmail');
-  
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -54,11 +54,11 @@ export default function Login() {
       if (!res.error) navigate('/')
     })
   };
-  
+
   return (
     <section
       className="pt-120 pb-120"
-     
+
     >
       <div
         style={{
@@ -126,7 +126,7 @@ export default function Login() {
                       <TextField
                         fullWidth
                         label="Enter Password..."
-                        type={showPassword ? 'text' : 'password'} 
+                        type={showPassword ? 'text' : 'password'}
                         variant="outlined"
                         error={!!errors['password']}
                         {...register('password', {

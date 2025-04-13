@@ -28,6 +28,7 @@ root.render(
     <BrowserRouter basename='/'>
       <ConfirmProvider>
         <App />
+        <ToastContainer position="bottom-left" theme="colored" />
       </ConfirmProvider>
     </BrowserRouter>
   </Provider>
