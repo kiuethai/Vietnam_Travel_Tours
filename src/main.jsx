@@ -6,6 +6,18 @@ import { ToastContainer } from 'react-toastify'
 import { Provider } from 'react-redux'
 import { store } from '~/redux/store'
 import { ConfirmProvider } from 'material-ui-confirm'
+// Add Material-UI theme provider
+import { ThemeProvider as ThemeProviderV5 } from '@mui/material/styles';
+
+import { StyledEngineProvider } from '@mui/material/styles';
+import { LayoutProvider } from './context/LayoutContext';
+import { UserProvider } from './context/UserContext';
+import { ManagementProvider } from './context/ManagementContext';
+import {
+  ThemeProvider as ThemeChangeProvider,
+  ThemeStateContext,
+} from './context/ThemeContext';
+import CssBaseline from '@mui/material/CssBaseline';
 
 // Cấu hình Redux-Persist
 import { PersistGate } from 'redux-persist/integration/react'
@@ -21,15 +33,37 @@ AOS.init();
 import { injectStore } from './utils/authorizeAxios'
 injectStore(store)
 
+// Define theme with colors from your CSS variables
 
 const root = createRoot(document.getElementById('root'))
 root.render(
+
+
   <Provider store={store}>
-    <BrowserRouter basename='/'>
-      <ConfirmProvider>
-        <App />
-        <ToastContainer position="bottom-left" theme="colored" />
-      </ConfirmProvider>
-    </BrowserRouter>
-  </Provider>
+  <LayoutProvider>
+    <UserProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeChangeProvider>
+        <BrowserRouter basename='/'>
+          <ThemeStateContext.Consumer>
+            {(theme) => (
+              <ThemeProviderV5 theme={theme}>
+                <ManagementProvider>
+                  <CssBaseline />
+                  <ConfirmProvider>
+                  <App />
+                  <ToastContainer position="bottom-left" theme="colored" />
+                  </ConfirmProvider>
+                </ManagementProvider>
+              </ThemeProviderV5>
+            )}
+          </ThemeStateContext.Consumer>
+          </BrowserRouter>
+        </ThemeChangeProvider>
+      </StyledEngineProvider>
+    </UserProvider>
+  </LayoutProvider>
+</Provider>
+
+  
 )

@@ -17,28 +17,30 @@ import "./assets/css/slick.min.css";
 import "./assets/css/style.css"
 
 /* Import your page components here */
-import About from './pages/About';
-import Contact from './pages/Contact';
-import Destination2 from './pages/Destination2';
-import Home from './pages/Home';
-import Home2 from './pages/Home2';
-import Home3 from './pages/Home3';
+import About from './pages/Client/About';
+import Contact from './pages/Client/Contact';
+import Destination2 from './pages/Client/Destination2';
+import Home from './pages/Client/Home';
+import Home2 from './pages/Client/Home2';
+import Home3 from './pages/Client/Home3';
 import NotFound from './pages/NotFound';
-import Tour_details from './pages/Tour_details';
-import Tour_list from './pages/Tour_list';
-import Tour_guide from './pages/Tour_guide';
-import Tour_sidebar from './pages/Tour_sidebar';
-import ReveloLayout from "./components/layout/ReveloLayout";
+import Tour_details from './pages/Client/Tour_details';
+import Tour_list from './pages/Client/Tour_list';
+import Tour_guide from './pages/Client/Tour_guide';
+import Tour_sidebar from './pages/Client/Tour_sidebar';
+import ReveloLayout from "./components/Client/layout/ReveloLayout";
 /* Auth user */
-import Auth from "./pages/Auth/Auth";
-import ForgotPassword from "./pages/Auth/ForgotPassword";
-import AccountVerification from "./pages/Auth/AccountVerification";
-import ResetPassword from "./components/ResetPassword";
+import Auth from "./pages/Client/Auth/Auth";
+import ForgotPassword from "./pages/Client/Auth/ForgotPassword";
+import AccountVerification from "./pages/Client/Auth/AccountVerification";
+import ResetPassword from "./components/Client/ResetPassword";
 
 
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
-import Settings from '~/pages/Settings/Settings'
+import Settings from '~/pages/Client/Settings/Settings'
+import Login from '~/pages/Admin/login/Login'
+import Layout from '~/components/Admin/Layout/Layout'
 
 const ProtectedRoute = ({ user }) => {
   if (!user) return <Navigate to='/login' replace={true} />
@@ -49,6 +51,7 @@ function App() {
 
   return (
     <>
+      {/* Client Routes */}
       <Helmet>
         <title>KTTravel - Travel & Tour Booking</title>
         <meta
@@ -58,7 +61,7 @@ function App() {
       </Helmet>
 
       <Routes>
-        {/* Redirect Route*/}
+        {/* Navigate Route*/}
         <Route path="/" element={
           <ReveloLayout header={1} footer={1}>
             <Home />
@@ -151,12 +154,29 @@ function App() {
         <Route path="/tour_sidebar" element={<Tour_sidebar />} />
 
 
+        {/* Admin Routes */}
+        <Route path='/admin'>
+          <Route index element={currentUser ? <Navigate to='/admin/dashboard' replace /> : <Navigate to='/admin/login' replace />} />
+          <Route path='dashboard/*' element={
+            <ProtectedRoute user={currentUser}>
+              <Layout />
+            </ProtectedRoute>
+          } />
+          <Route path='login' element={currentUser ? <Navigate to='/admin/dashboard' replace /> : <Login />} />
+          {/* Add other admin routes here */}
+          <Route path='*' element={
+            <ProtectedRoute user={currentUser}>
+              <Layout />
+            </ProtectedRoute>
+          } />
+        </Route>
 
 
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
+
 }
 
 export default App;

@@ -33,3 +33,7 @@ export const resetPasswordAPI = async (data) => {
   toast.success('Mật khẩu của bạn đã được đặt lại thành công. Bây giờ bạn có thể đăng nhập bằng mật khẩu mới.', { theme: 'colored' })
   return response.data
 }
+
+
+/* APIs Admin */
+
