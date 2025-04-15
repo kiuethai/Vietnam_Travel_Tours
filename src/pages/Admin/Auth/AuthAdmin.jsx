@@ -1,4 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams, useLocation, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form';
+import { loginAdminAPI } from '~/redux/admin/adminSlice'
+
+
+import {
+  EMAIL_RULE,
+  PASSWORD_RULE,
+  FIELD_REQUIRED_MESSAGE,
+  PASSWORD_RULE_MESSAGE,
+  EMAIL_RULE_MESSAGE
+} from '~/utils/validators'
+
+import Box from '@mui/material/Box';
 import {
   Grid,
   CircularProgress,
@@ -8,7 +23,10 @@ import {
   TextField as Input,
   Typography,
 } from '@mui/material';
-import { useParams, useLocation, useNavigate } from 'react-router-dom'
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import classnames from 'classnames';
 
@@ -26,12 +44,16 @@ import {
   registerUser,
   sendPasswordResetEmail,
 } from '~/context/UserContext';
+
+
 import { receiveToken, doInit } from '~/context/UserContext';
 
 //components
 import { Button } from '~/components/Admin/Wrappers/Wrappers';
 import Widget from '~/components/Admin/Widget/Widget';
 import config from '~/config';
+import Login from './Login';
+
 
 const getGreeting = () => {
   const d = new Date();
@@ -46,32 +68,19 @@ const getGreeting = () => {
   }
 };
 
-function withRouter(Component) {
-  return (props) => {
-    const params = useParams()
-    const location = useLocation()
-    const navigate = useNavigate()
 
-    return (
-      <Component
-        {...props}
-        params={params}
-        location={location}
-        navigate={navigate}
-      />
-    )
-  }
-}
-
-function Login(props) {
+function AuthAdmin(props) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  
   let classes = useStyles();
-  const tab = new URLSearchParams(props.location.search).get('tab');
-
+  const tab = new URLSearchParams(location.search).get('tab');
   // global
   let userDispatch = useUserDispatch();
 
   useEffect(() => {
-    const params = new URLSearchParams(props.location.search);
+    const params = new URLSearchParams(location.search);
     const token = params.get('token');
     if (token) {
       receiveToken(token, userDispatch);
@@ -83,11 +92,15 @@ function Login(props) {
   let [isLoading, setIsLoading] = useState(false);
   let [error, setError] = useState(null);
   let initialTab = parseInt(tab, 10);
+
   let [activeTabId, setActiveTabId] = useState(Number.isNaN(initialTab) ? 0 : initialTab); let [nameValue, setNameValue] = useState('');
-  let [loginValue, setLoginValue] = useState('admin');
-  let [passwordValue, setPasswordValue] = useState('password');
+
+
+  let [loginValue, setLoginValue] = useState('');
+  let [passwordValue, setPasswordValue] = useState('');
   let [forgotEmail, setForgotEmail] = useState('');
-  let [isForgot, setIsForgot] = useState(false);
+
+  // let [isForgot, setIsForgot] = useState(false);
 
   let isLoginFormValid = () => {
     return loginValue.length !== 0 && passwordValue.length !== 0;
@@ -106,6 +119,19 @@ function Login(props) {
     }
   };
 
+  const submitLogIn = (data) => {
+    const { email, password } = data
+    toast.promise(
+      dispatch(loginAdminAPI({ email, password })),
+      { pending: 'Logging in...' }
+    ).then(res => {
+      console.log('Login response full object:', res);
+      if (!res.error) navigate('/')
+    })
+  };
+
+
+
   return (
     <Grid container className={classes.container}>
       <div className={classes.logotypeContainer}>
@@ -114,57 +140,10 @@ function Login(props) {
           ADMIN KTTravel
         </Typography>
       </div>
-      <div
-        className={
-          !isForgot ? classes.formContainer : classes.customFormContainer
-        }
-      >
+      <div className={classes.formContainer} >
         <div className={classes.form}>
-          {isForgot ? (
-            <div>
-              <Input
-                id='password'
-                InputProps={{
-                  classes: {
-                    underline: classes.InputUnderline,
-                    input: classes.Input,
-                  },
-                }}
-                value={forgotEmail}
-                onChange={(e) => setForgotEmail(e.target.value)}
-                margin='normal'
-                placeholder='Email'
-                type='Email'
-                fullWidth
-              />
-              <div className={classes.formButtons}>
-                {isLoading ? (
-                  <CircularProgress size={26} className={classes.loginLoader} />
-                ) : (
-                  <Button
-                    disabled={forgotEmail.length === 0}
-                    onClick={() =>
-                      sendPasswordResetEmail(forgotEmail)(userDispatch)
-                    }
-                    variant='contained'
-                    color='primary'
-                    size='large'
-                  >
-                    Send
-                  </Button>
-                )}
-                <Button
-                  color='primary'
-                  size='large'
-                  onClick={() => setIsForgot(!isForgot)}
-                  className={classes.forgetButton}
-                >
-                  Back to login
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <>
+       
+        
               <Tabs
                 value={activeTabId}
                 onChange={(e, id) => setActiveTabId(id)}
@@ -177,32 +156,13 @@ function Login(props) {
               </Tabs>
               {activeTabId === 0 && (
                 <React.Fragment>
-                  {config.isBackend ? (
-                    <Widget
-                      disableWidgetMenu
-                      inheritHeight
-                      style={{ marginTop: 32 }}
-                    >
-                      <Typography
-                        variant={'body2'}
-                        component="div"
-                        style={{ textAlign: 'center' }}
-                      >
-                        {/* This is a real app with Node.js backend - use */}
-                        test
-                        <Typography variant={'body2'} weight={'bold'}>
-                          "admin / password"
-                        </Typography>{' '}
-                        to login!
-                      </Typography>
-                    </Widget>
-                  ) : null}
                   <Typography variant='h1' className={classes.greeting}>
-                    {getGreeting()}, User
+                    {getGreeting()}, Admin
                   </Typography>
                   <Button
                     size='large'
                     className={classes.googleButton}
+                    /* Login */
                     onClick={() =>
                       loginUser(
                         userDispatch,
@@ -229,85 +189,14 @@ function Login(props) {
                     </Typography>
                     <div className={classes.formDivider} />
                   </div>
-                  <Grow
-                    in={error}
-                    style={
-                      !error ? { display: 'none' } : { display: 'inline-block' }
-                    }
-                  >
-                    <Typography className={classes.errorMessage}>
-                      Something is wrong with your login or password :(
-                    </Typography>
-                  </Grow>
-                  <Input
-                    id='email'
-                    InputProps={{
-                      classes: {
-                        underline: classes.InputUnderline,
-                        input: classes.Input,
-                      },
-                    }}
-                    value={loginValue}
-                    onChange={(e) => setLoginValue(e.target.value)}
-                    margin='normal'
-                    placeholder='Email Adress'
-                    type='email'
-                    fullWidth
-                    onKeyDown={(e) => loginOnEnterKey(e)}
-                  />
-                  <Input
-                    id='password'
-                    InputProps={{
-                      classes: {
-                        underline: classes.InputUnderline,
-                        input: classes.Input,
-                      },
-                    }}
-                    value={passwordValue}
-                    onChange={(e) => setPasswordValue(e.target.value)}
-                    margin='normal'
-                    placeholder='Password'
-                    type='password'
-                    fullWidth
-                    onKeyDown={(e) => loginOnEnterKey(e)}
-                  />
-                  <div className={classes.formButtons}>
-                    {isLoading ? (
-                      <CircularProgress
-                        size={26}
-                        className={classes.loginLoader}
-                      />
-                    ) : (
-                      <Button
-                        disabled={!isLoginFormValid()}
-                        onClick={() =>
-                          loginUser(
-                            userDispatch,
-                            loginValue,
-                            passwordValue,
-                            props.history,
-                            setIsLoading,
-                            setError,
-                          )
-                        }
-                        variant='contained'
-                        color='primary'
-                        size='large'
-                      >
-                        Login
-                      </Button>
-                    )}
-                    <Button
-                      color='primary'
-                      size='large'
-                      onClick={() => setIsForgot(!isForgot)}
-                      className={classes.forgetButton}
-                    >
-                      Forgot Password?
-                    </Button>
-                  </div>
+                  
+                  {/* From login */}
+                  <Login  />
+               
                 </React.Fragment>
               )}
+
+
               {activeTabId === 1 && (
                 <React.Fragment>
                   <Typography variant='h1' className={classes.greeting}>
@@ -430,12 +319,12 @@ function Login(props) {
                   </Button>
                 </React.Fragment>
               )}
-            </>
-          )}
+          
         </div>
       </div>
-    </Grid>
+
+    </Grid >
   );
 }
 
-export default withRouter(Login);
+export default AuthAdmin

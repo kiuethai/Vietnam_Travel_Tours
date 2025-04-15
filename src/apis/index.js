@@ -3,7 +3,7 @@ import { API_ROOT } from '~/utils/constants'
 import { toast } from 'react-toastify'
 
 
-/** Users */
+/**APIs Users */
 export const registerUserAPI = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/register`, data)
   toast.success('Tài khoản đã được tạo thành công! Vui lòng kiểm tra và xác minh tài khoản của bạn trước khi đăng nhập', { theme: 'colored' })
@@ -36,4 +36,23 @@ export const resetPasswordAPI = async (data) => {
 
 
 /* APIs Admin */
+
+export const registerAdminAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/admin/register`, data)
+  toast.success('Tài khoản đã được tạo thành công! Vui lòng kiểm tra và xác minh tài khoản của bạn trước khi đăng nhập', { theme: 'colored' })
+  return response.data
+}
+
+export const verifyAdminAPI = async (data) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/admin/verify`, data)
+  toast.success('Tài khoản đã được xác minh thành công! Bây giờ bạn có thể Đặt ngay để tận hưởng dịch vụ của chúng tôi! Chúc bạn một ngày tốt lành!', { theme: 'colored' })
+  return response.data
+}
+
+export const refreshTokenAdminAPI = async () => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/admin/refresh_token`)
+  return response.data
+}
+
+
 

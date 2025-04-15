@@ -33,6 +33,7 @@ export default function ForgotPassword() {
       { pending: 'Đang gửi yêu cầu đặt lại mật khẩu...' }
     ).then(() => {
       // Toast notification is already handled in the API function
+      toast.success('Link đặt lại mật khẩu đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư và làm theo hướng dẫn.', { theme: 'colored' });
     });
   };
 

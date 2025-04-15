@@ -39,7 +39,7 @@ import ResetPassword from "./components/Client/ResetPassword";
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
 import Settings from '~/pages/Client/Settings/Settings'
-import Login from '~/pages/Admin/login/Login'
+import AuthAdmin from '~/pages/Admin/Auth/AuthAdmin'
 import Layout from '~/components/Admin/Layout/Layout'
 
 const ProtectedRoute = ({ user }) => {
@@ -162,7 +162,7 @@ function App() {
               <Layout />
             </ProtectedRoute>
           } />
-          <Route path='login' element={currentUser ? <Navigate to='/admin/dashboard' replace /> : <Login />} />
+          <Route path='login' element={currentUser ? <Navigate to='/admin/dashboard' replace /> : <AuthAdmin />} />
           {/* Add other admin routes here */}
           <Route path='*' element={
             <ProtectedRoute user={currentUser}>

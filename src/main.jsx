@@ -16,6 +16,7 @@ import { ManagementProvider } from './context/ManagementContext';
 import {
   ThemeProvider as ThemeChangeProvider,
   ThemeStateContext,
+  useThemeState
 } from './context/ThemeContext';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -33,37 +34,37 @@ AOS.init();
 import { injectStore } from './utils/authorizeAxios'
 injectStore(store)
 
-// Define theme with colors from your CSS variables
+// Component con sử dụng hook thay vì Consumer
+function ThemedApp() {
+  const theme = useThemeState();
+  return (
+    <ThemeProviderV5 theme={theme}>
+      <ManagementProvider>
+        <CssBaseline />
+        <ConfirmProvider>
+          <App />
+          <ToastContainer position="bottom-left" theme="colored" />
+        </ConfirmProvider>
+      </ManagementProvider>
+    </ThemeProviderV5>
+  );
+}
 
 const root = createRoot(document.getElementById('root'))
 root.render(
-
-
   <Provider store={store}>
-  <LayoutProvider>
-    <UserProvider>
-      <StyledEngineProvider injectFirst>
-        <ThemeChangeProvider>
-        <BrowserRouter basename='/'>
-          <ThemeStateContext.Consumer>
-            {(theme) => (
-              <ThemeProviderV5 theme={theme}>
-                <ManagementProvider>
-                  <CssBaseline />
-                  <ConfirmProvider>
-                  <App />
-                  <ToastContainer position="bottom-left" theme="colored" />
-                  </ConfirmProvider>
-                </ManagementProvider>
-              </ThemeProviderV5>
-            )}
-          </ThemeStateContext.Consumer>
-          </BrowserRouter>
-        </ThemeChangeProvider>
-      </StyledEngineProvider>
-    </UserProvider>
-  </LayoutProvider>
-</Provider>
-
-  
+    <PersistGate persistor={persistor}>
+      <LayoutProvider>
+        <UserProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeChangeProvider>
+              <BrowserRouter basename='/'>
+                <ThemedApp />
+              </BrowserRouter>
+            </ThemeChangeProvider>
+          </StyledEngineProvider>
+        </UserProvider>
+      </LayoutProvider>
+    </PersistGate>
+  </Provider>
 )
