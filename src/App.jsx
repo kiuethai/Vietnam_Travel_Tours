@@ -38,6 +38,8 @@ import ResetPassword from "./components/Client/ResetPassword";
 
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
+import { selectCurrentAdmin } from '~/redux/admin/adminSlice'
+
 import Settings from '~/pages/Client/Settings/Settings'
 import AuthAdmin from '~/pages/Admin/Auth/AuthAdmin'
 import Layout from '~/components/Admin/Layout/Layout'
@@ -46,8 +48,16 @@ const ProtectedRoute = ({ user }) => {
   if (!user) return <Navigate to='/login' replace={true} />
   return <Outlet />
 }
+
+
+const ProtectedAdminRoute = ({ admin }) => {
+  if (!admin) return <Navigate to='/login' replace={true} />
+  return <Layout />
+}
+
 function App() {
   const currentUser = useSelector(selectCurrentUser)
+  const currentAdmin = useSelector(selectCurrentAdmin)
 
   return (
     <>
@@ -117,6 +127,8 @@ function App() {
               <Settings />
             </ReveloLayout>} />
 
+
+         
         </Route>
 
 
@@ -156,18 +168,18 @@ function App() {
 
         {/* Admin Routes */}
         <Route path='/admin'>
-          <Route index element={currentUser ? <Navigate to='/admin/dashboard' replace /> : <Navigate to='/admin/login' replace />} />
-          <Route path='dashboard/*' element={
-            <ProtectedRoute user={currentUser}>
+          <Route index element={currentAdmin ? <Navigate to='/admin/dashboard' replace /> : <Navigate to='/admin/login' replace />} />
+          <Route path='/admin/*' element={
+            <ProtectedAdminRoute admin={currentAdmin}>
               <Layout />
-            </ProtectedRoute>
+            </ProtectedAdminRoute>
           } />
-          <Route path='login' element={currentUser ? <Navigate to='/admin/dashboard' replace /> : <AuthAdmin />} />
+          <Route path='login' element={currentAdmin ? <Navigate to='/admin/dashboard' replace /> : <AuthAdmin />} />
           {/* Add other admin routes here */}
-          <Route path='*' element={
-            <ProtectedRoute user={currentUser}>
+          <Route path='/admin/*' element={
+            <ProtectedAdminRoute admin={currentAdmin}>
               <Layout />
-            </ProtectedRoute>
+            </ProtectedAdminRoute>
           } />
         </Route>
 

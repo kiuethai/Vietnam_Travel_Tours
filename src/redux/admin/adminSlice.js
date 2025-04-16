@@ -20,18 +20,19 @@ export const loginAdminAPI = createAsyncThunk(
 export const logoutAdminAPI = createAsyncThunk(
   'admin/logoutAdminAPI',
   async (showSuccessMessage = true) => {
+   
     const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/admin/logout`)
     if (showSuccessMessage) {
       toast.success('Logged out successfully!')
+      
     }
     return response.data
   }
 )
 
-export const updateAdminAPI = createAsyncThunk(
+export const  updateAdminAPI = createAsyncThunk(
   'admin/updateAdminAPI',
   async (data) => {
-
     const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/admin/update`, data)
     return response.data
   }
@@ -64,7 +65,7 @@ export const adminSlice = createSlice({
       // console.log('🚀 ~ builder.addCase ~ admin:', admin)
 
       state.currentAdmin = admin
-      // console.log('🚀 ~ builder.addCase ~ state.currentAdmin :', state.currentAdmin )
+      console.log('🚀 ~ builder.addCase ~ state.currentAdmin :', state.currentAdmin )
     })
   }
 })

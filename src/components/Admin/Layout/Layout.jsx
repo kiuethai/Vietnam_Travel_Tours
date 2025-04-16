@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import classnames from 'classnames';
 
-import SettingsIcon from '@mui/icons-material/Settings';
 import GithubIcon from '@mui/icons-material/GitHub';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -40,6 +39,7 @@ import { useLayoutState } from '~/context/LayoutContext';
 
 //Sidebar structure
 import structure from '../Sidebar/SidebarStructure'
+import Profile from '~/pages/Admin/profile/Profile';
 
 const Redirect = (props) => {
   useEffect(() => window.location.replace(props.url));
@@ -49,7 +49,6 @@ const Redirect = (props) => {
 function Layout(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const id = open ? 'add-section-popover' : undefined;
   const handleClick = (event) => {
@@ -74,8 +73,9 @@ function Layout(props) {
           <Route path='dashboard' element={<Dashboard />} />
 
 
-          {/* <Route path="/app/profile" component={Profile} /> */}
-          {/* <Route path='/app/user/edit' component={EditUser} /> */}
+          <Route path="profile/*" element={<Profile />} />
+
+          {/* <Route path='/app/user/edit' element={<EditUser />} /> */}
 
 
           {/* <Route path="/app/ecommerce/management" exact>
@@ -107,26 +107,10 @@ function Layout(props) {
           /> */}
           <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
         </Routes>
-        <Fab
-          color='primary'
-          aria-label='settings'
-          onClick={(e) => handleClick(e)}
-          className={classes.changeThemeFab}
-          style={{ zIndex: 100 }}
-        >
-          <SettingsIcon style={{ color: '#fff' }} />
-        </Fab>
+
         <ColorChangeThemePopper id={id} open={open} anchorEl={anchorEl} />
         <Footer>
           <div>
-            <Link
-              color={'primary'}
-              href={'https://flatlogic.com/about'}
-              target={'_blank'}
-              className={classes.link}
-            >
-              About Us
-            </Link>
           </div>
           <div>
             <Link to={'https://www.facebook.com/kieuthaizz'} target={'_blank'}>

@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton, Menu, MenuItem } from '@mui/material';
 import { useTheme } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCurrentAdmin, logoutAdminAPI } from '~/redux/admin/adminSlice'
+import { useConfirm } from 'material-ui-confirm'
+
+
 import {
   Menu as MenuIcon,
   Person as AccountIcon,
   ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 import classNames from 'classnames';
-
-//images
-import profile from '../images/main-profile.png';
-import config from '~/config'
 
 // styles
 import useStyles from './styles';
@@ -25,41 +26,19 @@ import {
   useLayoutDispatch,
   toggleSidebar,
 } from '~/context/LayoutContext';
-import {
-  useManagementDispatch,
-  useManagementState,
-} from '~/context/ManagementContext';
-
-import { actions } from '~/context/ManagementContext';
-import { useUserDispatch, signOut } from '~/context/UserContext';
 
 export default function Header(props) {
   let classes = useStyles();
   let theme = useTheme();
-
+  const dispatch = useDispatch()
+  const currentAdmin = useSelector(selectCurrentAdmin)
+  const navigate = useNavigate()
   // global
   let layoutState = useLayoutState();
   let layoutDispatch = useLayoutDispatch();
-  let userDispatch = useUserDispatch();
-  const managementDispatch = useManagementDispatch();
-
   // local
   const [profileMenu, setProfileMenu] = useState(null);
-  const [currentUser, setCurrentUser] = useState();
   const [isSmall, setSmall] = useState(false);
-
-  const managementValue = useManagementState();
-
-  useEffect(() => {
-    actions.doFind(sessionStorage.getItem('user_id'))(managementDispatch);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (config.isBackend) {
-      setCurrentUser(managementValue.currentUser);
-    }
-  }, [managementValue]);
 
   useEffect(function () {
     window.addEventListener('resize', handleWindowWidthChange);
@@ -75,7 +54,18 @@ export default function Header(props) {
     let isSmallScreen = windowWidth < breakpointWidth;
     setSmall(isSmallScreen);
   }
-
+  const confirmLogout = useConfirm()
+  const handleLogout = () => {
+    confirmLogout({
+      title: 'Đăng xuất khỏi tài khoản của bạn?',
+      confirmationText: 'Xác nhận',
+      cancellationText: 'Hủy'
+    }).then(async () => {
+      // Gọi API đăng xuất người dùng
+      const res = await dispatch(logoutAdminAPI())
+      if (!res.error) navigate('/admin/login')
+    }).catch(() => { })
+  }
   return (
     <AppBar position='fixed' className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
@@ -88,7 +78,7 @@ export default function Header(props) {
           )}
         >
           {(!layoutState.isSidebarOpened && isSmall) ||
-          (layoutState.isSidebarOpened && !isSmall) ? (
+            (layoutState.isSidebarOpened && !isSmall) ? (
             <ArrowBackIcon
               classes={{
                 root: classNames(
@@ -120,15 +110,12 @@ export default function Header(props) {
           onClick={(e) => setProfileMenu(e.currentTarget)}
         >
           <Avatar
-            alt={currentUser?.firstName}
+            alt={currentAdmin?.displayName}
             // eslint-disable-next-line no-mixed-operators
-            src={
-              (currentUser?.avatar?.length >= 1 &&
-              currentUser?.avatar[currentUser.avatar.length - 1].publicUrl) || profile
-            }
+            src={currentAdmin?.avatar}
             classes={{ root: classes.headerIcon }}
           >
-            {currentUser?.firstName?.[0]}
+            {currentAdmin?.displayName?.[0]}
           </Avatar>
         </IconButton>
         <Typography
@@ -137,7 +124,7 @@ export default function Header(props) {
         >
           <div className={classes.profileLabel}>Hi,&nbsp;</div>
           <Typography weight={'bold'} className={classes.profileLabel}>
-            {currentUser?.firstName}
+            {currentAdmin?.displayName}
           </Typography>
         </Typography>
         <Menu
@@ -151,16 +138,9 @@ export default function Header(props) {
         >
           <div className={classes.profileMenuUser}>
             <Typography variant='h4' weight='medium'>
-              {currentUser?.firstName}
+              {currentAdmin?.displayName}
             </Typography>
-            <Typography
-              className={classes.profileMenuLink}
-              component='a'
-              color='primary'
-              href='https://flatlogic.com'
-            >
-              Flatlogic.com
-            </Typography>
+
           </div>
           <MenuItem
             className={classNames(
@@ -177,7 +157,7 @@ export default function Header(props) {
             <Typography
               className={classes.profileMenuLink}
               color='primary'
-              onClick={() => signOut(userDispatch, props.history)}
+              onClick={handleLogout}
             >
               Sign Out
             </Typography>

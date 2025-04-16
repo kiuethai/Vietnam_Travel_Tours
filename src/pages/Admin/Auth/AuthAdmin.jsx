@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation} from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 import {
   Grid,
@@ -41,7 +41,7 @@ function AuthAdmin(props) {
 
   let initialTab = parseInt(tab, 10);
 
-  let [activeTabId, setActiveTabId] = useState(Number.isNaN(initialTab) ? 0 : initialTab); 
+  let [activeTabId, setActiveTabId] = useState(Number.isNaN(initialTab) ? 0 : initialTab);
 
   return (
     <Grid container className={classes.container}>
@@ -71,8 +71,8 @@ function AuthAdmin(props) {
               <Button
                 size='large'
                 className={classes.googleButton}
-                /* Login */
-              
+              /* Login */
+
               >
                 <img
                   src={google}

@@ -17,7 +17,7 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
-
+import { useLocation } from 'react-router-dom';
 // styles
 import useStyles from './styles';
 import useStyles2 from '../../styles';
@@ -32,7 +32,6 @@ export default function SidebarLink({
   icon,
   label,
   children,
-  location,
   isSidebarOpened,
   nested,
   type,
@@ -44,7 +43,7 @@ export default function SidebarLink({
   let [isOpen, setIsOpen] = useState(false);
   // Add Section Popover state
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const location = useLocation();
   // Login page onClick
   function onLogin() {
     localStorage.removeItem('token');
