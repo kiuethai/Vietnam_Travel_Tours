@@ -40,6 +40,7 @@ import { useLayoutState } from '~/context/LayoutContext';
 //Sidebar structure
 import structure from '../Sidebar/SidebarStructure'
 import Profile from '~/pages/Admin/profile/Profile';
+import UserList from '~/pages/Admin/user/UserList';
 
 const Redirect = (props) => {
   useEffect(() => window.location.replace(props.url));
@@ -75,6 +76,10 @@ function Layout(props) {
 
           <Route path="profile/*" element={<Profile />} />
 
+          <Route path={'users'}  element={<UserList />} />
+
+
+          
           {/* <Route path='/app/user/edit' element={<EditUser />} /> */}
 
 

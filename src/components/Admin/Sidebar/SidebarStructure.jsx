@@ -25,7 +25,7 @@ import ViewCompactRoundedIcon from '@mui/icons-material/ViewCompactRounded';
 import Dot from './components/Dot';
 
 const structure = [
-  { id: 100, label: 'Profile', link: '/admin/profile', icon: <ProfileIcon /> },
+  { id: 100, label: 'Quản lý Admin', link: '/admin/profile', icon: <ProfileIcon /> },
   { id: 0, label: 'Dashboard', link: '/admin/dashboard', icon: <HomeIcon /> },
   {
     id: 1,
@@ -50,24 +50,10 @@ const structure = [
   },
   {
     id: 2,
-    label: 'User',
-    link: '/profile/user',
+    label: 'Quản lý người dùng',
+    link: '/admin/users',
     badgeColor: 'secondary',
-    icon: <PersonIcon />,
-    children: [
-      {
-        label: 'User List',
-        link: '/profile/users',
-      },
-      {
-        label: 'User Add',
-        link: '/profile/user/new',
-      },
-      {
-        label: 'User Edit',
-        link: '/profile/user/edit',
-      },
-    ],
+    icon: <PersonIcon />
   },
   {
     id: 3,
@@ -79,7 +65,7 @@ const structure = [
     id: 4,
     label: 'Chat',
     icon: <ChatIcon />,
-    click: function(event, ...rest) {
+    click: function (event, ...rest) {
       const name = 'chatSetOpen'
       rest.forEach(c => {
         if (c.clickName === name) {

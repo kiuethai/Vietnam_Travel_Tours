@@ -34,6 +34,18 @@ export const resetPasswordAPI = async (data) => {
   return response.data
 }
 
+export const getAllUsersAPI = async () => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/users/getAllUsers`)
+  return response.data
+}
+
+
+export const UpdateUserAPI = async (userId, data) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/${userId}`, data)
+  toast.success('Cập nhật thông tin tài khoản thành công!', { theme: 'colored' })
+  return response.data
+}
+
 
 /* APIs Admin */
 
