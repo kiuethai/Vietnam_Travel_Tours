@@ -5,7 +5,8 @@ import rollupNodePolyFill from 'rollup-plugin-polyfill-node'
 
 export default defineConfig({
   define: {
-    'process.env': process.env
+    'process.env': process.env,
+    global: 'window'
   },
   plugins: [
     react(),

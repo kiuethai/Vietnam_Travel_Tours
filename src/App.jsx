@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -50,9 +51,9 @@ const ProtectedRoute = ({ user }) => {
 }
 
 
-const ProtectedAdminRoute = ({ admin }) => {
-  if (!admin) return <Navigate to='/login' replace={true} />
-  return <Layout />
+const ProtectedAdminRoute = ({ admin, children }) => {
+  if (!admin) return <Navigate to='/admin/login' replace={true} />
+  return children;
 }
 
 function App() {
@@ -128,7 +129,7 @@ function App() {
             </ReveloLayout>} />
 
 
-         
+
         </Route>
 
 
@@ -169,7 +170,7 @@ function App() {
         {/* Admin Routes */}
         <Route path='/admin'>
           <Route index element={currentAdmin ? <Navigate to='/admin/dashboard' replace /> : <Navigate to='/admin/login' replace />} />
-          <Route path='/admin/*' element={
+          <Route path='*' element={
             <ProtectedAdminRoute admin={currentAdmin}>
               <Layout />
             </ProtectedAdminRoute>

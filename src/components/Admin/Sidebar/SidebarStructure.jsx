@@ -29,22 +29,22 @@ const structure = [
   { id: 0, label: 'Dashboard', link: '/admin/dashboard', icon: <HomeIcon /> },
   {
     id: 1,
-    label: 'E-commerce',
+    label: 'Quản lý Tour',
     badgeColor: 'success',
-    link: '/profile/ecommerce',
+    link: '/admin/ecommerce',
     icon: <ShoppingCartIcon />,
     children: [
       {
-        label: 'Product Manage',
-        link: '/profile/ecommerce/management',
+        label: 'Thêm Tour',
+        link: '/admin/tours/addtours',
       },
       {
         label: 'Products Grid',
-        link: '/profile/ecommerce/gridproducts',
+        link: '/admin/ecommerce/gridproducts',
       },
       {
         label: 'Product Page',
-        link: '/profile/ecommerce/product',
+        link: '/admin/ecommerce/product',
       },
     ],
   },
