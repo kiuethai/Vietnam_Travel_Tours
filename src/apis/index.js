@@ -68,14 +68,25 @@ export const refreshTokenAdminAPI = async () => {
 
 /* APIs Tours */
 
-// export const getAllToursAPI = async () => {
-//   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/tours/getAllTours`)
-//   return response.data
-// }
+export const getAllToursAPI = async () => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/tours/getAllTours`)
+  return response.data
+}
+
+export const getTourByIdAPI = async (tourId) => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/tours/${tourId}`)
+  return response.data
+}
 
 export const addTourApi = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/tours/addTour`, data)
   toast.success('Thêm tour thành công!', { theme: 'colored' })
+  return response.data
+}
+
+export const updateTourApi = async (tourId, data) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/tours/updateTour/${tourId}`, data)
+  toast.success('Cập nhật tour thành công!', { theme: 'colored' })
   return response.data
 }
 

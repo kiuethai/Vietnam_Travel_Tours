@@ -34,7 +34,7 @@ function SuccessView({loading, success, handleSubmit}) {
               color="primary"
               sx={{ mt: 3 }}
               component={Link}
-              to="/admin/tours"
+              to="/admin/tours/getAllTour"
             >
               Quay lại danh sách tour
             </Button>

@@ -25,6 +25,7 @@ import TourBasicInfoForm from "~/components/Admin/Tour/TourBasicInfoForm";
 import ImageUploader from "~/components/Admin/Tour/ImageUploader";
 import ItineraryEditor from "~/components/Admin/Tour/ItineraryEditor";
 import SuccessView from "~/components/Admin/Tour/SuccessView";
+import { formatBytes } from "~/utils/validators";
 
 const AddTour = () => {
   // State management
@@ -77,16 +78,9 @@ const AddTour = () => {
     }));
   }, []);
 
-  const formatBytes = (bytes, decimals = 2) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-  };
 
   const handleAcceptedFiles = useCallback((files) => {
+    console.log('Files being added:', files);
     const newFiles = files.map(file => Object.assign(file, {
       preview: URL.createObjectURL(file),
       formattedSize: formatBytes(file.size),
@@ -145,15 +139,7 @@ const AddTour = () => {
     });
   }, []);
 
-  // Navigation between tabs
-  const handleNext = useCallback(() => {
-    const nextTab = String(parseInt(activeTab) + 1);
-    if (parseInt(activeTab) === 2) {
-      handleSubmitTour();
-    } else if (parseInt(nextTab) <= 4) {
-      setActiveTab(nextTab);
-    }
-  }, [activeTab]);
+
 
   const handlePrevious = useCallback(() => {
     const prevTab = String(parseInt(activeTab) - 1);
@@ -223,6 +209,16 @@ const AddTour = () => {
 
     setUiState(state => ({ ...state, loading: false }));
   }, [formData, selectedFiles, startDate, endDate]);
+
+  // Navigation between tabs
+  const handleNext = useCallback(() => {
+    const nextTab = String(parseInt(activeTab) + 1);
+    if (parseInt(activeTab) === 2) {
+      handleSubmitTour();
+    } else if (parseInt(nextTab) <= 4) {
+      setActiveTab(nextTab);
+    }
+  }, [activeTab, selectedFiles, handleSubmitTour]);
   const handleSubmitItineraries = useCallback(async () => {
     setUiState({ loading: true, error: null, success: false });
 

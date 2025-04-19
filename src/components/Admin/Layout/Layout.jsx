@@ -42,6 +42,8 @@ import structure from '../Sidebar/SidebarStructure'
 import Profile from '~/pages/Admin/profile/Profile';
 import UserList from '~/pages/Admin/user/UserList';
 import AddTour from '~/pages/Admin/Tours/AddTours';
+import GetTour from '~/pages/Admin/Tours/GetTour';
+import UpdateTour from '~/pages/Admin/Tours/UpdateTour';
 
 const Redirect = (props) => {
   useEffect(() => window.location.replace(props.url));
@@ -80,6 +82,11 @@ function Layout(props) {
           <Route path='users' element={<UserList />} />
 
           <Route path="tours/addtours" element={<AddTour />} />
+
+          <Route path="tours/getAllTour" element={<GetTour />} />
+
+         
+          <Route path="tours/getAllTour/edit/:id" element={<UpdateTour />} />
 
 
           {/* <Route path="/app/ecommerce/management" exact>

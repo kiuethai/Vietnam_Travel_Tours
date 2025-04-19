@@ -31,7 +31,7 @@ const structure = [
     id: 1,
     label: 'Quản lý Tour',
     badgeColor: 'success',
-    link: '/admin/ecommerce',
+    link: 'tours/addtours',
     icon: <ShoppingCartIcon />,
     children: [
       {
@@ -39,13 +39,9 @@ const structure = [
         link: '/admin/tours/addtours',
       },
       {
-        label: 'Products Grid',
-        link: '/admin/ecommerce/gridproducts',
-      },
-      {
-        label: 'Product Page',
-        link: '/admin/ecommerce/product',
-      },
+        label: 'Danh sách Tour',
+        link: '/admin/tours/getAllTour',
+      }
     ],
   },
   {
@@ -57,7 +53,7 @@ const structure = [
   },
   {
     id: 3,
-    label: 'Documentation',
+    label: 'Quảng lý Booking',
     link: '/documentation',
     icon: <DocumentationIcon />,
   },
