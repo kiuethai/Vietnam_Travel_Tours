@@ -1,34 +1,25 @@
-import { Accordion } from "react-bootstrap";
+import draftToHtml from 'draftjs-to-html';
 
-const RaveloAccordion = ({ event, active, onClick, title }) => {
-  return (
-    <div
-      className="accordion-item"
-      data-aos="fade-up"
-      data-aos-duration={1500}
-      data-aos-offset={50}
-    >
-      <h5 className="accordion-header">
-        <Accordion.Toggle
-          as={"button"}
-          className={`accordion-button ${active == event ? "" : "collapsed"}`}
-          eventKey={event}
-          aria-expanded={active == event ? "true" : "false"}
-          onClick={() => onClick()}
-        >
-          {title}
-        </Accordion.Toggle>
-      </h5>
-      <Accordion.Collapse eventKey={event}>
-        <div className="accordion-body">
-          <p>
-            To take a trivial example which undertakes laborious physical
-            exercise except to obtain some advantage pleasure annoying
-            consequences
-          </p>
-        </div>
-      </Accordion.Collapse>
+const RaveloAccordion = ({ event, active, onClick, title, description }) => (
+  <div className="accordion-item">
+    <h5 className="accordion-header">
+      <button
+        className={`accordion-button${active === event ? "" : " collapsed"}`}
+        aria-expanded={active === event ? "true" : "false"}
+        onClick={() => onClick(event)}
+        type="button"
+      >
+        {title}
+      </button>
+    </h5>
+    <div className={`accordion-collapse collapse${active === event ? " show" : ""}`}>
+      <div className="accordion-body">
+        {description && (
+          <div dangerouslySetInnerHTML={{ __html: draftToHtml(JSON.parse(description)) }} />
+        )}
+      </div>
     </div>
-  );
-};
+  </div>
+);
+
 export default RaveloAccordion;

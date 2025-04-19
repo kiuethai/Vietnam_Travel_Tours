@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Slider from "rc-slider";
 import { useState } from "react";
 
-const TourSidebar = () => {
+const   TourSidebar = () => {
   const [value, setValue] = useState([10, 30]);
   return (
     <div className="col-lg-3 col-md-6 col-sm-10 rmb-75">
@@ -14,7 +14,7 @@ const TourSidebar = () => {
           data-aos-duration={1500}
           data-aos-offset={50}
         >
-          <h6 className="widget-title">Filter by Price</h6>
+          <h6 className="widget-title">Lọc theo giá</h6>
           <div className="price-filter-wrap">
             <div className="price-slider-range">
               <Slider
@@ -30,7 +30,7 @@ const TourSidebar = () => {
               />
             </div>
             <div className="price">
-              <span>Price </span>
+              <span>Giá </span>
               {/* <input type="text" value={value[0]} id="price" readOnly="" /> */}
               <p className="mb-0 fw-bold">
                 ${value[0]} - ${value[1]}
@@ -44,7 +44,7 @@ const TourSidebar = () => {
           data-aos-duration={1500}
           data-aos-offset={50}
         >
-          <h6 className="widget-title">By Activities</h6>
+          <h6 className="widget-title">Điểm đến</h6>
           <ul className="radio-filter">
             <li>
               <input
@@ -390,20 +390,7 @@ const TourSidebar = () => {
         data-aos-duration={1500}
         data-aos-offset={50}
       >
-        <div className="content text-white">
-          <span className="h6">Explore The World</span>
-          <h3>Best Tourist Place</h3>
-          <Link to="tour-grid" className="theme-btn style-two bgc-secondary">
-            <span data-hover="Explore Now">Explore Now</span>
-            <i className="fal fa-arrow-right" />
-          </Link>
-        </div>
-        <div className="image">
-          <img src="assets/images/widgets/cta-widget.png" alt="CTA" />
-        </div>
-        <div className="cta-shape">
-          <img src="assets/images/widgets/cta-shape2.png" alt="Shape" />
-        </div>
+      
       </div>
     </div>
   );

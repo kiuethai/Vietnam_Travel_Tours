@@ -1,11 +1,30 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Banner from "~/components/Client/Banner"
 import Subscribe from "~/components/Client/Subscribe"
 import TourSidebar from "~/components/Client/TourSidebar"
 import { Link } from 'react-router-dom'
-
+import { getAllToursAPI } from '~/apis'
 
 function Tour_list() {
+  const [tours, setTours] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTours = async () => {
+      try {
+        const response = await getAllToursAPI();
+        console.log('🚀 ~ fetchTours ~ response:', response.data)
+        setTours(response || []);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching tours:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchTours();
+  }, []);
+
   return (
     <div><Banner pageTitle={"Danh sách tour du lịch"} pageName={"Tour List"} search />
       {/* Tour List Area start */}
@@ -27,438 +46,86 @@ function Tour_list() {
                     </a>
                   </li>
                 </ul>
+
+
                 <div className="sort-text mb-15 me-4 me-xl-auto">
-                  34 Tours found
+                  {tours.length} Tours found
                 </div>
-                <div className="sort-text mb-15 me-4">Sort By</div>
+                <div className="sort-text mb-15 me-4">Sắp xếp theo</div>
                 <select>
                   <option value="default" selected="">
-                    Short By
+                    Sắp xếp theo
                   </option>
-                  <option value="new">Newness</option>
-                  <option value="old">Oldest</option>
-                  <option value="hight-to-low">High To Low</option>
-                  <option value="low-to-high">Low To High</option>
+                  <option value="hight-to-low">Cao đến thấp</option>
+                  <option value="low-to-high">Thấp đến cao</option>
                 </select>
               </div>
-              <div
-                className="destination-item style-three bgc-lighter"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <span className="badge bgc-pink">Featured</span>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/tour-list1.jpg"
-                    alt="Tour List"
-                  />
-                </div>
-                <div className="content">
-                  <div className="destination-header">
-                    <span className="location">
-                      <i className="fal fa-map-marker-alt" /> Bali, Indonesia
-                    </span>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
+
+              {loading ? (
+                <div className="text-center">Loading tours...</div>
+              ) : (
+                tours.map((tour, index) => (
+                  <div
+                    key={tour._id || index}
+                    className="destination-item style-three bgc-lighter"
+                    data-aos="fade-up"
+                    data-aos-duration={1500}
+                    data-aos-offset={50}
+                  >
+                    <div className="image">
+                      {tour.availability && <span className="badge bgc-pink">Available</span>}
+                      <a href="#" className="heart">
+                        <i className="fas fa-heart" />
+                      </a>
+                      <img
+                        src={tour.images?.[0] || "assets/images/destinations/tour-list1.jpg"}
+                        alt={tour.title || "Tour List"}
+                      />
+                    </div>
+                    <div className="content">
+                      <div className="destination-header">
+                        <span className="location">
+                          <i className="fal fa-map-marker-alt" /> {tour.destination || "Location not specified"}
+                        </span>
+                        <div className="ratting">
+                          {[...Array(5)].map((_, i) => (
+                            <i key={i} className="fas fa-star" />
+                          ))}
+                        </div>
+                      </div>
+                      <h5>
+                        <Link to={`/tour-details/${tour._id}`}>
+                          {tour.title || "Tour Title"}
+                        </Link>
+                      </h5>
+                      <p>
+                        {tour.destination || "No description available"}
+                      </p>
+                      <ul className="blog-meta">
+                        <li>
+                          <i className="far fa-clock" /> {tour.time || "Duration not specified"}
+                        </li>
+                        <li>
+                          <i className="far fa-user" /> {tour.quantity || 0} khách
+                        </li>
+                      </ul>
+                      <div className="destination-footer">
+                        <span className="price">
+                          <span>{tour.priceAdult?.toLocaleString('vi-VN')}đ</span>/người lớn
+                        </span>
+                        <Link
+                          to={`/tour-details/${tour._id}`}
+                          className="theme-btn style-two style-three"
+                        >
+                          <span data-hover="Đặt Ngay">Đặt Ngay</span>
+                          <i className="fal fa-arrow-right" />
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                  <h5>
-                    <Link href="tour-details">
-                      Bay Cruise by Boat in Bali, Indonesia
-                    </Link>
-                  </h5>
-                  <p>
-                    Bali, Indonesia, is tropical paradise renowned breathtaking
-                    beaches, vibrant culture, and lush landscapes
-                  </p>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-clock" /> 3 days 2 nights
-                    </li>
-                    <li>
-                      <i className="far fa-user" /> 5-8 guest
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$58.00</span>/person
-                    </span>
-                    <Link
-                      href="tour-details"
-                      className="theme-btn style-two style-three"
-                    >
-                      <span data-hover="Book Now">Book Now</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="destination-item style-three bgc-lighter"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <span className="badge">10% Off</span>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/tour-list2.jpg"
-                    alt="Tour List"
-                  />
-                </div>
-                <div className="content">
-                  <div className="destination-header">
-                    <span className="location">
-                      <i className="fal fa-map-marker-alt" /> Rome, Italy
-                    </span>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                    </div>
-                  </div>
-                  <h5>
-                    <Link href="tour-details">
-                      Buenos Aires, Calafate &amp; Ushuaia
-                    </Link>
-                  </h5>
-                  <p>
-                    Bali, Indonesia, is tropical paradise renowned breathtaking
-                    beaches, vibrant culture, and lush landscapes
-                  </p>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-clock" /> 3 days 2 nights
-                    </li>
-                    <li>
-                      <i className="far fa-user" /> 5-8 guest
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$105.00</span>/person
-                    </span>
-                    <Link
-                      href="tour-details"
-                      className="theme-btn style-two style-three"
-                    >
-                      <span data-hover="Book Now">Book Now</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="destination-item style-three bgc-lighter"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/tour-list3.jpg"
-                    alt="Tour List"
-                  />
-                </div>
-                <div className="content">
-                  <div className="destination-header">
-                    <span className="location">
-                      <i className="fal fa-map-marker-alt" /> Tamnougalt,
-                      Morocco
-                    </span>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                    </div>
-                  </div>
-                  <h5>
-                    <Link href="tour-details">
-                      Camels on desert Morocco, Sahara.
-                    </Link>
-                  </h5>
-                  <p>
-                    Bali, Indonesia, is tropical paradise renowned breathtaking
-                    beaches, vibrant culture, and lush landscapes
-                  </p>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-clock" /> 3 days 2 nights
-                    </li>
-                    <li>
-                      <i className="far fa-user" /> 5-8 guest
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$386.00</span>/person
-                    </span>
-                    <Link
-                      href="tour-details"
-                      className="theme-btn style-two style-three"
-                    >
-                      <span data-hover="Book Now">Book Now</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="destination-item style-three bgc-lighter"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <span className="badge bgc-primary">Popular</span>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/tour-list4.jpg"
-                    alt="Tour List"
-                  />
-                </div>
-                <div className="content">
-                  <div className="destination-header">
-                    <span className="location">
-                      <i className="fal fa-map-marker-alt" /> Switzerland
-                    </span>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                    </div>
-                  </div>
-                  <h5>
-                    <Link href="tour-details">
-                      Hakone, Lake Asha Cruise Day Bus Trip
-                    </Link>
-                  </h5>
-                  <p>
-                    Bali, Indonesia, is tropical paradise renowned breathtaking
-                    beaches, vibrant culture, and lush landscapes
-                  </p>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-clock" /> 3 days 2 nights
-                    </li>
-                    <li>
-                      <i className="far fa-user" /> 5-8 guest
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$293.00</span>/person
-                    </span>
-                    <Link
-                      href="tour-details"
-                      className="theme-btn style-two style-three"
-                    >
-                      <span data-hover="Book Now">Book Now</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="destination-item style-three bgc-lighter"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/tour-list5.jpg"
-                    alt="Tour List"
-                  />
-                </div>
-                <div className="content">
-                  <div className="destination-header">
-                    <span className="location">
-                      <i className="fal fa-map-marker-alt" /> Tours, France
-                    </span>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                    </div>
-                  </div>
-                  <h5>
-                    <Link href="tour-details">
-                      Concrete Building Basilica St Martin
-                    </Link>
-                  </h5>
-                  <p>
-                    Bali, Indonesia, is tropical paradise renowned breathtaking
-                    beaches, vibrant culture, and lush landscapes
-                  </p>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-clock" /> 3 days 2 nights
-                    </li>
-                    <li>
-                      <i className="far fa-user" /> 5-8 guest
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$58.00</span>/person
-                    </span>
-                    <Link
-                      href="tour-details"
-                      className="theme-btn style-two style-three"
-                    >
-                      <span data-hover="Book Now">Book Now</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="destination-item style-three bgc-lighter"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <span className="badge bgc-pink">Featured</span>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/tour-list6.jpg"
-                    alt="Tour List"
-                  />
-                </div>
-                <div className="content">
-                  <div className="destination-header">
-                    <span className="location">
-                      <i className="fal fa-map-marker-alt" /> Wildest, Italy
-                    </span>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                    </div>
-                  </div>
-                  <h5>
-                    <Link href="tour-details">
-                      Blue lake water view taken Sea Beach
-                    </Link>
-                  </h5>
-                  <p>
-                    Bali, Indonesia, is tropical paradise renowned breathtaking
-                    beaches, vibrant culture, and lush landscapes
-                  </p>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-clock" /> 3 days 2 nights
-                    </li>
-                    <li>
-                      <i className="far fa-user" /> 5-8 guest
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$58.00</span>/person
-                    </span>
-                    <Link
-                      href="tour-details"
-                      className="theme-btn style-two style-three"
-                    >
-                      <span data-hover="Book Now">Book Now</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="destination-item style-three bgc-lighter"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/tour-list7.jpg"
-                    alt="Tour List"
-                  />
-                </div>
-                <div className="content">
-                  <div className="destination-header">
-                    <span className="location">
-                      <i className="fal fa-map-marker-alt" /> Bali, Indonesia
-                    </span>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                    </div>
-                  </div>
-                  <h5>
-                    <Link href="tour-details">
-                      Bay Cruise by Boat in Bali, Indonesia
-                    </Link>
-                  </h5>
-                  <p>
-                    Bali, Indonesia, is tropical paradise renowned breathtaking
-                    beaches, vibrant culture, and lush landscapes
-                  </p>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-clock" /> 3 days 2 nights
-                    </li>
-                    <li>
-                      <i className="far fa-user" /> 5-8 guest
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>$58.00</span>/person
-                    </span>
-                    <Link
-                      href="tour-details"
-                      className="theme-btn style-two style-three"
-                    >
-                      <span data-hover="Book Now">Book Now</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
+                ))
+              )}
+
               <ul
                 className="pagination pt-15 flex-wrap"
                 data-aos="fade-up"
@@ -501,9 +168,6 @@ function Tour_list() {
         </div>
       </section>
       {/* Tour List Area end */}
-      {/* Newsletter Area start */}
-      <Subscribe />
-      {/* Newsletter Area end */}
     </div>
   )
 }

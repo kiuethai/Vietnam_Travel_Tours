@@ -518,7 +518,7 @@ const UpdateTour = () => {
         if (existingImages.length > 0) {
           tourBaseData.existingImages = existingImages;
         }
-        
+
         // Update existing tour
         await updateTourApi(id, tourBaseData);
       } else {

@@ -149,7 +149,11 @@ function App() {
           </ReveloLayout>
         } />
         <Route path="/tour_guide" element={<Tour_guide />} />
-
+        <Route path="/tour-details/:id" element={
+          <ReveloLayout>
+            <Tour_details />
+          </ReveloLayout>
+        } />
         <Route path="/contact" element={
           <ReveloLayout insta>
             <Contact />

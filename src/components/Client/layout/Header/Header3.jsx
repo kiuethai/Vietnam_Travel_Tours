@@ -23,7 +23,7 @@ function Header3({ sidebarClick }) {
                 <div className="logo">
                   <Link href="/">
                     <img
-                      src="assets/images/logos/logo-two.png"
+                      src="~/assets/images/logos/logo-two.png"
                       alt="Logo"
                       title="Logo"
                     />
