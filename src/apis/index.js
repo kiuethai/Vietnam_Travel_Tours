@@ -73,10 +73,16 @@ export const getAllToursAPI = async () => {
   return response.data
 }
 
-export const getTourByIdAPI = async (tourId) => {
-  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/tours/${tourId}`)
-  return response.data
-}
+export const getTourByIdAPI = async (id) => {
+  try {
+    const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/tours/${id}`);
+    // console.log("API response data:", response.data);
+    return response.data; 
+  } catch (error) {
+    // console.error("Error fetching tour:", error);
+    throw error;
+  }
+};
 
 export const addTourApi = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/tours/addTour`, data)
@@ -92,7 +98,7 @@ export const updateTourApi = async (tourId, data) => {
 
 export const addItineraryApi = async (tourId, data) => {
   const response = await authorizedAxiosInstance.post(
-    `${API_ROOT}/v1/tours/${tourId}/itinerary`,data )
+    `${API_ROOT}/v1/tours/${tourId}/itinerary`, data)
   toast.success('Thêm lịch trình thành công!', { theme: 'colored' })
   return response.data
 }

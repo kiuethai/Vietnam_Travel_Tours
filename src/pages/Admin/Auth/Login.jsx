@@ -48,7 +48,7 @@ function Login() {
       dispatch(loginAdminAPI({ email, password })),
       { pending: 'Logging in...' }
     ).then(res => {
-      console.log('Login response full object:', res);
+      // console.log('Login response full object:', res);
       if (!res.error) navigate('/admin')
     })
   };

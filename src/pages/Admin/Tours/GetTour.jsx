@@ -39,7 +39,6 @@ import useStyles from './styles'
 
 import { actions } from '~/context/ManagementContext'
 import { getComparator, stableSort } from '~/utils/arrange'
-import UpdateTour from './UpdateTour'
 
 // Resizable component to handle column resizing
 const Resizable = ({ children, onResize, width }) => {

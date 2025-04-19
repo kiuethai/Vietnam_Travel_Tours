@@ -50,7 +50,7 @@ export default function Login() {
       dispatch(loginUserAPI({ email, password })),
       { pending: 'Logging in...' }
     ).then(res => {
-      console.log('Login response full object:', res);
+      // console.log('Login response full object:', res);
       if (!res.error) navigate('/')
     })
   };

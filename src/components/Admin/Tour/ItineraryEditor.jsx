@@ -8,15 +8,20 @@ import {
 import { Editor } from "react-draft-wysiwyg"
 import { EditorState } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-function ItineraryEditor({ tour, itineraries, handleItineraryChange }) {
+function ItineraryEditor({ tour, itineraries, handleItineraryChange, isEditMode, isLoading }) {
+  console.log("ItineraryEditor rendered with:", tour);
+  console.log("ItineraryEditor itineraries with:", itineraries);
+
   return (
     <>
       <Typography variant="body1" component="label">
-        Nhập lộ trình chi tiết
+        {isEditMode ? "Cập nhật lộ trình chi tiết" : "Nhập lộ trình chi tiết"}
       </Typography>
       {tour ? (
-        <Alert severity="success" sx={{ mt: 2, mb: 2 }}>
-          Tour "{tour.title}" đã được tạo thành công. Vui lòng nhập lộ trình cho {itineraries.length} ngày.
+        <Alert severity={isEditMode ? "info" : "success"} sx={{ mt: 2, mb: 2 }}>
+          {isEditMode
+            ? `Đang chỉnh sửa lộ trình cho tour "${tour.title}". Lộ trình gồm ${itineraries.length} ngày.`
+            : `Tour "${tour.title}" đã được tạo thành công. Vui lòng nhập lộ trình cho ${itineraries.length} ngày.`}
         </Alert>
       ) : (
         <Alert severity="info" sx={{ mt: 2, mb: 2 }}>
@@ -24,7 +29,7 @@ function ItineraryEditor({ tour, itineraries, handleItineraryChange }) {
         </Alert>
       )}
 
-      {itineraries.map((itinerary, index) => (
+      {itineraries && itineraries.map((item, index) => (
         <Box
           key={index}
           sx={{
@@ -39,15 +44,18 @@ function ItineraryEditor({ tour, itineraries, handleItineraryChange }) {
           <TextField
             fullWidth
             type="text"
-            label={`Ngày ${itinerary.day}`}
+            label={`Ngày ${item.day}`}
             variant="outlined"
             size="small"
-            value={itinerary.title}
+            value={item.title}
             onChange={(e) => handleItineraryChange(index, 'title', e.target.value)}
             sx={{ mb: 2 }}
           />
           <Editor
-            editorState={itinerary.description instanceof EditorState ? itinerary.description : EditorState.createEmpty()}
+            editorState={item.description instanceof EditorState
+              ?
+              item.description :
+              EditorState.createEmpty()}
             onEditorStateChange={(editorState) => handleItineraryChange(index, 'description', editorState)}
             toolbarClassName="toolbarClassName"
             wrapperClassName="wrapperClassName"

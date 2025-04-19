@@ -5,17 +5,29 @@ import {
   Grid,
   Typography,
   Box,
-  Button
+  Button,
+  Alert
 } from '@mui/material';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import Dropzone from "react-dropzone"
 
-function ImageUploader({ selectedFiles, handleAcceptedFiles, handleRemoveFile }) {
+function ImageUploader({ selectedFiles, handleAcceptedFiles, handleRemoveFile, isEditMode, isLoading }) {
+  console.log("ImageUploader rendered with files:", { selectedFiles, isEditMode });
+  const hasExistingImages = selectedFiles.some(f => f.existingImage);
+  const minRequiredImages = isEditMode ? (hasExistingImages ? 1 : 5) : 5;
   return (
     <>
+
+      {isEditMode && hasExistingImages && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          Tour đã có {selectedFiles.filter(f => f.existingImage).length} ảnh. Bạn có thể giữ nguyên hoặc thay đổi.
+        </Alert>
+      )}
+
       <Typography variant="body1" component="label" gutterBottom>
-        Thêm ảnh (Tối thiểu 5 ảnh)
+        Thêm ảnh (Tối thiểu {minRequiredImages} ảnh)
       </Typography>
+
       <Typography variant="caption" display="block" gutterBottom>
         Hình ảnh nên thể hiện rõ các điểm đến, hoạt động và cảnh quan của tour
       </Typography>

@@ -9,16 +9,23 @@ import {
   Select,
   MenuItem,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  Alert
 } from '@mui/material';
 import { Editor } from "react-draft-wysiwyg"
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 
-function TourBasicInfoForm({ formData, handleInputChange, editorState, onEditorStateChange, startDate, setStartDate, endDate, setEndDate }) {
+function TourBasicInfoForm({ formData, handleInputChange, editorState, onEditorStateChange, startDate, setStartDate, endDate, setEndDate, isEditMode, isLoading }) {
+  console.log("TourBasicInfoForm rendered with data:", { formData, isEditMode });
   return (
     <>
+      {isEditMode && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          Bạn đang chỉnh sửa tour hiện có. Các thông tin đã được điền sẵn.
+        </Alert>
+      )}
       <Grid container spacing={3} sx={{ justifyContent: 'center', alignItems: 'center' }}>
         <Grid item xs={12}>
           <TextField
@@ -30,6 +37,7 @@ function TourBasicInfoForm({ formData, handleInputChange, editorState, onEditorS
             value={formData.title}
             onChange={handleInputChange}
             required
+            disabled={isLoading}
           />
         </Grid>
 

@@ -56,15 +56,12 @@ const UpdateTour = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
   // Images
   const [selectedFiles, setSelectedFiles] = useState([]);
-
   // Tour and itinerary data
   const [tour, setTour] = useState(null);
   const [createdTourId, setCreatedTourId] = useState(null);
   const [itineraries, setItineraries] = useState([]);
-
   // Add state to track original data for change detection
   const [originalTourData, setOriginalTourData] = useState(null);
   const [originalItineraries, setOriginalItineraries] = useState([]);
@@ -135,21 +132,30 @@ const UpdateTour = () => {
     const startDate = new Date(start);
     const endDate = new Date(end);
     return Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
-  }, []);
+  }, []); // Empty dependency array since this function doesn't depend on any props or state
+
+  // Use a ref to track if itineraries were initialized
+  const itinerariesInitialized = React.useRef(false);
 
   // Update itineraries when tour or dates change
   useEffect(() => {
-    if (tour && startDate && endDate) {
-      const daysRequired = calculateTourDays(startDate, endDate);
-      const emptyItineraries = Array.from({ length: daysRequired }, (_, i) => ({
-        tourId: tour.id,
-        day: i + 1,
-        title: `Ngày ${i + 1}`,
-        description: EditorState.createEmpty()
-      }));
-      setItineraries(emptyItineraries);
+    // Skip if itineraries are already populated or if necessary data is missing
+    if (!tour || !startDate || !endDate || itineraries.length > 0 || itinerariesInitialized.current) {
+      return;
     }
-  }, [tour, startDate, endDate, calculateTourDays]);
+
+    const daysRequired = calculateTourDays(startDate, endDate);
+    const emptyItineraries = Array.from({ length: daysRequired }, (_, i) => ({
+      tourId: tour.id,
+      day: i + 1,
+      title: `Ngày ${i + 1}`,
+      description: EditorState.createEmpty()
+    }));
+
+    // Set the ref to prevent future initializations
+    itinerariesInitialized.current = true;
+    setItineraries(emptyItineraries);
+  }, [tour, startDate, endDate]); // Removed calculateTourDays and itineraries.length from dependencies
 
   // Itinerary handling
   const handleItineraryChange = useCallback((index, field, value) => {
@@ -179,7 +185,7 @@ const UpdateTour = () => {
 
   // Check if any changes were made to the tour data
   const checkForChanges = useCallback(() => {
-    if (!originalTourData) return true; // If no original data, assume changes
+    if (!originalTourData) return true;
 
     // Check basic form data changes
     const formChanged =
@@ -208,7 +214,49 @@ const UpdateTour = () => {
       selectedFiles.some(file => !file.existingImage);
 
     // Check itinerary changes (simplified check)
-    const itinerariesChanged = itineraries.length !== originalItineraries.length;
+    let itinerariesChanged = itineraries.length !== originalItineraries.length;
+
+    if (!itinerariesChanged && itineraries.length > 0) {
+      for (let i = 0; i < itineraries.length; i++) {
+        const current = itineraries[i];
+        const original = originalItineraries[i];
+
+        // So sánh title
+        if (current.title !== original.title) {
+          itinerariesChanged = true;
+          break;
+        }
+
+        // So sánh description - lấy nội dung dưới dạng chuỗi để so sánh
+        let currentContent = '';
+        let originalContent = '';
+
+        // Xử lý EditorState một cách an toàn
+        if (current.description instanceof EditorState) {
+          currentContent = current.description.getCurrentContent().getPlainText();
+        } else if (typeof current.description === 'string') {
+          currentContent = current.description;
+        }
+
+        if (original.description instanceof EditorState) {
+          originalContent = original.description.getCurrentContent().getPlainText();
+        } else if (typeof original.description === 'string') {
+          originalContent = original.description;
+        }
+
+        // So sánh nội dung văn bản thực tế
+        if (currentContent !== originalContent) {
+          console.log('Phát hiện thay đổi nội dung:', {
+            day: i + 1,
+            current: currentContent,
+            original: originalContent
+          });
+          itinerariesChanged = true;
+          break;
+        }
+      }
+    }
+
 
     const hasAnyChanges = formChanged || datesChanged || imagesChanged || itinerariesChanged;
     setHasChanges(hasAnyChanges);
@@ -218,62 +266,70 @@ const UpdateTour = () => {
   useEffect(() => {
     const fetchTourData = async () => {
       if (!id) return;
-
+      // console.log("Fetching data for ID:", id);
       setUiState(prev => ({ ...prev, loading: true }));
+      let tourData = null;
+      let tourDetails = null;
+
       try {
         // Fetch tour details
-        const tourData = await getTourByIdAPI(id);
+        tourData = await getTourByIdAPI(id);
         if (!tourData) throw new Error("Không tìm thấy dữ liệu tour");
 
+        tourDetails = tourData.tour || tourData;
         // Save original data for comparison later
         setOriginalTourData({ ...tourData });
 
+        // console.log("Đã tìm thấy itinerary:", tourDetails.itinerary);
+
         // Set form data
         setFormData({
-          title: tourData.title || '',
-          description: tourData.description || '',
-          quantity: tourData.quantity?.toString() || '',
-          domain: tourData.domain || '',
-          priceAdult: tourData.priceAdult?.toString() || '',
-          priceChild: tourData.priceChild?.toString() || '',
-          destination: tourData.destination || '',
-          availability: tourData.availability !== undefined ? tourData.availability : true,
+          title: tourDetails.title || '',
+          description: tourDetails.description || '',
+          quantity: tourDetails.quantity !== undefined ? tourDetails.quantity.toString() : '',
+          domain: tourDetails.domain || '',
+          priceAdult: tourDetails.priceAdult !== undefined ? tourDetails.priceAdult.toString() : '',
+          priceChild: tourDetails.priceChild !== undefined ? tourDetails.priceChild.toString() : '',
+          destination: tourDetails.destination || '',
+          availability: tourDetails.availability !== undefined ? tourDetails.availability : true,
           itinerary: []
         });
 
         // Set dates
-        if (tourData.startDate) setStartDate(dayjs(tourData.startDate));
-        if (tourData.endDate) setEndDate(dayjs(tourData.endDate));
+        if (tourDetails.startDate) setStartDate(dayjs(tourDetails.startDate));
+        if (tourDetails.endDate) setEndDate(dayjs(tourDetails.endDate));
 
         // Set editor state from description
-        if (tourData.description) {
+        if (tourDetails.description) {
           try {
-            const contentState = convertFromRaw(JSON.parse(tourData.description));
+            const contentState = convertFromRaw(JSON.parse(tourDetails.description));
             setEditorState(EditorState.createWithContent(contentState));
           } catch (e) {
             console.error("Error parsing description:", e);
             setEditorState(EditorState.createWithContent(
-              ContentState.createFromText(tourData.description || '')
+              ContentState.createFromText(tourDetails.description || '')
             ));
           }
         }
 
         // Set tour and createdTourId for next steps
-        setTour(tourData);
+        setTour(tourDetails);
         setCreatedTourId(id);
 
-        // Get itineraries from tour data directly
-        if (tourData.itineraries && tourData.itineraries.length > 0) {
-          // Save original itineraries
-          setOriginalItineraries([...tourData.itineraries]);
+        // Get itinerary from tour data directly
+        if (tourDetails.itinerary && tourDetails.itinerary.length > 0) {
+          // Save original itinerary
+          setOriginalItineraries([...tourDetails.itinerary]);
+          console.log("Original itinerary from API:", tourDetails.itinerary);
 
-          const formattedItineraries = tourData.itineraries.map(item => ({
+          const formattedItineraries = tourDetails.itinerary.map(item => ({
             ...item,
             description: item.description ? (() => {
               try {
                 const parsedContent = JSON.parse(item.description);
                 return EditorState.createWithContent(convertFromRaw(parsedContent));
               } catch (e) {
+                console.log('🚀 ~ emptyItineraries ~ emptyItineraries:', emptyItineraries)
                 return EditorState.createWithContent(
                   ContentState.createFromText(item.description || '')
                 );
@@ -281,12 +337,13 @@ const UpdateTour = () => {
             })() : EditorState.createEmpty()
           }));
 
+          console.log('Formatted itineraries after processing:', formattedItineraries);
           setItineraries(formattedItineraries);
         } else {
-          // If no itineraries, create empty ones based on tour duration
+          // If no itinerary, create empty ones based on tour duration
           const daysRequired = calculateTourDays(
-            tourData.startDate && dayjs(tourData.startDate),
-            tourData.endDate && dayjs(tourData.endDate)
+            tourDetails.startDate && dayjs(tourDetails.startDate),
+            tourDetails.endDate && dayjs(tourDetails.endDate)
           );
 
           const emptyItineraries = Array.from({ length: daysRequired }, (_, i) => ({
@@ -300,8 +357,8 @@ const UpdateTour = () => {
         }
 
         // If images exist, fetch and set them
-        if (tourData.images && tourData.images.length > 0) {
-          const imageFiles = tourData.images.map((img, index) => ({
+        if (tourDetails.images && tourDetails.images.length > 0) {
+          const imageFiles = tourDetails.images.map((img, index) => ({
             preview: img.url || img,
             formattedSize: 'Existing image',
             name: `existing-image-${index}`,
@@ -311,7 +368,6 @@ const UpdateTour = () => {
           setSelectedFiles(imageFiles);
           setOriginalImages([...imageFiles]);
         }
-
       } catch (err) {
         console.error('Error fetching tour data:', err);
         setUiState(prev => ({
@@ -319,6 +375,8 @@ const UpdateTour = () => {
           error: err.message || 'Không thể tải dữ liệu tour',
         }));
       } finally {
+        // Sau khi nhận data
+        // console.log("Processing complete, tour data:", tourData);
         setUiState(prev => ({ ...prev, loading: false }));
       }
     };
@@ -326,6 +384,7 @@ const UpdateTour = () => {
     fetchTourData();
   }, [id, calculateTourDays]);
 
+  // Submit Tour function
   const handleSubmitTour = useCallback(async () => {
     setUiState({ loading: true, error: null, success: false });
 
@@ -346,8 +405,6 @@ const UpdateTour = () => {
 
       // In edit mode, just prepare data for the itinerary step
       if (isEditMode) {
-        // If tour already has itineraries, they should already be loaded
-        // Otherwise, create default itineraries based on tour duration
         if (itineraries.length === 0) {
           const daysRequired = calculateTourDays(startDate, endDate);
           const emptyItineraries = Array.from({ length: daysRequired }, (_, i) => ({
@@ -472,11 +529,20 @@ const UpdateTour = () => {
             : itinerary.description
         }));
 
-        // Add itineraries to form data
-        tourData.append('itineraries', JSON.stringify(formattedItineraries));
+        // Create JSON data for API submission
+        const jsonData = {
+          ...Object.fromEntries(
+            Object.entries(formData).filter(([key]) => key !== 'itinerary')
+          ),
+          startDate: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
+          endDate: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+          itinerary: formattedItineraries,
+          existingImages: existingImages.length > 0 ? existingImages : undefined
+        };
 
-        // Make a single API call to update the tour with all data
-        await updateTourApi(id, tourData);
+        // Make API call with JSON data, not FormData
+        await updateTourApi(id, jsonData);
+
       } else if (!isEditMode) {
         // Same logic for creating new tour and itineraries
         const tourData = new FormData();
@@ -506,10 +572,18 @@ const UpdateTour = () => {
             : itinerary.description
         }));
 
-        // Add itineraries to form data
-        tourData.append('itineraries', JSON.stringify(formattedItineraries));
+        // Create JSON data for API submission
+        const jsonData = {
+          ...Object.fromEntries(
+            Object.entries(formData).filter(([key]) => key !== 'itinerary')
+          ),
+          startDate: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
+          endDate: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+          itinerary: formattedItineraries
+        };
 
-        await addTourApi(tourData);
+        // Make API call with JSON data
+        await addTourApi(jsonData);
       }
 
       setUiState({ loading: false, error: null, success: true });
@@ -525,55 +599,16 @@ const UpdateTour = () => {
 
   const { loading, error, success } = uiState;
 
-  const SuccessViewWithChanges = ({ loading, success, handleSubmit }) => (
-    <div className="text-center p-5">
-      {loading ? (
-        <div className="d-flex justify-content-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      ) : success ? (
-        <>
-          <i className="bx bx-check-circle text-success display-3"></i>
-          <h4 className="mt-3">Cập nhật tour thành công!</h4>
-          <p>Tour đã được lưu vào hệ thống.</p>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate('/admin/tours/getAllTour')}
-            className="mt-3"
-          >
-            Về trang quản lý tour
-          </Button>
-        </>
-      ) : (
-        <>
-          <Typography variant="h6" gutterBottom>
-            Xác nhận cập nhật tour
-          </Typography>
-          {hasChanges ? (
-            <Typography variant="body1" gutterBottom>
-              Bạn đã thay đổi thông tin tour. Nhấn Xác nhận để lưu các thay đổi.
-            </Typography>
-          ) : (
-            <Typography variant="body1" gutterBottom>
-              Không có thay đổi nào được thực hiện. Bạn có thể quay lại danh sách tour.
-            </Typography>
-          )}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-            className="mt-3"
-            disabled={!hasChanges}
-          >
-            {hasChanges ? 'Xác nhận' : 'Không có thay đổi'}
-          </Button>
-        </>
-      )}
-    </div>
-  );
+  useEffect(() => {
+    if (activeTab === "4" && isEditMode) {
+      const hasAnyChanges = checkForChanges();
+      setHasChanges(hasAnyChanges);
+    }
+  }, [activeTab, formData, startDate, endDate, selectedFiles, itineraries.length, originalTourData, originalImages, originalItineraries, checkForChanges]);
+
+  useEffect(() => {
+    console.log("formData updated in component:", formData);
+  }, [formData]);
 
   return (
     <React.Fragment>
@@ -621,6 +656,7 @@ const UpdateTour = () => {
                               endDate={endDate}
                               setEndDate={setEndDate}
                               isLoading={loading}
+                              isEditMode={isEditMode}
                             />
                           </TabPanel>
 
@@ -630,6 +666,7 @@ const UpdateTour = () => {
                               handleAcceptedFiles={handleAcceptedFiles}
                               handleRemoveFile={handleRemoveFile}
                               isLoading={loading}
+                              isEditMode={isEditMode}
                             />
                           </TabPanel>
 
@@ -639,13 +676,13 @@ const UpdateTour = () => {
                               itineraries={itineraries}
                               handleItineraryChange={handleItineraryChange}
                               isLoading={loading}
+                              isEditMode={isEditMode}
                             />
                           </TabPanel>
 
                           <TabPanel value="4">
                             <Grid container justifyContent="center">
                               <Grid item xs={12} md={8}>
-                                {checkForChanges()} {/* Trigger change check when tab is active */}
                                 <SuccessView
                                   loading={loading}
                                   success={success}

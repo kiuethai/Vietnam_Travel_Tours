@@ -45,10 +45,6 @@ import AddTour from '~/pages/Admin/Tours/AddTours';
 import GetTour from '~/pages/Admin/Tours/GetTour';
 import UpdateTour from '~/pages/Admin/Tours/UpdateTour';
 
-const Redirect = (props) => {
-  useEffect(() => window.location.replace(props.url));
-  return <span>Redirecting...</span>;
-};
 
 function Layout(props) {
   const classes = useStyles();
@@ -72,7 +68,7 @@ function Layout(props) {
         })}
       >
         <div className={classes.fakeToolbar} />
-        <BreadCrumbs />
+        {/* <BreadCrumbs /> */} 
         <Routes>
           <Route path='dashboard' element={<Dashboard />} />
 
