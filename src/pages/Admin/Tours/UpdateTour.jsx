@@ -490,103 +490,42 @@ const UpdateTour = () => {
         throw new Error("Tour ID không tồn tại!");
       }
 
-      if (isEditMode && shouldUpdate) {
-        const tourData = new FormData();
+      const formattedItineraries = itineraries.map(itinerary => ({
+        id: itinerary.id,
+        day: itinerary.day,
+        title: itinerary.title,
+        description: itinerary.description instanceof EditorState
+          ? JSON.stringify(convertToRaw(itinerary.description.getCurrentContent()))
+          : itinerary.description
+      }));
 
-        // Add basic tour information
-        Object.entries(formData).forEach(([key, value]) => {
-          if (key !== 'itinerary' && value !== null && value !== undefined) {
-            tourData.append(key, value);
-          }
-        });
+      const existingImages = selectedFiles
+        .filter(file => file.existingImage)
+        .map(file => file.path);
 
-        // Add dates
-        if (startDate) tourData.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
-        if (endDate) tourData.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
+      // Prepare common tour data
+      const tourBaseData = {
+        ...Object.fromEntries(
+          Object.entries(formData).filter(([key]) => key !== 'itinerary')
+        ),
+        startDate: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
+        endDate: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+        itinerary: formattedItineraries
+      };
 
-        // Add new images (filter out existing images)
-        const newImages = selectedFiles.filter(file => !file.existingImage);
-        newImages.forEach(file => {
-          tourData.append('images', file);
-        });
-
-        // Add list of existing images to keep
-        const existingImages = selectedFiles
-          .filter(file => file.existingImage)
-          .map(file => file.path);
-
+      if (isEditMode) {
+        // Add existing images for update mode
         if (existingImages.length > 0) {
-          tourData.append('existingImages', JSON.stringify(existingImages));
+          tourBaseData.existingImages = existingImages;
         }
-
-        // Format itineraries for API
-        const formattedItineraries = itineraries.map(itinerary => ({
-          id: itinerary.id,
-          day: itinerary.day,
-          title: itinerary.title,
-          description: itinerary.description instanceof EditorState
-            ? JSON.stringify(convertToRaw(itinerary.description.getCurrentContent()))
-            : itinerary.description
-        }));
-
-        // Create JSON data for API submission
-        const jsonData = {
-          ...Object.fromEntries(
-            Object.entries(formData).filter(([key]) => key !== 'itinerary')
-          ),
-          startDate: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
-          endDate: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
-          itinerary: formattedItineraries,
-          existingImages: existingImages.length > 0 ? existingImages : undefined
-        };
-
-        // Make API call with JSON data, not FormData
-        await updateTourApi(id, jsonData);
-
-      } else if (!isEditMode) {
-        // Same logic for creating new tour and itineraries
-        const tourData = new FormData();
-
-        // Add form fields to FormData
-        Object.entries(formData).forEach(([key, value]) => {
-          if (key !== 'itinerary' && value !== null && value !== undefined) {
-            tourData.append(key, value);
-          }
-        });
-
-        // Add dates
-        if (startDate) tourData.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
-        if (endDate) tourData.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
-
-        // Add images
-        selectedFiles.forEach(file => {
-          tourData.append('images', file);
-        });
-
-        // Format itineraries for API
-        const formattedItineraries = itineraries.map(itinerary => ({
-          day: itinerary.day,
-          title: itinerary.title,
-          description: itinerary.description instanceof EditorState
-            ? JSON.stringify(convertToRaw(itinerary.description.getCurrentContent()))
-            : itinerary.description
-        }));
-
-        // Create JSON data for API submission
-        const jsonData = {
-          ...Object.fromEntries(
-            Object.entries(formData).filter(([key]) => key !== 'itinerary')
-          ),
-          startDate: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
-          endDate: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
-          itinerary: formattedItineraries
-        };
-
-        // Make API call with JSON data
-        await addTourApi(jsonData);
+        
+        // Update existing tour
+        await updateTourApi(id, tourBaseData);
+      } else {
+        // Create new tour with all images
+        await addTourApi(tourBaseData);
       }
 
-      setUiState({ loading: false, error: null, success: true });
     } catch (err) {
       console.error("Error details:", err);
       setUiState({
@@ -594,7 +533,10 @@ const UpdateTour = () => {
         error: err.response?.data?.message || err.message || 'Đã xảy ra lỗi khi cập nhật lộ trình',
         success: false
       });
+      return;
     }
+
+    setUiState({ loading: false, error: null, success: true });
   }, [createdTourId, itineraries, isEditMode, formData, startDate, endDate, selectedFiles, id, checkForChanges]);
 
   const { loading, error, success } = uiState;
