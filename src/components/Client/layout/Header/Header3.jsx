@@ -23,7 +23,7 @@ function Header3({ sidebarClick }) {
                 <div className="logo">
                   <Link href="/">
                     <img
-                      src="~/assets/images/logos/logo-two.png"
+                      src="https://res.cloudinary.com/dbkhjufja/image/upload/v1745105033/matlzpcdf9e8o8uufcft.png"
                       alt="Logo"
                       title="Logo"
                     />

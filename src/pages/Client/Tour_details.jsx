@@ -287,7 +287,7 @@ function Tour_details() {
                 >
                   <div className="author-thumb">
                     <img
-                      src="~/assets/images/blog/comment-author1.jpg"
+                      src="https://res.cloudinary.com/dbkhjufja/image/upload/v1742119408/samples/logo.png"
                       alt="Author"
                     />
                   </div>

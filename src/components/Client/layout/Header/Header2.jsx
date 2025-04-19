@@ -65,7 +65,9 @@ function Header2({ sidebarClick }) {
           </div>
           <div className="logo text-lg-center">
             <Link to="/">
-              <img  src="https://res.cloudinary.com/dbkhjufja/image/upload/v1744543947/b88zgpwgvx6pd51fw4zz.png" alt="Logo" />
+              <img
+                src="https://res.cloudinary.com/dbkhjufja/image/upload/v1744543947/b88zgpwgvx6pd51fw4zz.png"
+                alt="Logo" />
             </Link>
           </div>
           <hr className="my-40" />
