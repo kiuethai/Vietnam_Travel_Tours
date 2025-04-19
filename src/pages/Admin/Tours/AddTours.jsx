@@ -4,40 +4,27 @@ import {
   CardContent,
   Container,
   Grid,
-  TextField,
   Typography,
   Box,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Stepper,
   Step,
   StepLabel,
-  Alert,
-  FormControlLabel,
-  Checkbox,
-  CircularProgress
+  Alert
 } from '@mui/material';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Link } from "react-router-dom";
-import { Editor } from "react-draft-wysiwyg"
 import { EditorState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import Dropzone from "react-dropzone"
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { addTourApi, addItineraryApi } from '~/apis'
-import TourBasicInfoForm from "./TourBasicInfoForm";
-import ImageUploader from "./ImageUploader";
-import ItineraryEditor from "./ItineraryEditor";
-import SuccessView from "./SuccessView";
 // Main component
+import TourBasicInfoForm from "~/components/Admin/Tour/TourBasicInfoForm";
+import ImageUploader from "~/components/Admin/Tour/ImageUploader";
+import ItineraryEditor from "~/components/Admin/Tour/ItineraryEditor";
+import SuccessView from "~/components/Admin/Tour/SuccessView";
 
 const AddTour = () => {
   // State management
