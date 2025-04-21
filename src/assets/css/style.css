@@ -4406,6 +4406,7 @@ h6, .h6, blockquote {
   height: calc(100% - 10px);
   background-position: center; }
   .search-banner .content {
+
     background-repeat: repeat-x;
     padding: 15px 20px 100px 35px;
     border-radius: 10px 10px 0 0; }
@@ -4476,7 +4477,9 @@ h6, .h6, blockquote {
       width: 100%;
       -webkit-transition: 0.5s;
       -o-transition: 0.5s;
-      transition: 0.5s; }
+      transition: 0.5s; 
+      height: 177px;
+    }
     .destination-item .image .ratting {
       position: absolute;
       left: 0;
@@ -4975,26 +4978,37 @@ h6, .h6, blockquote {
 .tour-grid-wrap .tour-grid.destination-item .content {
   padding-top: 10px;
   position: relative;
-  padding-bottom: 15px; }
+  padding-bottom: 15px; 
+  height: 409px;}
   .tour-grid-wrap .tour-grid.destination-item .content .ratting {
     position: absolute;
     right: 20px;
     top: -46px; }
+   
   .tour-grid-wrap .tour-grid.destination-item .content .blog-meta {
+    
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
-    justify-content: space-between; }
+    justify-content: space-between;
+    position: absolute; 
+    bottom: 100px }
     .tour-grid-wrap .tour-grid.destination-item .content .blog-meta li:not(:last-child) {
       margin-right: 10px; }
   .tour-grid-wrap .tour-grid.destination-item .content .destination-footer {
     margin-top: 25px;
     padding-top: 25px;
-    border-top: 1px solid var(--border-color); }
+    border-top: 1px solid var(--border-color);
+    position: absolute; 
+    bottom: 15px; 
+   
+   }
     .tour-grid-wrap .tour-grid.destination-item .content .destination-footer .theme-btn.style-three {
       width: 35px;
       height: 35px;
       padding: 0;
-      line-height: 35px; }
+      line-height: 35px;
+      margin-left: 10px;
+     }
       .tour-grid-wrap .tour-grid.destination-item .content .destination-footer .theme-btn.style-three i {
         margin-left: 0; }
 

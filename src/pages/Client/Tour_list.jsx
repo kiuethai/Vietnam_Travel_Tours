@@ -60,120 +60,129 @@ function Tour_list() {
                   <option value="low-to-high">Thấp đến cao</option>
                 </select>
               </div>
+              <div className="tour-grid-wrap">
+                <div className="row">
+                {loading ? (
+                  <div className="text-center">Loading tours...</div>
+                ) : (
 
-              {loading ? (
-                <div className="text-center">Loading tours...</div>
-              ) : (
-                tours.map((tour, index) => (
-                  <div
-                    key={tour._id || index}
-                    className="destination-item style-three bgc-lighter"
-                    data-aos="fade-up"
-                    data-aos-duration={1500}
-                    data-aos-offset={50}
-                  >
-                    <div className="image">
-                      {tour.availability 
-                      ? 
-                      <span className="badge bgc-pink">Available</span> 
-                      : 
-                      <span className="badge bgc-red">Not Available</span>
-                      }
-                      <a href="#" className="heart">
-                        <i className="fas fa-heart" />
-                      </a>
-                      <img
-                        src={tour.images?.[0] || "assets/images/destinations/tour-list1.jpg"}
-                        alt={tour.title || "Tour List"}
-                      />
-                    </div>
-                    <div className="content">
-                      <div className="destination-header">
-                        <span className="location">
-                          <i className="fal fa-map-marker-alt" /> {tour.destination || "Location not specified"}
-                        </span>
-                        <div className="ratting">
-                          {[...Array(5)].map((_, i) => (
-                            <i key={i} className="fas fa-star" />
-                          ))}
+
+                  tours.map((tour, index) => (
+                    <div className="col-xl-4 col-md-6">
+                      <div
+                        key={tour?._id || index}
+                        className="destination-item tour-grid style-three bgc-lighter"
+                        data-aos="fade-up"
+                        data-aos-duration={1500}
+                        data-aos-offset={50}
+                      >
+                        <div className="image">
+                          {tour?.availability
+                            ?
+                            <span className="badge bgc-pink">Available</span>
+                            :
+                            <span className="badge bgc-red">Not Available</span>
+                          }
+                          <a href="#" className="heart">
+                            <i className="fas fa-heart" />
+                          </a>
+                          <img
+                            src={tour?.images?.[0] || "assets/images/destinations/tour-list1.jpg"}
+                            alt={tour?.title || "Tour List"}
+                          />
+                        </div>
+                        <div className="content">
+                          <div className="destination-header">
+                            <span className="location">
+                              <i className="fal fa-map-marker-alt" /> {tour?.destination || "Location not specified"}
+                            </span>
+                            <div className="ratting">
+                              {[...Array(5)].map((_, i) => (
+                                <i key={i} className="fas fa-star" />
+                              ))}
+                            </div>
+                          </div>
+                          <h5>
+                            <Link to={`/tour-details/${tour?._id}`}>
+                              {tour?.title || "Tour Title"}
+                            </Link>
+                          </h5>
+                          <p>
+                            {tour?.destination || "No description available"}
+                          </p>
+                          <ul className="blog-meta">
+                            <li>
+                              <i className="far fa-clock" /> {tour?.time || "Duration not specified"}
+                            </li>
+                            <li>
+                              <i className="far fa-user" /> {tour?.quantity || 0} khách
+                            </li>
+                          </ul>
+                          <div className="destination-footer">
+                            <span className="price">
+                              <span>{tour.priceAdult?.toLocaleString('vi-VN')}đ</span>/người lớn
+                            </span>
+                            <Link
+                              to={`/tour-details/${tour?._id}`}
+                              className="theme-btn style-two style-three"
+                            >
+                              <span data-hover="Đặt Ngay"></span>
+                              <i className="fal fa-arrow-right" />
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                      <h5>
-                        <Link to={`/tour-details/${tour._id}`}>
-                          {tour.title || "Tour Title"}
-                        </Link>
-                      </h5>
-                      <p>
-                        {tour.destination || "No description available"}
-                      </p>
-                      <ul className="blog-meta">
-                        <li>
-                          <i className="far fa-clock" /> {tour.time || "Duration not specified"}
-                        </li>
-                        <li>
-                          <i className="far fa-user" /> {tour.quantity || 0} khách
-                        </li>
-                      </ul>
-                      <div className="destination-footer">
-                        <span className="price">
-                          <span>{tour.priceAdult?.toLocaleString('vi-VN')}đ</span>/người lớn
-                        </span>
-                        <Link
-                          to={`/tour-details/${tour._id}`}
-                          className="theme-btn style-two style-three"
-                        >
-                          <span data-hover="Đặt Ngay">Đặt Ngay</span>
-                          <i className="fal fa-arrow-right" />
-                        </Link>
-                      </div>
                     </div>
-                  </div>
-                ))
-              )}
+                  )
+                  )
 
-              <ul
-                className="pagination pt-15 flex-wrap"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <li className="page-item disabled">
-                  <span className="page-link">
-                    <i className="far fa-chevron-left" />
-                  </span>
-                </li>
-                <li className="page-item active">
-                  <span className="page-link">
-                    1<span className="sr-only">(current)</span>
-                  </span>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    2
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    3
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    ...
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    <i className="far fa-chevron-right" />
-                  </a>
-                </li>
-              </ul>
+                )
+                }
+              </div>
             </div>
+            <ul
+              className="pagination pt-15 flex-wrap"
+              data-aos="fade-up"
+              data-aos-duration={1500}
+              data-aos-offset={50}
+            >
+              <li className="page-item disabled">
+                <span className="page-link">
+                  <i className="far fa-chevron-left" />
+                </span>
+              </li>
+              <li className="page-item active">
+                <span className="page-link">
+                  1<span className="sr-only">(current)</span>
+                </span>
+              </li>
+              <li className="page-item">
+                <a className="page-link" href="#">
+                  2
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" href="#">
+                  3
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" href="#">
+                  ...
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" href="#">
+                  <i className="far fa-chevron-right" />
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-      </section>
-      {/* Tour List Area end */}
     </div>
+      </section >
+    {/* Tour List Area end */ }
+    </div >
   )
 }
 
