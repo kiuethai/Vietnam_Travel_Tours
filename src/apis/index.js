@@ -102,3 +102,10 @@ export const addItineraryApi = async (tourId, data) => {
   toast.success('Thêm lịch trình thành công!', { theme: 'colored' })
   return response.data
 }
+
+
+/* Dashboad APIS */
+export const getDashboardDataAPI = async () => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/dashboard/domain_values`)
+  return response.data
+} 

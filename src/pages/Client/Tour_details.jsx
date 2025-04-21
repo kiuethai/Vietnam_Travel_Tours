@@ -375,151 +375,45 @@ function Tour_details() {
                   data-aos-duration={1500}
                   data-aos-offset={50}
                 >
-                  <h5 className="widget-title">Tour Booking</h5>
+                  <h5 className="widget-title">Đặt Tour</h5>
                   <form action="#">
                     <div className="date mb-25">
-                      <b>From Date</b>
-                      <input type="date" />
+                      <b>Ngày đi</b>
+                      {tour?.startDate}
                     </div>
-                    <hr />
-                    <div className="time py-5">
-                      <b>Time :</b>
-                      <ul className="radio-filter">
-                        <li>
-                          <input
-                            className="form-check-input"
-                            defaultChecked=""
-                            type="radio"
-                            name="time"
-                            id="time1"
-                          />
-                          <label htmlFor="time1">12:00</label>
-                        </li>
-                        <li>
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="time"
-                            id="time2"
-                          />
-                          <label htmlFor="time2">08:00</label>
-                        </li>
-                      </ul>
+                    <div className="date mb-25">
+                      <b>Ngày về</b>
+                      {tour?.endDate}
                     </div>
+                   
+                    
                     <hr className="mb-25" />
                     <h6>Tickets:</h6>
                     <ul className="tickets clearfix">
                       <li>
-                        Adult (18- years) <span className="price">$28.50</span>
-                        <select name="18-" id="18-">
-                          <option value="value1">01</option>
-                          <option value="value1">02</option>
-                          <option value="value1" selected="">
-                            03
-                          </option>
-                        </select>
+                        Người lớn x 1<span className="price">{tour?.priceAdult}VNĐ</span>
+                       
                       </li>
                       <li>
-                        Adult (18+ years) <span className="price">$50.40</span>
-                        <select name="18+" id="18+">
-                          <option value="value1">01</option>
-                          <option value="value1">02</option>
-                          <option value="value1">03</option>
-                        </select>
+                        Trẻ em x 1 <span className="price">{tour?.priceChild}VNĐ</span>
+                       
                       </li>
                     </ul>
                     <hr className="mb-25" />
-                    <h6>Add Extra:</h6>
-                    <ul className="radio-filter pt-5">
-                      <li>
-                        <input
-                          className="form-check-input"
-                          defaultChecked=""
-                          type="radio"
-                          name="AddExtra"
-                          id="add-extra1"
-                        />
-                        <label htmlFor="add-extra1">
-                          Add service per booking <span>$50</span>
-                        </label>
-                      </li>
-                      <li>
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="AddExtra"
-                          id="add-extra2"
-                        />
-                        <label htmlFor="add-extra2">
-                          Add service per personal <span>$24</span>
-                        </label>
-                      </li>
-                    </ul>
-                    <hr />
+                   
                     <h6>
-                      Total: <span className="price">$74</span>
+                      Tổng: <span className="price">5980000VNĐ</span>
                     </h6>
                     <button
                       type="submit"
                       className="theme-btn style-two w-100 mt-15 mb-5"
                     >
-                      <span data-hover="Book Now">Book Now</span>
+                      <span data-hover="Book Now">Đặt ngay</span>
                       <i className="fal fa-arrow-right" />
                     </button>
-                    <div className="text-center">
-                      <Link href="contact">Need some help?</Link>
-                    </div>
+                   
                   </form>
-                </div>
-
-                <div
-                  className="widget widget-contact"
-                  data-aos="fade-up"
-                  data-aos-duration={1500}
-                  data-aos-offset={50}
-                >
-                  <h5 className="widget-title">Need Help?</h5>
-                  <ul className="list-style-one">
-                    <li>
-                      <i className="far fa-envelope" />{" "}
-                      <a href="emilto:helpxample@gmail.com">
-                        helpxample@gmail.com
-                      </a>
-                    </li>
-                    <li>
-                      <i className="far fa-phone-volume" />{" "}
-                      <a href="callto:+000(123)45688">+000 (123) 456 88</a>
-                    </li>
-                  </ul>
-                </div>
-                <div
-                  className="widget widget-cta"
-                  data-aos="fade-up"
-                  data-aos-duration={1500}
-                  data-aos-offset={50}
-                >
-                  <div className="content text-white">
-                    <span className="h6">Explore The World</span>
-                    <h3>Best Tourist Place</h3>
-                    <Link
-                      href="tour-grid"
-                      className="theme-btn style-two bgc-secondary"
-                    >
-                      <span data-hover="Explore Now">Explore Now</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                  <div className="image">
-                    <img src="assets/images/widgets/cta-widget.png" alt="CTA" />
-                  </div>
-                  <div className="cta-shape">
-                    <img
-                      src="assets/images/widgets/cta-shape3.png"
-                      alt="Shape"
-                    />
-                  </div>
-                </div>
-                
+                </div>              
               </div>
             </div>
           </div>

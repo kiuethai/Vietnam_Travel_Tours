@@ -73,7 +73,12 @@ function Tour_list() {
                     data-aos-offset={50}
                   >
                     <div className="image">
-                      {tour.availability && <span className="badge bgc-pink">Available</span>}
+                      {tour.availability 
+                      ? 
+                      <span className="badge bgc-pink">Available</span> 
+                      : 
+                      <span className="badge bgc-red">Not Available</span>
+                      }
                       <a href="#" className="heart">
                         <i className="fas fa-heart" />
                       </a>

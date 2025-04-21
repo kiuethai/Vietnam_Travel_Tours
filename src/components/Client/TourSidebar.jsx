@@ -1,9 +1,28 @@
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import Slider from "rc-slider";
-import { useState } from "react";
+import { getDashboardDataAPI } from "~/apis";
 
-const   TourSidebar = () => {
-  const [value, setValue] = useState([10, 30]);
+const TourSidebar = () => {
+  const [value, setValue] = useState([10000000, 3000000]);
+  const [Domain, setDomain] = useState([]);
+
+  useEffect(() => {
+    const fetchTours = async () => {
+      try {
+        const response = await getDashboardDataAPI();
+        console.log('🚀 ~ fetchTours ~ response DOMAIN:', response.dataDomain.values)
+        setDomain(response.dataDomain.values|| []);
+       
+      } catch (error) {
+        console.error("Error fetching tours:", error);
+       
+      }
+    };
+
+    fetchTours();
+  }, []);
+
   return (
     <div className="col-lg-3 col-md-6 col-sm-10 rmb-75">
       <div className="shop-sidebar mb-30">
@@ -30,11 +49,16 @@ const   TourSidebar = () => {
               />
             </div>
             <div className="price">
-              <span>Giá </span>
+              <span>Giá</span>
               {/* <input type="text" value={value[0]} id="price" readOnly="" /> */}
               <p className="mb-0 fw-bold">
-                ${value[0]} - ${value[1]}
+                {value[0]}VNĐ
               </p>
+
+              <p className="mb-0 fw-bold">
+                - {value[1]}VNĐ
+              </p>
+
             </div>
           </div>
         </div>
@@ -55,62 +79,31 @@ const   TourSidebar = () => {
                 id="activity1"
               />
               <label htmlFor="activity1">
-                Sea Beach <span>18</span>
+                Bắc <span>{Domain?.[0]}</span>
               </label>
             </li>
             <li>
               <input
                 className="form-check-input"
                 type="radio"
+                defaultChecked=""
                 name="ByActivities"
-                id="activity2"
+                id="activity1"
               />
-              <label htmlFor="activity2">
-                Car Parking <span>29</span>
+              <label htmlFor="activity1">
+                Trung <span>{Domain?.[1]}</span>
               </label>
             </li>
             <li>
               <input
                 className="form-check-input"
                 type="radio"
+                defaultChecked=""
                 name="ByActivities"
-                id="activity3"
+                id="activity1"
               />
-              <label htmlFor="activity3">
-                Laundry Service <span>23</span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByActivities"
-                id="activity4"
-              />
-              <label htmlFor="activity4">
-                Outdoor Seating <span>25</span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByActivities"
-                id="activity5"
-              />
-              <label htmlFor="activity5">
-                Reservations <span>26</span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByActivities"
-                id="activity6"
-              />
-              <label htmlFor="activity6">
-                Smoking Allowed <span>28</span>
+              <label htmlFor="activity1">
+                Nam <span>{Domain?.[2]}</span>
               </label>
             </li>
           </ul>
@@ -121,7 +114,7 @@ const   TourSidebar = () => {
           data-aos-duration={1500}
           data-aos-offset={50}
         >
-          <h6 className="widget-title">By Reviews</h6>
+          <h6 className="widget-title">Đánh giá</h6>
           <ul className="radio-filter">
             <li>
               <input
@@ -211,178 +204,7 @@ const   TourSidebar = () => {
             </li>
           </ul>
         </div>
-        <div
-          className="widget widget-languages"
-          data-aos="fade-up"
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <h6 className="widget-title">By Languages</h6>
-          <ul className="radio-filter">
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                defaultChecked=""
-                name="ByLanguages"
-                id="language1"
-              />
-              <label htmlFor="language1">American</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language2"
-              />
-              <label htmlFor="language2">English</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language3"
-              />
-              <label htmlFor="language3">German</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language4"
-              />
-              <label htmlFor="language4">Japanese</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language5"
-              />
-              <label htmlFor="language5">Vietnamese</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language6"
-              />
-              <label htmlFor="language6">French</label>
-            </li>
-          </ul>
-        </div>
-        <div
-          className="widget widget-duration"
-          data-aos="fade-up"
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <h6 className="widget-title">Duration</h6>
-          <ul className="radio-filter">
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                defaultChecked=""
-                name="Duration"
-                id="duration1"
-              />
-              <label htmlFor="duration1">0 - 2 hours</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Duration"
-                id="duration2"
-              />
-              <label htmlFor="duration2">2 - 4 hours</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Duration"
-                id="duration3"
-              />
-              <label htmlFor="duration3">4 - 8 hours</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Duration"
-                id="duration4"
-              />
-              <label htmlFor="duration4">Fulda (+8 hours)</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Duration"
-                id="duration5"
-              />
-              <label htmlFor="duration5">Multi days</label>
-            </li>
-          </ul>
-        </div>
-        <div
-          className="widget widget-tour"
-          data-aos="fade-up"
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <h6 className="widget-title">Popular Tours</h6>
-          <div className="destination-item tour-grid style-three bgc-lighter">
-            <div className="image">
-              <span className="badge">10% Off</span>
-              <img src="assets/images/widgets/tour1.jpg" alt="Tour" />
-            </div>
-            <div className="content">
-              <div className="destination-header">
-                <span className="location">
-                  <i className="fal fa-map-marker-alt" /> Bali, Indonesia
-                </span>
-                <div className="ratting">
-                  <i className="fas fa-star" />
-                  <span>(4.8)</span>
-                </div>
-              </div>
-              <h6>
-                <Link to="tour-details">
-                  Relinking Beach, Bali, Indonesia
-                </Link>
-              </h6>
-            </div>
-          </div>
-          <div className="destination-item tour-grid style-three bgc-lighter">
-            <div className="image">
-              <img src="assets/images/widgets/tour1.jpg" alt="Tour" />
-            </div>
-            <div className="content">
-              <div className="destination-header">
-                <span className="location">
-                  <i className="fal fa-map-marker-alt" /> Bali, Indonesia
-                </span>
-                <div className="ratting">
-                  <i className="fas fa-star" />
-                  <span>(4.8)</span>
-                </div>
-              </div>
-              <h6>
-                <Link to="tour-details">
-                  Relinking Beach, Bali, Indonesia
-                </Link>
-              </h6>
-            </div>
-          </div>
-        </div>
+
       </div>
       <div
         className="widget widget-cta"
@@ -390,7 +212,7 @@ const   TourSidebar = () => {
         data-aos-duration={1500}
         data-aos-offset={50}
       >
-      
+
       </div>
     </div>
   );
