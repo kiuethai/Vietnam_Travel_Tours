@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import Slider from "rc-slider";
-import { getDashboardDataAPI } from "~/apis";
+import { getDashboardDataAPI, getAllToursAPI } from "~/apis";
 
-const TourSidebar = () => {
-  const [value, setValue] = useState([10000000, 3000000]);
+const TourSidebar = ({ value, setValue, selectedRegion, setSelectedRegion }) => {
+
   const [Domain, setDomain] = useState([]);
+
 
   useEffect(() => {
     const fetchTours = async () => {
       try {
         const response = await getDashboardDataAPI();
-        console.log('🚀 ~ fetchTours ~ response DOMAIN:', response.dataDomain.values)
-        setDomain(response.dataDomain.values|| []);
-       
+        setDomain(response.dataDomain.values || []);
+
       } catch (error) {
         console.error("Error fetching tours:", error);
-       
+
       }
     };
 
     fetchTours();
   }, []);
+
 
   return (
     <div className="col-lg-3 col-md-6 col-sm-10 rmb-75">
@@ -39,6 +40,8 @@ const TourSidebar = () => {
               <Slider
                 value={value}
                 range
+                min={1000000}
+                max={10000000}
                 onChange={(e) => setValue(e)}
                 trackStyle={{ backgroundColor: "#63AB45" }}
                 handleStyle={{
@@ -52,62 +55,80 @@ const TourSidebar = () => {
               <span>Giá</span>
               {/* <input type="text" value={value[0]} id="price" readOnly="" /> */}
               <p className="mb-0 fw-bold">
-                {value[0]}VNĐ
+                {value[0].toLocaleString()} VNĐ
               </p>
 
               <p className="mb-0 fw-bold">
-                - {value[1]}VNĐ
+                - {value[1].toLocaleString()} VNĐ
               </p>
-
             </div>
           </div>
         </div>
+
+
         <div
           className="widget widget-activity"
           data-aos="fade-up"
           data-aos-duration={1500}
           data-aos-offset={50}
         >
-          <h6 className="widget-title">Điểm đến</h6>
+          <h6 className="widget-title">Vùng miền</h6>
           <ul className="radio-filter">
             <li>
               <input
                 className="form-check-input"
                 type="radio"
-                defaultChecked=""
                 name="ByActivities"
-                id="activity1"
+                id="b"
+                checked={selectedRegion === "b"}
+                onChange={() => setSelectedRegion("b")}
               />
-              <label htmlFor="activity1">
-                Bắc <span>{Domain?.[0]}</span>
+              <label htmlFor="b">
+                Miền Bắc <span>{Domain?.[0]}</span>
               </label>
             </li>
             <li>
               <input
                 className="form-check-input"
                 type="radio"
-                defaultChecked=""
                 name="ByActivities"
-                id="activity1"
+                id="t"
+                checked={selectedRegion === "t"}
+                onChange={() => setSelectedRegion("t")}
               />
-              <label htmlFor="activity1">
-                Trung <span>{Domain?.[1]}</span>
+              <label htmlFor="t">
+                Miền Trung <span>{Domain?.[1]}</span>
               </label>
             </li>
             <li>
               <input
                 className="form-check-input"
                 type="radio"
-                defaultChecked=""
                 name="ByActivities"
-                id="activity1"
+                id="n"
+                checked={selectedRegion === "n"}
+                onChange={() => setSelectedRegion("n")}
               />
-              <label htmlFor="activity1">
-                Nam <span>{Domain?.[2]}</span>
+              <label htmlFor="n">
+                Miền Nam <span>{Domain?.[2]}</span>
+              </label>
+            </li>
+            <li>
+              <input
+                className="form-check-input"
+                type="radio"
+                name="ByActivities"
+                id="tatca"
+                checked={selectedRegion === ""}
+                onChange={() => setSelectedRegion("")}
+              />
+              <label htmlFor="tatca">
+                Tất cả
               </label>
             </li>
           </ul>
         </div>
+
         <div
           className="widget widget-reviews"
           data-aos="fade-up"

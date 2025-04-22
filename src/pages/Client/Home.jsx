@@ -56,6 +56,7 @@ function Home() {
             </div>
           </div>
           <div className="row justify-content-center">
+        
             <div className="col-xxl-3 col-xl-4 col-md-6">
               <div
                 className="destination-item"
@@ -219,6 +220,8 @@ function Home() {
                 </div>
               </div>
             </div>
+
+            
           </div>
         </div>
       </section>
