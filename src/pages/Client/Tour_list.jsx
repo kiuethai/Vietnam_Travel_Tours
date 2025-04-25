@@ -17,7 +17,6 @@ function Tour_list() {
     const fetchTours = async () => {
       try {
         const response = await getAllToursAPI();
-        console.log('🚀 ~ fetchTours ~ response:', response)
         setTours(response || []);
         setLoading(false);
       } catch (error) {
@@ -169,10 +168,10 @@ function Tour_list() {
                           </div>
                         </div>
                       </div>
-                    )
-                    )
-                  )
-                  }
+                              )
+                                )
+                                  )
+                                    }
                 </div>
               </div>
               <ul

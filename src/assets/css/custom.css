@@ -1,0 +1,32 @@
+.privacy-section {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+/* Header */
+.booking-header {
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Payment Options */
+.payment-option {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #e2e4e5;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.payment-option img {
+  width: 40px;
+}

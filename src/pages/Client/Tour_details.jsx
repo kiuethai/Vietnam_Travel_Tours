@@ -79,12 +79,14 @@ function Tour_details() {
             <div className="col-lg-4 col-md-6">
               <div className="gallery-item">
                 <img
+                  style={{ height: "434px" }}
                   src={tour?.images?.[0]}
                   alt={tour?.title || "Tour List"}
                 />
               </div>
               <div className="gallery-item">
                 <img
+                  style={{ height: "445px" }}
                   src={tour?.images?.[1]}
                   alt={tour?.title || "Tour List"}
                 />
@@ -93,7 +95,16 @@ function Tour_details() {
             <div className="col-lg-4 col-md-6">
               <div className="gallery-item">
                 <img
+                  style={{ height: "434px" }}
                   src={tour?.images?.[2]}
+                  alt={tour?.title || "Tour List"}
+                />
+
+              </div>
+              <div className="gallery-item">
+                <img
+                  style={{ height: "445px" }}
+                  src={tour?.images?.[5]}
                   alt={tour?.title || "Tour List"}
                 />
               </div>
@@ -101,12 +112,14 @@ function Tour_details() {
             <div className="col-lg-4 col-md-6">
               <div className="gallery-item">
                 <img
+                  style={{ height: "434px" }}
                   src={tour?.images?.[3]}
                   alt={tour?.title || "Tour List"}
                 />
               </div>
               <div className="gallery-item">
                 <img
+                  style={{ height: "445px" }}
                   src={tour?.images?.[4]}
                   alt={tour?.title || "Tour List"}
                 />
@@ -245,9 +258,9 @@ function Tour_details() {
               </Accordion>
 
 
-            
-              
-              
+
+
+
               <h3>Khách hàng đánh giá</h3>
               <div className="clients-reviews bgc-black mt-30 mb-60">
                 <div className="left">
@@ -311,7 +324,7 @@ function Tour_details() {
                     </a>
                   </div>
                 </div>
-                
+
               </div>
               <h3>Thêm đánh giá</h3>
               <form
@@ -335,7 +348,7 @@ function Tour_details() {
                       <i className="fas fa-star-half-alt" />
                     </div>
                   </div>
-                 
+
                 </div>
                 <hr className="mt-30 mb-40" />
                 <h5>Để lại phả hồi</h5>
@@ -377,49 +390,79 @@ function Tour_details() {
                 >
                   <h5 className="widget-title">Đặt Tour</h5>
                   <form action="#">
-                    <div className="date mb-25">
+                    <div className="date mb-25" >
                       <b>Ngày đi</b>
-                      {tour?.startDate}
+                      <input
+                        type="date"
+                        value={
+                          tour?.startDate
+                            ? new Date(tour.startDate).toISOString().split("T")[0]
+                            : ""
+                        }
+                        disabled
+                      />
+
                     </div>
                     <div className="date mb-25">
                       <b>Ngày về</b>
-                      {tour?.endDate}
+                      <input
+                        type="date"
+                        value={
+                          tour?.endDate
+                            ? new Date(tour?.endDate).toISOString().split("T")[0]
+                            : ""
+                        }
+                        disabled
+                      />
                     </div>
-                   
-                    
+                    <hr />
+                    <div className="time py-5">
+                      <b>Thời gian :</b>
+                      <ul className="radio-filter">
+                        {tour?.time}
+                      </ul>
+                    </div>
                     <hr className="mb-25" />
-                    <h6>Tickets:</h6>
+                    <h6>Vé :</h6>
                     <ul className="tickets clearfix">
                       <li>
-                        Người lớn x 1<span className="price">{tour?.priceAdult}VNĐ</span>
-                       
+                        Người lớn <span className="price">
+                          {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceAdult)}
+                        </span>
                       </li>
                       <li>
-                        Trẻ em x 1 <span className="price">{tour?.priceChild}VNĐ</span>
-                       
+                        Trẻ em  <span className="price">
+                          {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceChild)}
+                        </span>
+
                       </li>
                     </ul>
                     <hr className="mb-25" />
-                   
+
                     <h6>
-                      Tổng: <span className="price">5980000VNĐ</span>
+                      Tổng: <span className="price">
+                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((tour?.priceAdult) + (tour?.priceChild))}
+                      </span>
                     </h6>
                     <button
                       type="submit"
                       className="theme-btn style-two w-100 mt-15 mb-5"
                     >
+                      <Link
+                        to={`/booking/${tour?._id}`}
+                      >
                       <span data-hover="Book Now">Đặt ngay</span>
                       <i className="fal fa-arrow-right" />
+                      </Link>
                     </button>
-                   
                   </form>
-                </div>              
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-    {/* Tour Details Area end */ }
+      {/* Tour Details Area end */}
 
     </>
   )

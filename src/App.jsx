@@ -16,6 +16,8 @@ import "./assets/css/magnific-popup.min.css";
 import "./assets/css/nice-select.min.css";
 import "./assets/css/slick.min.css";
 import "./assets/css/style.css"
+import "~/assets/css/custom.css"
+
 
 /* Import your page components here */
 import About from './pages/Client/About';
@@ -44,6 +46,7 @@ import { selectCurrentAdmin } from '~/redux/admin/adminSlice'
 import Settings from '~/pages/Client/Settings/Settings'
 import AuthAdmin from '~/pages/Admin/Auth/AuthAdmin'
 import Layout from '~/components/Admin/Layout/Layout'
+import Booking from "./pages/Client/Booking";
 
 const ProtectedRoute = ({ user }) => {
   if (!user) return <Navigate to='/login' replace={true} />
@@ -154,6 +157,13 @@ function App() {
             <Tour_details />
           </ReveloLayout>
         } />
+
+        <Route path="/booking/:id" element={
+          <ReveloLayout>
+            <Booking />
+          </ReveloLayout>
+        } />
+
         <Route path="/contact" element={
           <ReveloLayout insta>
             <Contact />
@@ -189,7 +199,14 @@ function App() {
         </Route>
 
 
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={
+          <ReveloLayout>
+
+            <NotFound />
+          </ReveloLayout>
+
+
+        } />
       </Routes>
     </>
   );
