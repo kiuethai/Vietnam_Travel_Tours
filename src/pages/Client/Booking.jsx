@@ -7,19 +7,35 @@ import ReveloLayout from "~/components/Client/layout/ReveloLayout";
 import { Link } from 'react-router-dom'
 import { Accordion } from "react-bootstrap";
 import Banner from "~/components/Client/Banner";
-import { getTourByIdAPI } from "~/apis";
+import { getTourByIdAPI, addBookingTourApi } from "~/apis";
 import draftToHtml from 'draftjs-to-html';
-
+import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '~/redux/user/userSlice'
 
 const transIdMomo = null; // hoặc giá trị thực tế
 
 function Booking() {
+  const currentUser = useSelector(selectCurrentUser)
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
   const [errors, setErrors] = useState({});
   const [discount, setDiscount] = useState(0);
+
+  // Thêm state form tại đây với các giá trị mặc định
+  const [form, setForm] = useState({
+    fullName: '',
+    email: '',
+    tel: '',
+    address: '',
+    numAdults: 1,
+    numChildren: 0,
+    agree: false,
+    payment: '',
+    totalPrice: 0
+  });
 
   useEffect(() => {
     const fetchTour = async () => {
@@ -43,8 +59,8 @@ function Booking() {
 
 
   // Tính tổng tiền
-  const calcTotal = (adults, children, discountValue = discount) => {
-    return adults * tour?.priceAdult + children * tour?.priceChild - discountValue;
+  const calcTotal = (adults, children) => {
+    return adults * tour?.priceAdult + children * tour?.priceChild;
   };
 
   // Xử lý thay đổi input
@@ -56,26 +72,28 @@ function Booking() {
     }));
   };
 
-  // Tăng/giảm số lượng
+  // Tối ưu hàm tăng/giảm số lượng
   const handleQuantity = (type, field) => {
-    setForm((prev) => {
-      let val = prev[field];
-      if (type === 'inc') val++;
-      if (type === 'dec') val = Math.max(field === 'numAdults' ? 1 : 0, val - 1);
-      return {
-        ...prev,
-        [field]: val,
-      };
-    });
+    const MIN_VALUES = {
+      numAdults: 1,
+      numChildren: 0
+    };
+
+    setForm(prev => ({
+      ...prev,
+      [field]: type === 'inc'
+        ? prev[field] + 1
+        : Math.max(MIN_VALUES[field] || 0, prev[field] - 1)
+    }));
   };
 
-  
 
   // Xử lý submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate đơn giản
     let newErrors = {};
+    if (!/\S+@\S+\.\S+/.test(form.email)) newErrors.email = 'Email không hợp lệ. Định dạng @gmail.com';
+    if (!/^\d{10}$/.test(form.tel)) newErrors.tel = 'Số điện thoại phải có 10 chữ số';
     if (!form.fullName) newErrors.fullName = 'Vui lòng nhập họ tên';
     if (!form.email) newErrors.email = 'Vui lòng nhập email';
     if (!form.tel) newErrors.tel = 'Vui lòng nhập số điện thoại';
@@ -84,23 +102,58 @@ function Booking() {
     if (!form.payment) newErrors.payment = 'Vui lòng chọn phương thức thanh toán';
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      // Gửi dữ liệu booking (gọi API ở đây)
-      alert('Đặt tour thành công!');
+      // Chuẩn bị dữ liệu gửi đi
+      const bookingData = {
+        address: form.address,
+        email: form.email,
+        fullName: form.fullName,
+        numAdults: form.numAdults,
+        numChildren: form.numChildren,
+        payment_hidden: form.payment,
+        tel: form.tel,
+        totalPrice: form.totalPrice,
+        tourId: id,
+        userId: currentUser?._id,
+      };
+  console.log("bookingData", bookingData)
+      if (form.payment === "office-payment") {
+        try {
+          await addBookingTourApi(bookingData);
+          toast.success('Đặt tour thành công!');
+          setForm({
+            fullName: '',
+            email: '',
+            tel: '',
+            address: '',
+            numAdults: 1,
+            numChildren: 0,
+            agree: false,
+            payment: '',
+            totalPrice: 0
+          });
+          setErrors({});
+        } catch (error) {
+          toast.error('Có lỗi xảy ra khi đặt tour!');
+        }
+      } else {
+        // Xử lý các phương thức thanh toán khác ở đây (PayPal, Momo, ...)
+        toast.info('Chức năng thanh toán này sẽ được cập nhật sau!');
+      }
     }
   };
 
-  // Tính lại tổng tiền khi số lượng hoặc discount thay đổi
+  // Tính lại tổng tiền khi số lượng
   useEffect(() => {
     setForm((prev) => ({
       ...prev,
       totalPrice: calcTotal(prev.numAdults, prev.numChildren),
     }));
-  }, [form.numAdults, form.numChildren, discount]);
+  }, [form.numAdults, form.numChildren]);
   const [active, setActive] = useState("collapse0");
 
   return (
     <>
-      <Banner pageTitle={"Đặt Tour"} pageName={"Đặt Tour"} />
+      <Banner pageTitle={"Đặt Tour"} pageName={"Booking"} />
       <section className="tour-details-page pb-100 pt-50">
         <div className="container">
           <div className="row">
@@ -123,54 +176,62 @@ function Booking() {
                       <input
                         type="text"
                         id="full-name"
-                        name="full-name"
+                        name="fullName"
                         className="form-control"
                         placeholder="Nhập họ và tên của bạn"
-                        defaultValue=""
-                        required=""
+                        value={form.fullName}
+                        onChange={handleChange}
+                        required
                       />
+                      {errors.fullName && <span className="text-danger">{errors.fullName}</span>}
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label htmlFor="phone">Email</label>
+                      <label htmlFor="email">Email</label>
                       <input
-                        type="text"
-                        id="phone"
-                        name="phone"
+                        type="email"
+                        id="email"
+                        name="email"
                         className="form-control"
                         placeholder="Nhập email của bạn"
-                        defaultValue=""
-                        required=""
+                        value={form.email}
+                        onChange={handleChange}
+                        required
                       />
+                      {errors.email && <span className="text-danger">{errors.email}</span>}
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label htmlFor="full-name">Số điện thoại</label>
+                      <label htmlFor="tel">Số điện thoại</label>
                       <input
-                        type="text"
-                        id="full-name"
-                        name="full-name"
+                        type="tel"
+                        id="tel"
+                        name="tel"
                         className="form-control"
-                        placeholder="Nhập số điện thoại của bạn"
-                        defaultValue=""
-                        required=""
+                        placeholder="Nhập số điện thoại"
+                        value={form.tel}
+                        onChange={handleChange}
+                        required
                       />
+                      {errors.tel && <span className="text-danger">{errors.tel}</span>}
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label htmlFor="phone">Địa chỉ</label>
+                      <label htmlFor="address">Địa chỉ</label>
                       <input
-                        type="text"
-                        id="phone"
-                        name="phone"
+                        type="address"
+                        id="address"
+                        name="address"
                         className="form-control"
                         placeholder="Nhập địa chỉ của bạn"
-                        defaultValue=""
-                        required=""
+                        value={form.address}
+                        onChange={handleChange}
+                        required
                       />
+                      {errors.address && <span className="text-danger">{errors.address}</span>}
                     </div>
                   </div>
                 </div>
@@ -227,14 +288,24 @@ function Booking() {
                   này sẽ được áp dụng. Vui lòng đọc kỹ điều kiện điều khoản trước khi lựa chọn sử dụng dịch vụ của
                   Travela.</p>
                 <div className="privacy-checkbox">
-                  <input type="checkbox" id="agree" name="agree" required />
-                  <label for="agree">Tôi đã đọc và đồng ý với <a href="#" target="_blank">Điều khoản thanh oán</a></label>
+                  <input
+                    type="checkbox"
+                    id="agree"
+                    name="agree"
+                    checked={form.agree}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="agree">Tôi đã đọc và đồng ý với
+                    <a href="#" target="_blank"> Điều khoản thanh toán</a>
+                  </label>
+                 
                 </div>
+                {errors.agree && <span className="text-danger">{errors.agree}</span>}
               </div>
 
               {/* <!-- Payment Method --> */}
               <h2 className="booking-header">Phương Thức Thanh Toán</h2>
-
               <label className="payment-option">
                 <input
                   type="radio"
@@ -277,6 +348,7 @@ function Booking() {
                 )}
               </label>
               <input type="hidden" name="payment_hidden" id="payment_hidden" />
+              {errors.payment && <span className="text-danger">{errors.payment}</span>}
             </div>
 
             {/* Order Summary  */}
@@ -328,12 +400,12 @@ function Booking() {
                     <ul className="tickets clearfix">
                       <li>
                         Người lớn <span className="price">
-                         1 x {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceAdult)}
+                          {form.numAdults} x {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceAdult)}
                         </span>
                       </li>
                       <li>
                         Trẻ em  <span className="price">
-                          {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceChild)}
+                          {form.numChildren} x {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceChild)}
                         </span>
 
                       </li>
@@ -342,19 +414,16 @@ function Booking() {
 
                     <h6>
                       Tổng: <span className="price">
-                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((tour?.priceAdult) + (tour?.priceChild))}
+                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((tour?.priceAdult) * (form?.numAdults) + (tour?.priceChild) * (form?.numChildren))}
                       </span>
                     </h6>
                     <button
                       type="submit"
                       className="theme-btn style-two w-100 mt-15 mb-5"
+                      onClick={handleSubmit}
                     >
-                      <Link
-                        to={`/booking/${tour?._id}`}
-                      >
                       <span data-hover="Book Now">Đặt ngay</span>
                       <i className="fal fa-arrow-right" />
-                      </Link>
                     </button>
                   </form>
                 </div>

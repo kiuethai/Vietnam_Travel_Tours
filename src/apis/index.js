@@ -104,6 +104,16 @@ export const addItineraryApi = async (tourId, data) => {
 }
 
 
+
+/* Booking tour APIS */
+export const addBookingTourApi = async (data) => {
+  const response = await authorizedAxiosInstance.post(
+    `${API_ROOT}/v1/booking/create`, data)
+  toast.success('Bạn đã đặt thành công tour', { theme: 'colored' })
+  return response.data
+}
+
+
 /* Dashboad APIS */
 export const getDashboardDataAPI = async () => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/dashboard/domain_values`)

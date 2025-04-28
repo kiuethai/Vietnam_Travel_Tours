@@ -1,16 +1,9 @@
 import RaveloAccordion from "~/components/Client/RaveloAccordion";
 import { useParams } from 'react-router-dom';
 import { useEffect } from "react"; // Add this if it's not already imported
-import Subscribe from "~/components/Client/Subscribe";
-import ReveloLayout from "~/components/Client/layout/ReveloLayout";
 import { Link } from 'react-router-dom'
 import { useState } from "react";
 import { Accordion } from "react-bootstrap";
-import Banner from "~/components/Client/Banner";
-import Counter from "~/components/Client/Counter";
-import SectionTitle from "~/components/Client/SectionTitle";
-import Testimonial from "~/components/Client/slider/Testimonial";
-import Client from "~/components/Client/slider/Client";
 import { getTourByIdAPI } from "~/apis";
 import draftToHtml from 'draftjs-to-html';
 
@@ -439,22 +432,14 @@ function Tour_details() {
                     </ul>
                     <hr className="mb-25" />
 
-                    <h6>
-                      Tổng: <span className="price">
-                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((tour?.priceAdult) + (tour?.priceChild))}
-                      </span>
-                    </h6>
-                    <button
-                      type="submit"
-                      className="theme-btn style-two w-100 mt-15 mb-5"
+                    
+                    <Link
+                      to={`/booking/${tour?._id}`}
+                      className="theme-btn style-two w-100 mt-15 mb-5 d-flex justify-content-center align-items-center"
                     >
-                      <Link
-                        to={`/booking/${tour?._id}`}
-                      >
                       <span data-hover="Book Now">Đặt ngay</span>
-                      <i className="fal fa-arrow-right" />
-                      </Link>
-                    </button>
+                      <i className="fal fa-arrow-right ml-2" />
+                    </Link>
                   </form>
                 </div>
               </div>

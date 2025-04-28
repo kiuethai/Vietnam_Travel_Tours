@@ -54,7 +54,7 @@ export default function Register() {
     const { email, password } = data
     toast.promise(
       registerUserAPI({ email, password }),
-      { pending: 'Registration is in progress...' }
+      { pending: 'Đăng ký đang được tiến hành ...' }
     ).then(user => {
       navigate(`/login?registeredEmail=${user.email}`)
     })
@@ -173,7 +173,7 @@ export default function Register() {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          {...register('agreeTerms', { required: 'You must agree to the terms' })}
+                          {...register('agreeTerms', { required: 'Bạn phải đồng ý với các điều khoản' })}
                         />
                       }
                       label={<>Tôi đồng ý với <Link to="#" style={{ color: '#38b5fe' }}>Điều khoản & Điều kiện</Link></>}
