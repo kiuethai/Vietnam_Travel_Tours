@@ -113,6 +113,11 @@ export const addBookingTourApi = async (data) => {
   return response.data
 }
 
+export const getDataPaypal = async () => {
+  const response = await authorizedAxiosInstance.get(
+    `${API_ROOT}/v1/booking/payment/paypal`)
+  return response.data
+}
 
 /* Dashboad APIS */
 export const getDashboardDataAPI = async () => {

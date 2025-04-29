@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
-import RaveloAccordion from "~/components/Client/RaveloAccordion";
+import React, { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useEffect } from "react"; // Add this if it's not already imported
-import Subscribe from "~/components/Client/Subscribe";
-import ReveloLayout from "~/components/Client/layout/ReveloLayout";
+import { useEffect } from "react";
 import { Link } from 'react-router-dom'
-import { Accordion } from "react-bootstrap";
 import Banner from "~/components/Client/Banner";
-import { getTourByIdAPI, addBookingTourApi } from "~/apis";
+import { getTourByIdAPI, addBookingTourApi, getDataPaypal } from "~/apis";
 import draftToHtml from 'draftjs-to-html';
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const transIdMomo = null; // hoặc giá trị thực tế
 
@@ -22,7 +19,8 @@ function Booking() {
   const { id } = useParams();
 
   const [errors, setErrors] = useState({});
-  const [discount, setDiscount] = useState(0);
+  const [paypalReady, setPaypalReady] = useState(false);
+  const [paypalClientId, setPaypalClientId] = useState("");
 
   // Thêm state form tại đây với các giá trị mặc định
   const [form, setForm] = useState({
@@ -36,6 +34,24 @@ function Booking() {
     payment: '',
     totalPrice: 0
   });
+
+  const paypalAmount = useMemo(() => {
+    if (!tour) return 0;
+    return (tour.priceAdult || 0) * (form.numAdults || 0) + (tour.priceChild || 0) * (form.numChildren || 0);
+  }, [tour, form.numAdults, form.numChildren]);
+
+  // Hàm xử lý thanh toán PayPal
+  const handlePaypalApprove = async (data, actions) => {
+    try {
+      const details = await actions.order.capture();
+      const bookingSuccess = await handleSubmit();
+      if (bookingSuccess !== false) {
+        toast.success("Thanh toán thành công bởi " + details.payer.name.given_name);
+      }
+    } catch (error) {
+      toast.error("Có lỗi xảy ra khi xác nhận thanh toán PayPal");
+    }
+  };
 
   useEffect(() => {
     const fetchTour = async () => {
@@ -55,8 +71,6 @@ function Booking() {
       fetchTour();
     }
   }, [id]);
-
-
 
   // Tính tổng tiền
   const calcTotal = (adults, children) => {
@@ -78,7 +92,6 @@ function Booking() {
       numAdults: 1,
       numChildren: 0
     };
-
     setForm(prev => ({
       ...prev,
       [field]: type === 'inc'
@@ -87,10 +100,11 @@ function Booking() {
     }));
   };
 
-
   // Xử lý submit
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e && typeof e.preventDefault === "function") {
+      e.preventDefault();
+    }
     let newErrors = {};
     if (!/\S+@\S+\.\S+/.test(form.email)) newErrors.email = 'Email không hợp lệ. Định dạng @gmail.com';
     if (!/^\d{10}$/.test(form.tel)) newErrors.tel = 'Số điện thoại phải có 10 chữ số';
@@ -111,45 +125,47 @@ function Booking() {
         numChildren: form.numChildren,
         payment_hidden: form.payment,
         tel: form.tel,
-        totalPrice: form.totalPrice,
+        totalPrice: calcTotal(form.numAdults, form.numChildren),
         tourId: id,
         userId: currentUser?._id,
       };
-  console.log("bookingData", bookingData)
-      if (form.payment === "office-payment") {
-        try {
-          await addBookingTourApi(bookingData);
-          toast.success('Đặt tour thành công!');
-          setForm({
-            fullName: '',
-            email: '',
-            tel: '',
-            address: '',
-            numAdults: 1,
-            numChildren: 0,
-            agree: false,
-            payment: '',
-            totalPrice: 0
-          });
-          setErrors({});
-        } catch (error) {
-          toast.error('Có lỗi xảy ra khi đặt tour!');
-        }
-      } else {
-        // Xử lý các phương thức thanh toán khác ở đây (PayPal, Momo, ...)
-        toast.info('Chức năng thanh toán này sẽ được cập nhật sau!');
+      console.log("bookingData", bookingData)
+      try {
+        await addBookingTourApi(bookingData);
+        toast.success('Đặt tour thành công!');
+        setForm({
+          fullName: '',
+          email: '',
+          tel: '',
+          address: '',
+          numAdults: 1,
+          numChildren: 0,
+          agree: false,
+          payment: '',
+          totalPrice: 0
+        });
+        setErrors({});
+      } catch (error) {
+        toast.error('Có lỗi xảy ra khi đặt tour!');
+        return false
       }
     }
+    return false
   };
 
-  // Tính lại tổng tiền khi số lượng
   useEffect(() => {
-    setForm((prev) => ({
-      ...prev,
-      totalPrice: calcTotal(prev.numAdults, prev.numChildren),
-    }));
-  }, [form.numAdults, form.numChildren]);
-  const [active, setActive] = useState("collapse0");
+    const fetchPaypalClientId = async () => {
+      const { data_paypal } = await getDataPaypal();
+      setPaypalClientId(data_paypal);
+      setPaypalReady(true);
+    };
+    fetchPaypalClientId();
+  }, []);
+
+  const paypalOptions = useMemo(() => ({
+    "client-id": paypalClientId || "sb",
+    currency: "USD",
+  }), [paypalClientId]);
 
   return (
     <>
@@ -299,7 +315,7 @@ function Booking() {
                   <label htmlFor="agree">Tôi đã đọc và đồng ý với
                     <a href="#" target="_blank"> Điều khoản thanh toán</a>
                   </label>
-                 
+
                 </div>
                 {errors.agree && <span className="text-danger">{errors.agree}</span>}
               </div>
@@ -414,17 +430,32 @@ function Booking() {
 
                     <h6>
                       Tổng: <span className="price">
-                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((tour?.priceAdult) * (form?.numAdults) + (tour?.priceChild) * (form?.numChildren))}
+                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(paypalAmount)}
                       </span>
                     </h6>
-                    <button
-                      type="submit"
-                      className="theme-btn style-two w-100 mt-15 mb-5"
-                      onClick={handleSubmit}
-                    >
-                      <span data-hover="Book Now">Đặt ngay</span>
-                      <i className="fal fa-arrow-right" />
-                    </button>
+                    {form.payment === "paypal-payment" && paypalReady ? (
+                      <PayPalScriptProvider options={paypalOptions}>
+                        <PayPalButtons
+                          style={{ layout: "vertical" }}
+                          forceReRender={[totalPrice]}
+                          createOrder={(data, actions) => actions.order.create({
+                            purchase_units: [{ amount: { value: totalPrice.toString() } }]
+                          })}
+                          onApprove={handlePaypalApprove}
+                        />
+                      </PayPalScriptProvider>
+                    )
+                      :
+                      (
+                        <button
+                          type="submit"
+                          className="theme-btn style-two w-100 mt-15 mb-5"
+                          onClick={handleSubmit}
+                        >
+                          <span data-hover="Book Now">Đặt ngay</span>
+                          <i className="fal fa-arrow-right" />
+                        </button>
+                      )}
                   </form>
                 </div>
               </div>
