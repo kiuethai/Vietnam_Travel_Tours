@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Slider from "rc-slider";
 import { getDashboardDataAPI, getAllToursAPI } from "~/apis";
 
-const TourSidebar = ({ value, setValue, selectedRegion, setSelectedRegion }) => {
+const   TourSidebar = ({ value, setValue, selectedRegion, setSelectedRegion }) => {
 
   const [Domain, setDomain] = useState([]);
 

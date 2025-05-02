@@ -47,6 +47,7 @@ import Settings from '~/pages/Client/Settings/Settings'
 import AuthAdmin from '~/pages/Admin/Auth/AuthAdmin'
 import Layout from '~/components/Admin/Layout/Layout'
 import Booking from "./pages/Client/Booking";
+import MyTour from "./pages/Client/MyTour";
 
 const ProtectedRoute = ({ user }) => {
   if (!user) return <Navigate to='/login' replace={true} />
@@ -151,12 +152,22 @@ function App() {
             <Tour_list />
           </ReveloLayout>
         } />
+
         <Route path="/tour_guide" element={<Tour_guide />} />
+
         <Route path="/tour-details/:id" element={
           <ReveloLayout>
             <Tour_details />
           </ReveloLayout>
         } />
+
+
+        <Route path="/my-tour" element={
+          <ReveloLayout>
+            <MyTour />
+          </ReveloLayout>
+        } />
+
 
         <Route path="/booking/:id" element={
           <ReveloLayout>
@@ -201,7 +212,6 @@ function App() {
 
         <Route path="*" element={
           <ReveloLayout>
-
             <NotFound />
           </ReveloLayout>
 

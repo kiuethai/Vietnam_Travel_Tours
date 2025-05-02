@@ -17,7 +17,7 @@ function Booking() {
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
-
+  const EXCHANGE_RATE = 25000;
   const [errors, setErrors] = useState({});
   const [paypalReady, setPaypalReady] = useState(false);
   const [paypalClientId, setPaypalClientId] = useState("");
@@ -35,11 +35,17 @@ function Booking() {
     totalPrice: 0
   });
 
+  const paypalAmountUSD = useMemo(() => {
+    if (!tour) return 0;
+    const vnd = (tour.priceAdult || 0) * (form.numAdults || 0) + (tour.priceChild || 0) * (form.numChildren || 0);
+    return (vnd / EXCHANGE_RATE).toFixed(2); // làm tròn 2 số thập phân
+  }, [tour, form.numAdults, form.numChildren]);
+
   const paypalAmount = useMemo(() => {
     if (!tour) return 0;
     return (tour.priceAdult || 0) * (form.numAdults || 0) + (tour.priceChild || 0) * (form.numChildren || 0);
-  }, [tour, form.numAdults, form.numChildren]);
 
+  }, [tour, form.numAdults, form.numChildren]);
   // Hàm xử lý thanh toán PayPal
   const handlePaypalApprove = async (data, actions) => {
     try {
@@ -434,12 +440,12 @@ function Booking() {
                       </span>
                     </h6>
                     {form.payment === "paypal-payment" && paypalReady ? (
-                      <PayPalScriptProvider options={paypalOptions}>
+                      <PayPalScriptProvider options={{ ...paypalOptions, currency: "USD" }}>
                         <PayPalButtons
                           style={{ layout: "vertical" }}
-                          forceReRender={[totalPrice]}
+                          forceReRender={[paypalAmountUSD]}
                           createOrder={(data, actions) => actions.order.create({
-                            purchase_units: [{ amount: { value: totalPrice.toString() } }]
+                            purchase_units: [{ amount: { value: paypalAmountUSD.toString() } }]
                           })}
                           onApprove={handlePaypalApprove}
                         />

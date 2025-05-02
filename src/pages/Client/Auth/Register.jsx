@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import LockIcon from '@mui/icons-material/Lock';
-import Typography from '@mui/material/Typography';
-import { Card as MuiCard } from '@mui/material';
-import CardActions from '@mui/material/CardActions';
-import TextField from '@mui/material/TextField';
-import Zoom from '@mui/material/Zoom';
-import { useForm } from 'react-hook-form';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { toast } from 'react-toastify';
+import React, { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Avatar from '@mui/material/Avatar'
+import LockIcon from '@mui/icons-material/Lock'
+import Typography from '@mui/material/Typography'
+import { Card as MuiCard } from '@mui/material'
+import CardActions from '@mui/material/CardActions'
+import TextField from '@mui/material/TextField'
+import Zoom from '@mui/material/Zoom'
+import { useForm } from 'react-hook-form'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import { toast } from 'react-toastify'
 import { registerUserAPI } from '~/apis'
 
 import {
@@ -29,7 +29,7 @@ import {
 
 // Simple FieldErrorAlert component if not available
 const FieldErrorAlert = ({ errors, fieldName }) => {
-  if (!errors[fieldName]) return null;
+  if (!errors[fieldName]) return null
   return (
     <Typography color="error" variant="caption" sx={{ display: 'block', mt: 0.5 }}>
       {errors[fieldName].message}
@@ -39,16 +39,16 @@ const FieldErrorAlert = ({ errors, fieldName }) => {
 
 export default function Register() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
 
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleMouseDownPassword = (event) => event.preventDefault();
+  const handleClickShowPassword = () => setShowPassword(!showPassword)
+  const handleMouseDownPassword = (event) => event.preventDefault()
   
-  const handleClickShowPasswordConfirm = () => setShowPasswordConfirm(!showPasswordConfirm);
-  const handleMouseDownPasswordConfirm = (event) => event.preventDefault();
+  const handleClickShowPasswordConfirm = () => setShowPasswordConfirm(!showPasswordConfirm)
+  const handleMouseDownPasswordConfirm = (event) => event.preventDefault()
 
   const submitRegister = (data) => {
     const { email, password } = data
@@ -58,7 +58,7 @@ export default function Register() {
     ).then(user => {
       navigate(`/login?registeredEmail=${user.email}`)
     })
-  };
+  }
 
   return (
     <section
@@ -147,8 +147,8 @@ export default function Register() {
                       {...register('confirmPassword', {
                         required: FIELD_REQUIRED_MESSAGE,
                         validate: (value) => {
-                          if (value === watch('password')) return true;
-                          return 'Passwords do not match!';
+                          if (value === watch('password')) return true
+                          return 'Passwords do not match!'
                         }
                       })}
                       InputProps={{
@@ -207,5 +207,5 @@ export default function Register() {
         </div>
       </div>
     </section>
-  );
+  )
 }

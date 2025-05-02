@@ -124,6 +124,7 @@ function Tour_list() {
                             <img
                               src={tour?.images?.[0] || "assets/images/destinations/tour-list1.jpg"}
                               alt={tour?.title || "Tour List"}
+                              style={{ height: " 177px" }}
                             />
                           </div>
                           <div className="content">
@@ -168,10 +169,10 @@ function Tour_list() {
                           </div>
                         </div>
                       </div>
-                              )
-                                )
-                                  )
-                                    }
+                    )
+                    )
+                  )
+                  }
                 </div>
               </div>
               <ul
