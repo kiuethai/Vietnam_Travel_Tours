@@ -4747,7 +4747,9 @@ h6, .h6, blockquote {
         .destination-item.style-three.bgc-lighter .content .destination-footer .theme-btn.style-three {
           margin-bottom: 5px;
           padding: 5px 20px;
-          font-size: 14px; }
+          font-size: 14px; 
+          margin-left: 100px;
+        }
     .destination-item.style-three.tour-grid {
       display: block; }
       .destination-item.style-three.tour-grid .image {

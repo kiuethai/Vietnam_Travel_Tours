@@ -131,8 +131,13 @@ function App() {
             <ReveloLayout header={1} footer={1}>
               <Settings />
             </ReveloLayout>} />
+          {/* Controller booking tour for userId */}
 
-
+          <Route path="/my-tour" element={
+            <ReveloLayout>
+              <MyTour />
+            </ReveloLayout>
+          } />
 
         </Route>
 
@@ -162,11 +167,6 @@ function App() {
         } />
 
 
-        <Route path="/my-tour" element={
-          <ReveloLayout>
-            <MyTour />
-          </ReveloLayout>
-        } />
 
 
         <Route path="/booking/:id" element={

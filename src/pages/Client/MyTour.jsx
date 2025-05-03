@@ -2,7 +2,38 @@ import Banner from "~/components/Client/Banner";
 import Subscribe from "~/components/Client/Subscribe";
 import TourSidebar from "~/components/Client/TourSidebar";
 import { Link } from 'react-router-dom'
+import { getTourBookingByUserId } from "~/apis";
+import { useEffect, useState } from "react";
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '~/redux/user/userSlice'
+
+
 function MyTour() {
+  const currentUser = useSelector(selectCurrentUser);
+  const [bookings, setBookings] = useState();
+  const [loading, setLoading] = useState(true);
+  console.log("currentUser", currentUser?._id);
+
+  useEffect(() => {
+    const fetchBookingTour = async () => {
+      try {
+        const response = await getTourBookingByUserId(currentUser?._id);
+        console.log('🚀 ~ fetchTour ~ response.data:', response.data)
+        console.log('🚀 ~ fetchTour ~ response:', response)
+        setBookings(response.tours || null);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching tour details:", error);
+        setLoading(false);
+      }
+    };
+    if (currentUser?._id) {
+      fetchBookingTour();
+    }
+  }, [currentUser?._id]);
+
+  console.log("getTourBookingByUserId", bookings);
+
   return (
     <>
       <Banner pageTitle={"Tour đã đặt"} pageName={"Tour đã đặt"} />
@@ -34,7 +65,6 @@ function MyTour() {
                     </div>
                     <div className="price">
                       <span>Giá</span>
-                      {/* <input type="text" value={value[0]} id="price" readOnly="" /> */}
                       <p className="mb-0 fw-bold">
                       </p>
                     </div>
@@ -44,103 +74,67 @@ function MyTour() {
             </div>
 
             <div className="col-lg-9">
-              <div
-                className="destination-item style-three bgc-lighter"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-
-                  <span className="badge bgc-pink">Đã xác nhận</span>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/tour-list1.jpg"
-                    alt="Tour List"
-                  />
-                </div>
-                <div className="content">
-                  <div className="destination-header">
-                    <span className="location">
-                      <i className="fal fa-map-marker-alt" />  PHÚ QUỐC
-                    </span>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
+              {loading ? (
+                <div>Đang tải...</div>
+              ) : bookings && bookings?.length > 0 ? (
+                bookings?.map((booking) => (
+                  <div
+                    key={booking?._id}
+                    className="destination-item style-three bgc-lighter mb-4"
+                    data-aos="fade-up"
+                    data-aos-duration={1500}
+                    data-aos-offset={50}
+                  >
+                    <div className="image">
+                      {/* Hiển thị trạng thái */}
+                      {booking?.bookingInfo?.status === "pending" && (
+                        <span className="badge">Chưa xác nhận</span>
+                      )}
+                      {booking?.bookingInfo?.status === "confirmed" && (
+                        <span className="badge bgc-primary">Đã xác nhận</span>
+                      )}
+                      {booking?.bookingInfo?.status === "completed" && (
+                        <span className="badge bgc-pink">Tour đã hoàn thành</span>
+                      )}
+                      <a href="#" className="heart">
+                        <i className="fas fa-heart" />
+                      </a>
+                      <img
+                        src="assets/images/destinations/tour-list1.jpg"
+                        alt="Tour List"
+                      />
+                    </div>
+                    <div className="content">
+                      <div className="destination-header">
+                        <span className="location">
+                          <i className="fal fa-map-marker-alt" /> {booking?.address}
+                        </span>
+                      </div>
+                      <h5>
+                        <Link to={`/tour-details/${booking?.tourId}`}>
+                          {booking?.fullName}
+                        </Link>
+                      </h5>
+                      <p>Email: {booking?.email}</p>
+                      <ul className="blog-meta">
+                        <li>
+                          <i className="far fa-user" /> {booking?.numAdults} người lớn, {booking?.numChildren} trẻ em
+                        </li>
+                        <li>
+                          <i className="far fa-clock" /> {new Date(booking?.createdAt).toLocaleString()}
+                        </li>
+                      </ul>
+                      <div className="destination-footer">
+                        <span className="price">
+                          <span>{booking?.totalPrice}đ</span>/tổng đơn
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <h5>
-                    <Link to="tour-details">
-                      BIỂN ĐẢO 3N2Đ | PHÚ QUỐC
-                    </Link>
-                  </h5>
-                  <p>
-                    PHÚ QUỐC
-                  </p>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-clock" />  2 ngày 1 đêm
-                    </li>
-                    <li>
-                      <i className="far fa-user" /> 8 khách
-                    </li>
-                  </ul>
-                  <div className="destination-footer">
-                    <span className="price">
-                      <span>3.290.000đ</span>/người lớn
-                    </span>
-                    <Link to="tour-details"
-                      className="theme-btn style-two style-three"
-                    >
-                      <span data-hover="Book Now">Đặt ngay</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              <ul
-                className="pagination pt-15 flex-wrap"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <li className="page-item disabled">
-                  <span className="page-link">
-                    <i className="far fa-chevron-left" />
-                  </span>
-                </li>
-                <li className="page-item active">
-                  <span className="page-link">
-                    1<span className="sr-only">(current)</span>
-                  </span>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    2
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    3
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    ...
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    <i className="far fa-chevron-right" />
-                  </a>
-                </li>
-              </ul>
+                ))
+              ) : (
+                <div>Bạn chưa đặt tour nào.</div>
+              )}
             </div>
           </div>
         </div>

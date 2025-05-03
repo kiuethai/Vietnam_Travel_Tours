@@ -46,6 +46,7 @@ function Booking() {
     return (tour.priceAdult || 0) * (form.numAdults || 0) + (tour.priceChild || 0) * (form.numChildren || 0);
 
   }, [tour, form.numAdults, form.numChildren]);
+  
   // Hàm xử lý thanh toán PayPal
   const handlePaypalApprove = async (data, actions) => {
     try {

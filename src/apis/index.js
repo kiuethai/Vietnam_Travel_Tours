@@ -119,6 +119,13 @@ export const getDataPaypal = async () => {
   return response.data
 }
 
+export const getTourBookingByUserId = async (userId) => {
+  const response = await authorizedAxiosInstance.get(
+    `${API_ROOT}/v1/booking/getUserTours/${userId}`)
+  return response.data
+}
+
+
 /* Dashboad APIS */
 export const getDashboardDataAPI = async () => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/dashboard/domain_values`)
