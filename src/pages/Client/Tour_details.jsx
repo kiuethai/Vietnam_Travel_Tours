@@ -12,6 +12,9 @@ function Tour_details() {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
+  const formatDate = d =>
+    d ? new Date(d).toLocaleDateString('vi-VN') : "";
+
   useEffect(() => {
     const fetchTour = async () => {
       try {
@@ -386,12 +389,8 @@ function Tour_details() {
                     <div className="date mb-25" >
                       <b>Ngày đi</b>
                       <input
-                        type="date"
-                        value={
-                          tour?.startDate
-                            ? new Date(tour.startDate).toISOString().split("T")[0]
-                            : ""
-                        }
+                        type="text"
+                        value={formatDate(tour?.startDate)}
                         disabled
                       />
 
@@ -399,12 +398,8 @@ function Tour_details() {
                     <div className="date mb-25">
                       <b>Ngày về</b>
                       <input
-                        type="date"
-                        value={
-                          tour?.endDate
-                            ? new Date(tour?.endDate).toISOString().split("T")[0]
-                            : ""
-                        }
+                        type="text"
+                        value={formatDate(tour?.endDate)}
                         disabled
                       />
                     </div>
@@ -432,7 +427,7 @@ function Tour_details() {
                     </ul>
                     <hr className="mb-25" />
 
-                    
+
                     <Link
                       to={`/booking/${tour?._id}`}
                       className="theme-btn style-two w-100 mt-15 mb-5 d-flex justify-content-center align-items-center"

@@ -21,7 +21,8 @@ function Booking() {
   const [errors, setErrors] = useState({});
   const [paypalReady, setPaypalReady] = useState(false);
   const [paypalClientId, setPaypalClientId] = useState("");
-
+  const formatDate = d =>
+    d ? new Date(d).toLocaleDateString('vi-VN') : "";
   // Thêm state form tại đây với các giá trị mặc định
   const [form, setForm] = useState({
     fullName: '',
@@ -46,7 +47,7 @@ function Booking() {
     return (tour.priceAdult || 0) * (form.numAdults || 0) + (tour.priceChild || 0) * (form.numChildren || 0);
 
   }, [tour, form.numAdults, form.numChildren]);
-  
+
   // Hàm xử lý thanh toán PayPal
   const handlePaypalApprove = async (data, actions) => {
     try {
@@ -389,12 +390,8 @@ function Booking() {
                     <div className="date mb-25" >
                       <b>Ngày đi</b>
                       <input
-                        type="date"
-                        value={
-                          tour?.startDate
-                            ? new Date(tour.startDate).toISOString().split("T")[0]
-                            : ""
-                        }
+                        type="text"
+                        value={formatDate(tour?.startDate)}
                         disabled
                       />
 
@@ -402,12 +399,8 @@ function Booking() {
                     <div className="date mb-25">
                       <b>Ngày về</b>
                       <input
-                        type="date"
-                        value={
-                          tour?.endDate
-                            ? new Date(tour?.endDate).toISOString().split("T")[0]
-                            : ""
-                        }
+                        type="text"
+                        value={formatDate(tour?.endDate)}
                         disabled
                       />
                     </div>

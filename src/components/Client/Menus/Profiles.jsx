@@ -76,13 +76,14 @@ function Profiles() {
           </MenuItem>
         </Link>
         <Divider />
-        
-        <MenuItem >
-          <ListItemIcon>
-            <CardTravelIcon fontSize="small" />
-          </ListItemIcon>
-          Tour đã đặt
-        </MenuItem>
+        <Link to="/my-tour" style={{ color: 'inherit' }}>
+          <MenuItem >
+            <ListItemIcon>
+              <CardTravelIcon fontSize="small" />
+            </ListItemIcon>
+            Tour đã đặt
+          </MenuItem>
+        </Link>
         <MenuItem onClick={handleLogout} sx={{
           '&:hover': {
             color: 'warning.dark',

@@ -96,44 +96,44 @@ function MyTour() {
                       {booking?.bookingInfo?.status === "completed" && (
                         <span className="badge bgc-pink">Tour đã hoàn thành</span>
                       )}
-                      <a href="#" className="heart">
-                        <i className="fas fa-heart" />
-                      </a>
+
                       <img
-                        src="assets/images/destinations/tour-list1.jpg"
+                        src={booking?.tourDetails?.images?.[0] || "assets/images/destinations/tour-list1.jpg"}
                         alt="Tour List"
                       />
                     </div>
                     <div className="content">
                       <div className="destination-header">
                         <span className="location">
-                          <i className="fal fa-map-marker-alt" /> {booking?.address}
+                          <i className="fal fa-map-marker-alt" /> {booking?.tourDetails?.destination}
                         </span>
                       </div>
                       <h5>
                         <Link to={`/tour-details/${booking?.tourId}`}>
-                          {booking?.fullName}
+                          {booking?.tourDetails?.title}
                         </Link>
                       </h5>
-                      <p>Email: {booking?.email}</p>
+                      <p>
+                        {booking?.tourDetails?.destination || "No description available"}
+                      </p>
                       <ul className="blog-meta">
                         <li>
-                          <i className="far fa-user" /> {booking?.numAdults} người lớn, {booking?.numChildren} trẻ em
+                          <i className="far fa-clock" /> {booking?.tourDetails?.time || "Duration not specified"}
                         </li>
                         <li>
-                          <i className="far fa-clock" /> {new Date(booking?.createdAt).toLocaleString()}
+                          <i className="far fa-user" /> {booking?.tourDetails?.quantity || 0} khách
                         </li>
                       </ul>
                       <div className="destination-footer">
                         <span className="price">
-                          <span>{booking?.totalPrice}đ</span>/tổng đơn
+                          <span>{booking?.tourDetails?.priceAdult?.toLocaleString('vi-VN')}đ</span>/người lớn
                         </span>
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div>Bạn chưa đặt tour nào.</div>
+                <div>Bạn chưa đặt tour nào.</div> 
               )}
             </div>
           </div>
