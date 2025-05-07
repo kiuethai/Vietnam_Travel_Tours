@@ -77,63 +77,71 @@ function MyTour() {
               {loading ? (
                 <div>Đang tải...</div>
               ) : bookings && bookings?.length > 0 ? (
-                bookings?.map((booking) => (
-                  <div
-                    key={booking?._id}
-                    className="destination-item style-three bgc-lighter mb-4"
-                    data-aos="fade-up"
-                    data-aos-duration={1500}
-                    data-aos-offset={50}
-                  >
-                    <div className="image">
-                      {/* Hiển thị trạng thái */}
-                      {booking?.bookingInfo?.status === "pending" && (
-                        <span className="badge">Chưa xác nhận</span>
-                      )}
-                      {booking?.bookingInfo?.status === "confirmed" && (
-                        <span className="badge bgc-primary">Đã xác nhận</span>
-                      )}
-                      {booking?.bookingInfo?.status === "completed" && (
-                        <span className="badge bgc-pink">Tour đã hoàn thành</span>
-                      )}
+                bookings
+                  .slice() // tạo bản sao để không thay đổi state gốc
+                  .sort((a, b) => {
+                    const order = { confirmed: 0, pending: 1, completed: 2 };
+                    const statusA = a?.bookingInfo?.status || "";
+                    const statusB = b?.bookingInfo?.status || "";
+                    return (order[statusA] ?? 99) - (order[statusB] ?? 99);
+                  })
+                  .map((booking) => (
+                    <div
+                      key={booking?._id}
+                      className="destination-item style-three bgc-lighter mb-4"
+                      data-aos="fade-up"
+                      data-aos-duration={1500}
+                      data-aos-offset={50}
+                    >
+                      <div className="image">
+                        {/* Hiển thị trạng thái */}
+                        {booking?.bookingInfo?.status === "pending" && (
+                          <span className="badge">Đợi xác nhận</span>
+                        )}
+                        {booking?.bookingInfo?.status === "confirmed" && (
+                          <span className="badge bgc-primary">Đã xác nhận</span>
+                        )}
+                        {booking?.bookingInfo?.status === "completed" && (
+                          <span className="badge bgc-pink">Tour đã hoàn thành</span>
+                        )}
 
-                      <img
-                        src={booking?.tourDetails?.images?.[0] || "assets/images/destinations/tour-list1.jpg"}
-                        alt="Tour List"
-                      />
-                    </div>
-                    <div className="content">
-                      <div className="destination-header">
-                        <span className="location">
-                          <i className="fal fa-map-marker-alt" /> {booking?.tourDetails?.destination}
-                        </span>
+                        <img
+                          src={booking?.tourDetails?.images?.[0] || "assets/images/destinations/tour-list1.jpg"}
+                          alt="Tour List"
+                        />
                       </div>
-                      <h5>
-                        <Link to={`/tour-details/${booking?.tourId}`}>
-                          {booking?.tourDetails?.title}
-                        </Link>
-                      </h5>
-                      <p>
-                        {booking?.tourDetails?.destination || "No description available"}
-                      </p>
-                      <ul className="blog-meta">
-                        <li>
-                          <i className="far fa-clock" /> {booking?.tourDetails?.time || "Duration not specified"}
-                        </li>
-                        <li>
-                          <i className="far fa-user" /> {booking?.tourDetails?.quantity || 0} khách
-                        </li>
-                      </ul>
-                      <div className="destination-footer">
-                        <span className="price">
-                          <span>{booking?.tourDetails?.priceAdult?.toLocaleString('vi-VN')}đ</span>/người lớn
-                        </span>
+                      <div className="content">
+                        <div className="destination-header">
+                          <span className="location">
+                            <i className="fal fa-map-marker-alt" /> {booking?.tourDetails?.destination}
+                          </span>
+                        </div>
+                        <h5>
+                          <Link to={`/booking/${booking?.tourDetails?._id}`}>
+                            {booking?.tourDetails?.title}
+                          </Link>
+                        </h5>
+                        <p>
+                          {booking?.tourDetails?.destination || "No description available"}
+                        </p>
+                        <ul className="blog-meta">
+                          <li>
+                            <i className="far fa-clock" /> {booking?.tourDetails?.time || "Duration not specified"}
+                          </li>
+                          <li>
+                            <i className="far fa-user" /> {booking?.tourDetails?.quantity || 0} khách
+                          </li>
+                        </ul>
+                        <div className="destination-footer">
+                          <span className="price">
+                            <span>{booking?.tourDetails?.priceAdult?.toLocaleString('vi-VN')}đ</span>/người lớn
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  ))
               ) : (
-                <div>Bạn chưa đặt tour nào.</div> 
+                <div>Bạn chưa đặt tour nào.</div>
               )}
             </div>
           </div>

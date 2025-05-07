@@ -119,6 +119,12 @@ export const getDataPaypal = async () => {
   return response.data
 }
 
+export const addMomoPayment = async (data) => {
+  const response = await authorizedAxiosInstance.post(
+    `${API_ROOT}/v1/booking/payment/momo`, data)
+  return response.data
+}
+
 export const getTourBookingByUserId = async (userId) => {
   const response = await authorizedAxiosInstance.get(
     `${API_ROOT}/v1/booking/getUserTours/${userId}`)
