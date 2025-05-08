@@ -24,8 +24,7 @@ import About from './pages/Client/About';
 import Contact from './pages/Client/Contact';
 import Destination2 from './pages/Client/Destination2';
 import Home from './pages/Client/Home';
-import Home2 from './pages/Client/Home2';
-import Home3 from './pages/Client/Home3';
+
 import NotFound from './pages/NotFound';
 import Tour_details from './pages/Client/Tour_details';
 import Tour_list from './pages/Client/Tour_list';
@@ -53,7 +52,6 @@ const ProtectedRoute = ({ user }) => {
   if (!user) return <Navigate to='/login' replace={true} />
   return <Outlet />
 }
-
 
 const ProtectedAdminRoute = ({ admin, children }) => {
   if (!admin) return <Navigate to='/admin/login' replace={true} />
@@ -101,38 +99,38 @@ function App() {
           <ReveloLayout header={1} footer={1}>
             <AccountVerification />
           </ReveloLayout>
-        }
-        />
+        } />
 
         <Route path="/forgot-password" element={
           <ReveloLayout header={1} footer={1}>
             <ForgotPassword />
           </ReveloLayout>
-        }
-        />
+        } />
 
         <Route path="/account/reset-password" element={
           <ReveloLayout header={1} footer={1}>
             <ResetPassword />
           </ReveloLayout>
-        }
-        />
+        } />
+
         {/* ProtectedRoute Routes */}
         < Route element={<ProtectedRoute user={currentUser} />}>
           {/* <Outlet /> của react-router-dom sẽ chạy vào các child route trong này */}
-
 
           {/* User setting */}
           <Route path='/settings/account' element={
             <ReveloLayout header={1} footer={1}>
               <Settings />
-            </ReveloLayout>} />
+            </ReveloLayout>
+          } />
+
           <Route path='/settings/security' element={
             <ReveloLayout header={1} footer={1}>
               <Settings />
-            </ReveloLayout>} />
-          {/* Controller booking tour for userId */}
+            </ReveloLayout>
+          } />
 
+          {/* Controller booking tour for userId */}
           <Route path="/my-tour" element={
             <ReveloLayout>
               <MyTour />
@@ -141,15 +139,10 @@ function App() {
 
         </Route>
 
-
-        <Route path="/home2" element={<Home2 />} />
-        <Route path="/home3" element={<Home3 />} />
-
         <Route path="/about" element={
           <ReveloLayout >
             <About />
           </ReveloLayout>
-
         } />
 
         <Route path="/tour" element={
@@ -166,9 +159,6 @@ function App() {
           </ReveloLayout>
         } />
 
-
-
-
         <Route path="/booking/:id" element={
           <ReveloLayout>
             <Booking />
@@ -181,42 +171,45 @@ function App() {
           </ReveloLayout>
         } />
 
-
         <Route path="/destination" element={
           <ReveloLayout>
             <Destination2 />
           </ReveloLayout>
         } />
 
-
         <Route path="/tour_sidebar" element={<Tour_sidebar />} />
-
 
         {/* Admin Routes */}
         <Route path='/admin'>
-          <Route index element={currentAdmin ? <Navigate to='/admin/dashboard' replace /> : <Navigate to='/admin/login' replace />} />
+
+          <Route index element={currentAdmin ?
+            <Navigate to='/admin/dashboard' replace /> : <Navigate to='/admin/login' replace />} />
+
           <Route path='*' element={
             <ProtectedAdminRoute admin={currentAdmin}>
               <Layout />
             </ProtectedAdminRoute>
           } />
-          <Route path='login' element={currentAdmin ? <Navigate to='/admin/dashboard' replace /> : <AuthAdmin />} />
+
+          <Route path='login' element={currentAdmin ?
+            <Navigate to='/admin/dashboard' replace /> : <AuthAdmin />} />
+
           {/* Add other admin routes here */}
           <Route path='/admin/*' element={
             <ProtectedAdminRoute admin={currentAdmin}>
               <Layout />
             </ProtectedAdminRoute>
           } />
-        </Route>
 
+
+        </Route>
 
         <Route path="*" element={
           <ReveloLayout>
             <NotFound />
           </ReveloLayout>
-
-
         } />
+
       </Routes>
     </>
   );

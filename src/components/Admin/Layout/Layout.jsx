@@ -44,7 +44,7 @@ import UserList from '~/pages/Admin/user/UserList';
 import AddTour from '~/pages/Admin/Tours/AddTours';
 import GetTour from '~/pages/Admin/Tours/GetTour';
 import UpdateTour from '~/pages/Admin/Tours/UpdateTour';
-
+import GetBookings from '~/pages/Admin/Booking/GetBookings';
 
 function Layout(props) {
   const classes = useStyles();
@@ -68,10 +68,9 @@ function Layout(props) {
         })}
       >
         <div className={classes.fakeToolbar} />
-        {/* <BreadCrumbs /> */} 
+        {/* <BreadCrumbs /> */}
         <Routes>
           <Route path='dashboard' element={<Dashboard />} />
-
 
           <Route path="profile/*" element={<Profile />} />
 
@@ -81,9 +80,9 @@ function Layout(props) {
 
           <Route path="tours/getAllTour" element={<GetTour />} />
 
-         
           <Route path="tours/getAllTour/edit/:id" element={<UpdateTour />} />
-
+          
+          <Route path="bookings" element={<GetBookings />} />
 
           {/* <Route path="/app/ecommerce/management" exact>
             <ProductsProvider>

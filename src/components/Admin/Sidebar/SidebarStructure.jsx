@@ -54,7 +54,7 @@ const structure = [
   {
     id: 3,
     label: 'Quảng lý Booking',
-    link: '/documentation',
+    link: '/admin/bookings',
     icon: <DocumentationIcon />,
   },
   {

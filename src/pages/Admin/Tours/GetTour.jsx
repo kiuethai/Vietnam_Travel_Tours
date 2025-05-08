@@ -19,16 +19,13 @@ import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TablePagination from '@mui/material/TablePagination'
+import TablePagination from '@mui/material/TablePagination/TablePagination'
 import TableRow from '@mui/material/TableRow'
-import TableSortLabel from '@mui/material/TableSortLabel'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import Notification from '~/components/Admin/Notification/Notification'
 import { toast } from 'react-toastify'
-
 import { Typography, Chip } from '~/components/Admin/Wrappers/Wrappers'
 import {
   useManagementDispatch,
@@ -39,63 +36,7 @@ import useStyles from './styles'
 
 import { actions } from '~/context/ManagementContext'
 import { getComparator, stableSort } from '~/utils/arrange'
-
-// Resizable component to handle column resizing
-const Resizable = ({ children, onResize, width }) => {
-  const [isResizing, setIsResizing] = useState(false);
-  const initialX = useRef(0);
-  const initialWidth = useRef(0);
-
-  const handleMouseDown = (e) => {
-    setIsResizing(true);
-    initialX.current = e.clientX;
-    initialWidth.current = width;
-    e.preventDefault();
-  };
-
-  const handleMouseUp = () => {
-    if (isResizing) {
-      setIsResizing(false);
-    }
-  };
-
-  const handleMouseMove = (e) => {
-    if (isResizing) {
-      const diff = e.clientX - initialX.current;
-      const newWidth = Math.max(50, initialWidth.current + diff); // Minimum width of 50px
-      onResize(newWidth);
-    }
-  };
-
-  useEffect(() => {
-    if (isResizing) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
-      return () => {
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
-      };
-    }
-  }, [isResizing]);
-
-  return (
-    <div style={{ position: 'relative', width: `${width}px` }}>
-      {children}
-      <div
-        style={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          bottom: 0,
-          width: '5px',
-          cursor: 'col-resize',
-          zIndex: 1,
-        }}
-        onMouseDown={handleMouseDown}
-      />
-    </div>
-  );
-};
+import EnhancedTableHead from '~/components/Admin/Tour/EnhancedTableHead'
 
 // Initialize default column widths - these values can be adjusted
 const defaultColumnWidths = {
@@ -111,58 +52,6 @@ const defaultColumnWidths = {
   ACTIONS: 120,
 };
 
-function EnhancedTableHead(props) {
-  const {
-    order,
-    orderBy,
-    onRequestSort,
-    columnWidths,
-    onColumnResize,
-  } = props;
-
-  const createSortHandler = property => event => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map(headCell => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'left' : 'right'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            style={{
-              width: columnWidths[headCell.id] || defaultColumnWidths[headCell.id],
-              paddingLeft: 8,
-              paddingRight: 8
-            }}
-          >
-            <Resizable
-              width={columnWidths[headCell.id] || defaultColumnWidths[headCell.id]}
-              onResize={(width) => onColumnResize(headCell.id, width)}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={createSortHandler(headCell.id)}
-              >
-                <Typography
-                  noWrap
-                  weight={'medium'}
-                  variant={'body2'}
-                >
-                  {headCell.label}
-                </Typography>
-              </TableSortLabel>
-            </Resizable>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
 
 const headCells = [
   { id: 'index', numeric: false, disablePadding: false, label: 'STT' },
@@ -259,7 +148,19 @@ function GetTour() {
     try {
       setLoading(true);
       const res = await getAllToursAPI();
-      setTourRows(Array.isArray(res) ? res : []);
+      const tours = Array.isArray(res) ? res : [];
+      setTourRows(tours);
+
+      // Tự động cập nhật trạng thái nếu đã hết hạn mà vẫn đang hoạt động
+      tours.forEach(async (tour) => {
+        if (
+          tour.endDate &&
+          moment().isAfter(moment(tour.endDate), 'day') &&
+          tour.availability
+        ) {
+          await updateTourApi(tour._id, { availability: false });
+        }
+      });
     } catch (error) {
       sendNotification('Không thể tải dữ liệu tour');
     } finally {
@@ -395,6 +296,7 @@ function GetTour() {
                   rowCount={tourRows.length}
                   columnWidths={columnWidths}
                   onColumnResize={handleColumnResize}
+                  headCells={headCells}
                 />
                 <TableBody>
                   {sortedAndPaginatedRows.map((row, index) => {
@@ -414,8 +316,8 @@ function GetTour() {
                         <TableCell padding="none" align="center" style={{ width: columnWidths['index'] }}>
                           {page * rowsPerPage + index + 1}
                         </TableCell>
-                        <TableCell align="left" style={{ width: columnWidths['title'] }}>
-                          <Typography variant="body2" noWrap title={row.title}>
+                        <TableCell align="left"  style={{ width: columnWidths['title'], whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                          <Typography variant="body2" title={row.title}>
                             {row.title}
                           </Typography>
                         </TableCell>
@@ -439,24 +341,33 @@ function GetTour() {
                             {row.quantity}
                           </Typography>
                         </TableCell>
-                        <TableCell align="left" style={{ width: columnWidths['destination'] }}>
-                          <Typography variant="body2" noWrap title={row.destination}>
+                        <TableCell align="left" style={{ width: columnWidths['destination'], whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                          <Typography variant="body2" title={row.destination}>
                             {row.destination}
                           </Typography>
                         </TableCell>
+
                         <TableCell align="center" style={{ width: columnWidths['availability'] }}>
                           <Chip
-                            label={row.availability ? 'Hoạt động' : 'Tạm ngừng'}
+                            label={
+                              row.endDate && moment().isAfter(moment(row.endDate), 'day')
+                                ? 'Tạm ngừng'
+                                : (row.availability ? 'Hoạt động' : 'Tạm ngừng')
+                            }
                             style={{
                               color: '#fff',
-                              backgroundColor: row.availability ? '#3CD4A0' : '#FF5C93',
+                              backgroundColor:
+                                row.endDate && moment().isAfter(moment(row.endDate), 'day')
+                                  ? '#FF5C93'
+                                  : (row.availability ? '#3CD4A0' : '#FF5C93'),
                               fontSize: 11,
                               fontWeight: 'bold',
                             }}
                           />
                         </TableCell>
+
                         <TableCell align="left" style={{ width: columnWidths['dates'] }}>
-                          <Typography variant="body2" noWrap>
+                          <Typography variant="body2" >
                             {row.startDate && moment(row.startDate).format('DD/MM/YYYY')}
                             {row.endDate && ` - ${moment(row.endDate).format('DD/MM/YYYY')}`}
                           </Typography>

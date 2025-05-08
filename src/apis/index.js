@@ -131,6 +131,16 @@ export const getTourBookingByUserId = async (userId) => {
   return response.data
 }
 
+export const getAllBookingsAPI = async () => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/booking/getAllTourBooking`)
+  return response.data
+}
+
+export const updateBookingApi = async (tourId, data) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/booking/updateBooking/${tourId}`, data)
+  toast.success('Cập nhật trạng thái booking thành công!', { theme: 'colored' })
+  return response.data
+}
 
 /* Dashboad APIS */
 export const getDashboardDataAPI = async () => {

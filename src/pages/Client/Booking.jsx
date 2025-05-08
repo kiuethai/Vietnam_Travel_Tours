@@ -56,6 +56,8 @@ function Booking() {
       const bookingSuccess = await handleSubmit();
       if (bookingSuccess !== false) {
         toast.success("Thanh toán thành công bởi " + details.payer.name.given_name);
+        window.location.reload();
+        return
       }
     } catch (error) {
       toast.error("Có lỗi xảy ra khi xác nhận thanh toán PayPal");
@@ -185,6 +187,8 @@ function Booking() {
             totalPrice: 0
           });
           setErrors({});
+          window.location.reload();
+          return
         }
       } catch (error) {
         toast.error('Có lỗi xảy ra khi đặt tour!');
