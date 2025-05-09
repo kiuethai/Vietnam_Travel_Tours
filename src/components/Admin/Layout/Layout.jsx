@@ -45,6 +45,8 @@ import AddTour from '~/pages/Admin/Tours/AddTours';
 import GetTour from '~/pages/Admin/Tours/GetTour';
 import UpdateTour from '~/pages/Admin/Tours/UpdateTour';
 import GetBookings from '~/pages/Admin/Booking/GetBookings';
+import BookingDetail from '~/pages/Admin/Booking/BookingDetail';
+import GetContacts from '~/pages/Admin/Contact/GetContacts';
 
 function Layout(props) {
   const classes = useStyles();
@@ -81,36 +83,15 @@ function Layout(props) {
           <Route path="tours/getAllTour" element={<GetTour />} />
 
           <Route path="tours/getAllTour/edit/:id" element={<UpdateTour />} />
-          
+
           <Route path="bookings" element={<GetBookings />} />
 
-          {/* <Route path="/app/ecommerce/management" exact>
-            <ProductsProvider>
-              <Ecommerce />
-            </ProductsProvider>
-          </Route>
-          <Route path="/app/ecommerce/management/edit/:id" exact>
-            <ProductsProvider>
-              <CreateProduct />
-            </ProductsProvider>
-          </Route>
-          <Route path="/app/ecommerce/management/create">
-            <ProductsProvider>
-              <CreateProduct />
-            </ProductsProvider>
-          </Route>
-          <Route path="/app/ecommerce/product/:id" component={Product}/>
-          <Route path="/app/ecommerce/product" component={Product} />
-          <Route path="/app/ecommerce/gridproducts" component={ProductsGrid}/>
+          <Route path="booking-detail/:id" element={<BookingDetail />} />
 
-        
-          <Route path={'/app/users'} exact component={UsersTablePage} />
-          <Route path={'/app/user/new'} exact component={UsersFormPage} />
-          <Route
-            path={'/app/users/:id/edit'}
-            exact
-            component={UsersFormPage}
-          /> */}
+          <Route path="booking-detail/:id" element={<BookingDetail />} />
+
+          <Route path="contact" element={<GetContacts />} />
+
           <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
         </Routes>
 

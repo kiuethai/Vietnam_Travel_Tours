@@ -316,7 +316,7 @@ function GetTour() {
                         <TableCell padding="none" align="center" style={{ width: columnWidths['index'] }}>
                           {page * rowsPerPage + index + 1}
                         </TableCell>
-                        <TableCell align="left"  style={{ width: columnWidths['title'], whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                        <TableCell align="left" style={{ width: columnWidths['title'], whiteSpace: 'normal', wordBreak: 'break-word' }}>
                           <Typography variant="body2" title={row.title}>
                             {row.title}
                           </Typography>

@@ -1,7 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Banner from "~/components/Client/Banner";
+import { contactAdminAPI } from "~/apis";
 
 function Contact() {
+  const [form, setForm] = useState({
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    message: ""
+  });
+  const [status, setStatus] = useState(null);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await contactAdminAPI(form);
+      setStatus("Gửi thành công!");
+      setForm({ fullName: "", phoneNumber: "", email: "", message: "" });
+    } catch (err) {
+      setStatus("Gửi thất bại, vui lòng thử lại.");
+    }
+  };
+
   return (
     <div>
       <Banner pageTitle={"Liên hệ với chúng tôi"} />
@@ -72,7 +96,7 @@ function Contact() {
                       <h5>Cần trợ giúp và hỗ trợ</h5>
                       <div className="text">
                         <i className="far fa-envelope" />{" "}
-                        <a href="mailto:kiuethai093@gmail.com">kiuethai093@gmail.com</a>
+                        <a href="mailto:kiuethai093@gmail.com">neverforget989@gmail.com</a>
                       </div>
                     </div>
                   </div>
@@ -152,8 +176,7 @@ function Contact() {
                   id="contactForm"
                   className="contactForm"
                   name="contactForm"
-                  action="assets/php/form-process.php"
-                  method="post"
+                  onSubmit={handleSubmit}
                   data-aos="fade-left"
                   data-aos-duration={1500}
                   data-aos-offset={50}
@@ -167,15 +190,16 @@ function Contact() {
                   <div className="row mt-35">
                     <div className="col-md-6">
                       <div className="form-group">
-                        <label htmlFor="name">Họ và tên</label>
+                        <label htmlFor="fullName">Họ và tên</label>
                         <input
                           type="text"
-                          id="name"
-                          name="name"
+                          id="fullName"
+                          name="fullName"
                           className="form-control"
                           placeholder="Nhập tên của bạn"
-                          defaultValue=""
-                          required=""
+                          value={form.fullName}
+                          onChange={handleChange}
+                          required
                           data-error="Please enter your Name"
                         />
                         <div className="help-block with-errors" />
@@ -183,15 +207,16 @@ function Contact() {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group">
-                        <label htmlFor="phone_number">Số điện thoại</label>
+                        <label htmlFor="phoneNumber">Số điện thoại</label>
                         <input
                           type="text"
-                          id="phone_number"
-                          name="phone_number"
+                          id="phoneNumber"
+                          name="phoneNumber"
                           className="form-control"
                           placeholder="Nhập số điện thoại của bạn"
-                          defaultValue=""
-                          required=""
+                          value={form.phoneNumber}
+                          onChange={handleChange}
+                          required
                           data-error="Số điện thoại"
                         />
                         <div className="help-block with-errors" />
@@ -205,9 +230,10 @@ function Contact() {
                           id="email"
                           name="email"
                           className="form-control"
-                          placeholder="Nhập địa chỉ email của bạn"  
-                          defaultValue=""
-                          required=""
+                          placeholder="Nhập địa chỉ email của bạn"
+                          value={form.email}
+                          onChange={handleChange}
+                          required
                           data-error="Please enter your Email"
                         />
                         <div className="help-block with-errors" />
@@ -222,26 +248,26 @@ function Contact() {
                           className="form-control"
                           rows={5}
                           placeholder="Nội dung"
-                          required=""
+                          value={form.message}
+                          onChange={handleChange}
+                          required
                           data-error="Please enter your Message"
-                          defaultValue={""}
                         />
                         <div className="help-block with-errors" />
                       </div>
                     </div>
                     <div className="col-md-12">
                       <div className="form-group mb-0">
-                       
-                   
                         <button type="submit" className="theme-btn style-two">
                           <span data-hover="Send Comments">Gửi</span>
                           <i className="fal fa-arrow-right" />
                         </button>
+                        {status && <div style={{ marginTop: 10 }}>{status}</div>}
                         <div id="msgSubmit" className="hidden" />
                       </div>
                     </div>
                   </div>
-                </form> 
+                </form>
               </div>
             </div>
             <div className="col-lg-5">
@@ -293,8 +319,6 @@ function Contact() {
       </div>
       {/* Contact Map End */}
     </div>
-
-
   )
 }
 

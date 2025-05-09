@@ -59,17 +59,16 @@ const structure = [
   },
   {
     id: 4,
+    label: 'Contact',
+    icon: <SupportIcon />,
+    link: '/admin/contact',
+  },
+  ,
+  {
+    id: 5,
     label: 'Chat',
     icon: <ChatIcon />,
-    click: function (event, ...rest) {
-      const name = 'chatSetOpen'
-      rest.forEach(c => {
-        if (c.clickName === name) {
-          return c(event)
-        }
-        return false
-      })
-    },
+    // link: '/admin/bookings',
   },
 ];
 

@@ -20,11 +20,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import { toast } from 'react-toastify'
 import { Chip } from '~/components/Admin/Wrappers/Wrappers'
-import {
-  useManagementDispatch,
-  useManagementState,
-} from '~/context/ManagementContext'
-import useStyles from './styles'
+import useStyles from '~/pages/Admin/Tours/styles'
 import { getComparator, stableSort } from '~/utils/arrange'
 import iconMomo from '~/assets/images/icons/icon_momo.png'
 import iconPaypal from '~/assets/images/icons/icon_paypal.png'
@@ -79,9 +75,6 @@ function GetBookings() {
   const [loading, setLoading] = useState(false)
   // New state for column widths
   const [columnWidths, setColumnWidths] = useState({ ...defaultColumnWidths })
-
-  const managementDispatch = useManagementDispatch()
-  const managementValue = useManagementState()
   const classes = useStyles()
 
 
@@ -95,7 +88,6 @@ function GetBookings() {
     rowsPerPage - Math.min(rowsPerPage, tourRows.length - page * rowsPerPage),
     [rowsPerPage, tourRows.length, page]
   );
-
 
   const fetchBookings = async () => {
     try {
@@ -321,7 +313,7 @@ function GetBookings() {
                                 variant="outlined"
                                 onClick={e => {
                                   e.stopPropagation();
-                                  navigate(`/admin/bookings/detail/${row._id}`);
+                                  navigate(`/admin/booking-detail/${row._id}`);
                                 }}
                               >
                                 Xem chi tiết

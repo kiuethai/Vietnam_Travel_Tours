@@ -104,6 +104,24 @@ export const addItineraryApi = async (tourId, data) => {
 }
 
 
+/* Contact tour APIS */
+
+export const contactAdminAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/contact`, data)
+  toast.success('Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi lại bạn trong thời gian sớm nhất.', { theme: 'colored' })
+  return response.data
+}
+
+export const getAllContactAPI = async () => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/contact`)
+  return response.data
+}
+
+export const replyUserAPI = async ( data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/contact/reply`, data)
+  toast.success('Phản hồi thành công!', { theme: 'colored' })
+  return response.data
+}
 
 /* Booking tour APIS */
 export const addBookingTourApi = async (data) => {
