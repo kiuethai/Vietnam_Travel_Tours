@@ -21,7 +21,6 @@ export const refreshTokenAPI = async () => {
   return response.data
 }
 
-
 export const requestPasswordResetAPI = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/password-reset/request`, data)
   toast.success('Link đặt lại mật khẩu đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư và làm theo hướng dẫn.', { theme: 'colored' })
@@ -39,16 +38,13 @@ export const getAllUsersAPI = async () => {
   return response.data
 }
 
-
 export const UpdateUserAPI = async (userId, data) => {
   const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/${userId}`, data)
   toast.success('Cập nhật thông tin tài khoản thành công!', { theme: 'colored' })
   return response.data
 }
 
-
 /* APIs Admin */
-
 export const registerAdminAPI = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/admin/register`, data)
   toast.success('Tài khoản đã được tạo thành công! Vui lòng kiểm tra và xác minh tài khoản của bạn trước khi đăng nhập', { theme: 'colored' })
@@ -67,7 +63,6 @@ export const refreshTokenAdminAPI = async () => {
 }
 
 /* APIs Tours */
-
 export const getAllToursAPI = async () => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/tours/getAllTours`)
   return response.data
@@ -103,9 +98,7 @@ export const addItineraryApi = async (tourId, data) => {
   return response.data
 }
 
-
 /* Contact tour APIS */
-
 export const contactAdminAPI = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/contact`, data)
   toast.success('Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi lại bạn trong thời gian sớm nhất.', { theme: 'colored' })
@@ -171,8 +164,14 @@ export const sendInvoiceAPI = async (bookingId) => {
   toast.success('Gửi hóa đơn thành công!', { theme: 'colored' })
   return response.data
 }
+
 /* Dashboad APIS */
 export const getDashboardDataAPI = async () => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/dashboard/domain_values`)
   return response.data
 } 
+
+export const getDashboardDataSummaryAPI = async() => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/dashboard/summary`)
+  return response.data
+}

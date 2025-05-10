@@ -36,7 +36,7 @@ const defaultColumnWidths = {
   createdAt: 110,
   repliedAt: 110,
   reply: 140,
-  ACTIONS: 140,
+  ACTIONS: 120,
 };
 
 const headCells = [
@@ -262,7 +262,7 @@ function GetContacts() {
                                   size="small"
                                   color="primary"
                                   variant="contained"
-                                  style={{ backgroundColor: '#e0e0e0', color: '#fff' }}
+                                  style={{ backgroundColor: '#000000', color: '#fff' }}
                                   disabled
                                 >
                                   Đã phản hồi

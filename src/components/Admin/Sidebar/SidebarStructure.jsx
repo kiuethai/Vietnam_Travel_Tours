@@ -25,10 +25,17 @@ import ViewCompactRoundedIcon from '@mui/icons-material/ViewCompactRounded';
 import Dot from './components/Dot';
 
 const structure = [
-  { id: 100, label: 'Quản lý Admin', link: '/admin/profile', icon: <ProfileIcon /> },
-  { id: 0, label: 'Dashboard', link: '/admin/dashboard', icon: <HomeIcon /> },
+  { id: 100, label: 'Dashboard', link: '/admin/dashboard', icon: <HomeIcon /> },
+  { id: 0, label: 'Quản lý Admin', link: '/admin/profile', icon: <ProfileIcon /> },
   {
     id: 1,
+    label: 'Quản lý người dùng',
+    link: '/admin/users',
+    badgeColor: 'secondary',
+    icon: <PersonIcon />
+  },
+  {
+    id: 2,
     label: 'Quản lý Tour',
     badgeColor: 'success',
     link: 'tours/addtours',
@@ -44,13 +51,7 @@ const structure = [
       }
     ],
   },
-  {
-    id: 2,
-    label: 'Quản lý người dùng',
-    link: '/admin/users',
-    badgeColor: 'secondary',
-    icon: <PersonIcon />
-  },
+
   {
     id: 3,
     label: 'Quảng lý Booking',

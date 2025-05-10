@@ -1,15 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useEffect } from "react";
 import { Link } from 'react-router-dom'
 import Banner from "~/components/Client/Banner";
-import { getTourByIdAPI, addBookingTourApi, getDataPaypal, getTourBookingByUserId, addMomoPayment } from "~/apis";
+import { getTourByIdAPI, addBookingTourApi, getDataPaypal, getTourBookingByUserId, addMomoPayment, updateBookingApi } from "~/apis";
 import draftToHtml from 'draftjs-to-html';
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-
 const transIdMomo = null; // hoặc giá trị thực tế
 
 function Booking() {
@@ -22,6 +20,10 @@ function Booking() {
   const [paypalReady, setPaypalReady] = useState(false);
   const [paypalClientId, setPaypalClientId] = useState("");
   const [userBooking, setUserBooking] = useState(null);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+
+
   const formatDate = d =>
     d ? new Date(d).toLocaleDateString('vi-VN') : "";
   // Thêm state form tại đây với các giá trị mặc định
@@ -126,7 +128,6 @@ function Booking() {
   };
 
   // Xử lý submit
-  // ...existing code...
   const handleSubmit = async (e) => {
     if (e && typeof e.preventDefault === "function") {
       e.preventDefault();
@@ -197,7 +198,6 @@ function Booking() {
     }
     return false
   };
-  // ...existing code...
 
   useEffect(() => {
     const fetchPaypalClientId = async () => {
@@ -212,6 +212,21 @@ function Booking() {
     "client-id": paypalClientId || "sb",
     currency: "USD",
   }), [paypalClientId]);
+
+
+  const handleCancelTour = async () => {
+    setCancelLoading(true);
+    try {
+      await updateBookingApi(userBooking.bookingId, { status: "cancelled" });
+      toast.success("Đã hủy tour thành công!");
+      window.location.reload();
+    } catch {
+      toast.error("Hủy tour thất bại!");
+    } finally {
+      setCancelLoading(false);
+      setShowCancelDialog(false);
+    }
+  }
 
   return (
     <>
@@ -532,9 +547,15 @@ function Booking() {
                       </span>
                     </h6>
                     {userBooking ? (
-                      <button className="theme-btn style-two w-100 mt-15 mb-5 btn-danger">
-                        <span>Hủy tour</span>
-                      </button>
+                      <>
+                        <button
+                          className="theme-btn style-two w-100 mt-15 mb-5 btn-danger"
+                          type="button"
+                          onClick={() => setShowCancelDialog(true)}
+                        >
+                          <span>Hủy tour</span>
+                        </button>
+                      </>
                     ) : (
                       form.payment === "paypal-payment" && paypalReady ? (
                         <PayPalScriptProvider options={{ ...paypalOptions, currency: "USD" }}>
@@ -564,9 +585,55 @@ function Booking() {
             </div>
           </div>
         </div>
-      </section >
-    </>
+      </section>
 
+      {/* Đặt dialog xác nhận ở ngoài cùng */}
+      {showCancelDialog && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: '8px',
+              padding: '24px',
+              minWidth: '320px',
+              maxWidth: '400px',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            }}
+          >
+            <h5 className="mb-4">Bạn chắc chắn muốn hủy tour này?</h5>
+            <div className="d-flex justify-content-end gap-2">
+              <button
+                className="btn btn-secondary"
+                onClick={() => setShowCancelDialog(false)}
+                disabled={cancelLoading}
+              >
+                Hủy
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={handleCancelTour}
+                disabled={cancelLoading}
+              >
+                {cancelLoading ? 'Đang xử lý...' : 'Xác nhận'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

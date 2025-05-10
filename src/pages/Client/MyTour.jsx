@@ -2,28 +2,23 @@ import Banner from "~/components/Client/Banner";
 import Subscribe from "~/components/Client/Subscribe";
 import TourSidebar from "~/components/Client/TourSidebar";
 import { Link } from 'react-router-dom'
-import { getTourBookingByUserId } from "~/apis";
+import { getTourBookingByUserId, updateBookingApi } from "~/apis";
 import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
-
 
 function MyTour() {
   const currentUser = useSelector(selectCurrentUser);
   const [bookings, setBookings] = useState();
   const [loading, setLoading] = useState(true);
-  console.log("currentUser", currentUser?._id);
 
   useEffect(() => {
     const fetchBookingTour = async () => {
       try {
         const response = await getTourBookingByUserId(currentUser?._id);
-        console.log('🚀 ~ fetchTour ~ response.data:', response.data)
-        console.log('🚀 ~ fetchTour ~ response:', response)
         setBookings(response.tours || null);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching tour details:", error);
         setLoading(false);
       }
     };
@@ -32,21 +27,29 @@ function MyTour() {
     }
   }, [currentUser?._id]);
 
-  console.log("getTourBookingByUserId", bookings);
+  useEffect(() => {
+    if (!bookings) return;
+    const now = new Date();
+    bookings.forEach((booking) => {
+      const endDate = new Date(booking?.tourDetails?.endDate);
+      if (
+        booking?.bookingInfo?.status !== "completed" &&
+        endDate &&
+        now > endDate
+      ) {
+        updateBookingApi(booking?.bookingInfo?.bookingId, { status: "completed" });
+        window.location.reload();
+        return
+      }
+    });
+  }, [bookings]);
 
   return (
     <>
       <Banner pageTitle={"Tour đã đặt"} pageName={"Tour đã đặt"} />
-      {/* Tour List Area start */}
-      <section
-        className="tour-list-page py-100 rel z-1"
-        style={{
-          "padding-top": "50px"
-        }}
-      >
+      <section className="tour-list-page py-100 rel z-1" style={{ "paddingTop": "50px" }}>
         <div className="container">
           <div className="row">
-            {/* <TourSidebar /> */}
             <div className="col-lg-3 col-md-6 col-sm-10 rmb-75">
               <div className="shop-sidebar mb-30">
                 <div
@@ -72,13 +75,12 @@ function MyTour() {
                 </div>
               </div>
             </div>
-
             <div className="col-lg-9">
               {loading ? (
                 <div>Đang tải...</div>
               ) : bookings && bookings?.length > 0 ? (
                 bookings
-                  .slice() // tạo bản sao để không thay đổi state gốc
+                  .slice()
                   .sort((a, b) => {
                     const order = { confirmed: 0, pending: 1, completed: 2 };
                     const statusA = a?.bookingInfo?.status || "";
@@ -94,7 +96,6 @@ function MyTour() {
                       data-aos-offset={50}
                     >
                       <div className="image">
-                        {/* Hiển thị trạng thái */}
                         {booking?.bookingInfo?.status === "pending" && (
                           <span className="badge">Đợi xác nhận</span>
                         )}
@@ -104,7 +105,6 @@ function MyTour() {
                         {booking?.bookingInfo?.status === "completed" && (
                           <span className="badge bgc-pink">Tour đã hoàn thành</span>
                         )}
-
                         <img
                           src={booking?.tourDetails?.images?.[0] || "assets/images/destinations/tour-list1.jpg"}
                           alt="Tour List"
@@ -147,11 +147,8 @@ function MyTour() {
           </div>
         </div>
       </section>
-      {/* Tour List Area end */}
-      {/* Newsletter Area start */}
       <Subscribe />
-      {/* Newsletter Area end */}
     </>
   );
-};
+}
 export default MyTour;
