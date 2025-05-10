@@ -243,7 +243,7 @@ function GetContacts() {
                             )}
                           </TableCell>
                           <TableCell align="center">
-                            {!row.repliedAt && (
+                            {!row.repliedAt ? (
                               <MenuItem
                                 size="small"
                                 color="primary"
@@ -252,10 +252,24 @@ function GetContacts() {
                                   e.stopPropagation();
                                   handleReply(row);
                                 }}
+                                style={{ backgroundColor: '#333', color: '#fff' }}
                               >
                                 Phản hồi
                               </MenuItem>
-                            )}
+                            ) :
+                              (
+                                <MenuItem
+                                  size="small"
+                                  color="primary"
+                                  variant="contained"
+                                  style={{ backgroundColor: '#e0e0e0', color: '#fff' }}
+                                  disabled
+                                >
+                                  Đã phản hồi
+                                </MenuItem>
+                              )
+
+                            }
                           </TableCell>
                         </TableRow>
                       );
@@ -268,7 +282,7 @@ function GetContacts() {
                   </TableBody>
                 </Table>
               </TableContainer>
-              
+
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, 50]}
                 component="div"

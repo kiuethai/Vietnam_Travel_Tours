@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -14,39 +14,20 @@ import {
   Chip,
   Divider,
   Avatar,
-  Stack,
+  Stack
 } from '@mui/material';
+import moment from 'moment'
 import PrintIcon from '@mui/icons-material/Print';
 import SendIcon from '@mui/icons-material/Send';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import PaidIcon from '@mui/icons-material/Paid';
+import { useNavigate, useParams } from 'react-router-dom'
+import { getTourBookingByBookingId, updateBookingApi, sendInvoiceAPI } from '~/apis'
+import { toast } from 'react-toastify';
 
-// Dữ liệu mẫu, thay bằng props hoặc fetch từ API
-const invoice_booking = {
-  title: 'Tour Đà Nẵng - Hội An',
-  bookingDate: '2024-05-10',
-  fullName: 'Nguyễn Văn A',
-  address: 'thanh Xuân, Hà Nội',
-  phoneNumber: '0123456789',
-  email: 'neverforget989@gmail.com',
-  checkoutId: 'HD123456',
-  transactionId: 'GD987654',
-  paymentDate: '2025-05-10',
-  userId: 'user001',
-  numAdults: 2,
-  priceAdult: 1500000,
-  numChildren: 1,
-  priceChild: 1000000,
-  destination: 'Hội An',
-  paymentMethod: 'office-payment', // 'paypal-payment', 'office-payment'
-  totalPrice: 4000000,
-  amount: 4000000,
-  startDate: '2025-05-15',
-  bookingStatus: 'b', // 'b' = chưa xác nhận
-  bookingId: 'BK001',
-};
 
 function formatCurrency(number) {
+  if (typeof number !== 'number' || isNaN(number)) return '0 vnđ';
   return number.toLocaleString('vi-VN') + ' vnđ';
 }
 
@@ -55,21 +36,24 @@ function getPaymentMethodIcon(method) {
     case 'momo-payment':
       return (
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar src="../../assets/images/icons/icon_momo.png" alt="Momo" sx={{ width: 45, height: 45 }} />
+          <Box src="../../assets/images/icons/icon_momo.png" alt="Momo" component="img"
+            sx={{ width: 45, height: 'auto' }} />
           <Typography>Momo</Typography>
         </Stack>
       );
     case 'paypal-payment':
       return (
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar src="../../assets/images/icons/icon_paypal.png" alt="Paypal" sx={{ width: 45, height: 45 }} />
+          <Box src="../../assets/images/icons/icon_paypal.png" alt="Paypal" component="img"
+            sx={{ width: 45, height: 'auto' }} />
           <Typography>Paypal</Typography>
         </Stack>
       );
     default:
       return (
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar src="../../assets/images/icons/icon_office.png" alt="Office" sx={{ width: 45, height: 45 }} />
+          <Box src="../../assets/images/icons/icon_office.png" alt="Office" component="img"
+            sx={{ width: 45, height: 'auto' }} />
           <Chip label="Thanh toán tại văn phòng" color="info" size="small" />
         </Stack>
       );
@@ -77,6 +61,49 @@ function getPaymentMethodIcon(method) {
 }
 
 function BookingDetail() {
+  const navigate = useNavigate();
+  const [invoice_booking, setInvoiceBooking] = useState({});
+  const [loading, setLoading] = useState(false)
+  const { id } = useParams();
+
+  const fetchBookings = async () => {
+    try {
+      setLoading(true);
+      const res = await getTourBookingByBookingId(id);
+      if (res && res.tour) {
+        const { bookingInfo, tourDetails } = res.tour;
+        setInvoiceBooking({
+          ...bookingInfo,
+          ...tourDetails,
+          bookingDate: bookingInfo.bookingDate,
+          bookingStatus: bookingInfo.status,
+          numAdults: bookingInfo.adults,
+          numChildren: bookingInfo.children,
+          amount: bookingInfo.totalPrice,
+          // fallback nếu thiếu trường
+          priceAdult: tourDetails.priceAdult || 0,
+          priceChild: tourDetails.priceChild || 0,
+          destination: tourDetails.destination || '',
+          title: tourDetails.title || '',
+          startDate: tourDetails.startDate,
+          totalPrice: bookingInfo.totalPrice,
+        });
+
+
+      } else {
+        setInvoiceBooking({});
+      }
+    } catch (error) {
+      toast.error('Không thể tải dữ liệu booking');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookings();
+  }, []);
+  console.log("invoice_booking", invoice_booking)
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>
@@ -87,38 +114,40 @@ function BookingDetail() {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={8}>
             <Stack direction="row" alignItems="center" spacing={2}>
-              <Avatar src="../../assets/images/icons/icon_office.png" alt="Office" sx={{ width: 50, height: 50 }}/>
+              <Avatar src="../../assets/images/icons/icon_office.png" alt="Office" sx={{ width: 50, height: 50 }} />
               <Typography variant="h5">{invoice_booking.title}</Typography>
             </Stack>
           </Grid>
           <Grid item xs={12} md={4} textAlign={{ xs: 'left', md: 'right' }}>
             <Typography variant="subtitle2">
-              Ngày: {new Date(invoice_booking.bookingDate).toLocaleDateString('vi-VN')}
+              Ngày đặt tour: {new Date(invoice_booking.bookingDate).toLocaleDateString('vi-VN')}
             </Typography>
           </Grid>
         </Grid>
         <Divider sx={{ my: 2 }} />
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
-            <Typography variant="subtitle2">Từ</Typography>
+            <Typography variant="subtitle2">Đến</Typography>
             <Typography fontWeight="bold">{invoice_booking.fullName}</Typography>
             <Typography>{invoice_booking.address}</Typography>
             <Typography>Số điện thoại: {invoice_booking.phoneNumber}</Typography>
             <Typography>Email: {invoice_booking.email}</Typography>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Typography variant="subtitle2">Đến</Typography>
+            <Typography variant="subtitle2">Từ</Typography>
             <Typography fontWeight="bold">Công ty KTTravel</Typography>
-            <Typography>Thanh xuân</Typography>
+            <Typography>Kim Giang, Hoàng Mai</Typography>
             <Typography>Hà Nội</Typography>
-            <Typography>Phone: 1 (804) 123-9876</Typography>
-            <Typography>Email: hoangthiloan@gmail.com</Typography>
+            <Typography>Phone: 0363994558</Typography>
+            <Typography>Email: neverforget989@gmail.com</Typography>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Typography><b>Mã hóa đơn #{invoice_booking.checkoutId}</b></Typography>
-            <Typography><b>Mã giao dịch:</b> {invoice_booking.transactionId}</Typography>
-            <Typography><b>Ngày thanh toán:</b> {invoice_booking.paymentDate}</Typography>
-            <Typography><b>Tài khoản:</b> {invoice_booking.userId}</Typography>
+            <Typography><b>Mã hóa đơn: {invoice_booking?.bookingId}</b></Typography>
+            <Typography><b>Mã giao dịch:</b> {invoice_booking?.checkoutId}</Typography>
+            <Typography><b>Ngày thanh toán: </b>
+              {invoice_booking?.updatedAt ? moment(invoice_booking?.updatedAt).format('DD/MM/YYYY') : ''}
+            </Typography>
+            <Typography><b>Tài khoản:</b> {invoice_booking?.email}</Typography>
           </Grid>
         </Grid>
         <Divider sx={{ my: 2 }} />
@@ -186,20 +215,52 @@ function BookingDetail() {
           <Button variant="outlined" startIcon={<PrintIcon />} onClick={() => window.print()}>
             In hóa đơn
           </Button>
-          <Button variant="contained" color="primary" startIcon={<SendIcon />}>
+          <Button variant="contained" color="primary" startIcon={<SendIcon />}
+            onClick={async (e) => {
+              e.stopPropagation();
+              setLoading(true);
+              try {
+                await sendInvoiceAPI(invoice_booking.bookingId);
+                toast.success('Gửi hóa đơn thành công');
+                return
+              } catch {
+                toast.error('Lỗi gửi hóa đơn')
+              } finally {
+                setLoading(false);
+              }
+            }}
+          >
             Gửi hóa đơn cho khách hàng
           </Button>
-          {invoice_booking.bookingStatus === 'b' && (
-            <Button variant="contained" color="success" startIcon={<CreditCardIcon />}>
-              Xác nhận
+          {invoice_booking.bookingStatus === 'pending' && (
+            <Button variant="contained" color="success" startIcon={<CreditCardIcon />}
+              onClick={async (e) => {
+                e.stopPropagation();
+                setLoading(true);
+                try {
+                  await updateBookingApi(invoice_booking.bookingId, { status: 'confirmed' });
+                  toast.success('Xác nhận booking thành công');
+                  fetchBookings()
+
+                  return
+                } catch {
+                  toast.error('Lỗi xác nhận booking')
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              Xác nhận booking
             </Button>
           )}
-          <Button variant="contained" color="info" startIcon={<PaidIcon />}>
-            Đã thanh toán
-          </Button>
+          {invoice_booking.paymentStatus === 'y' && (
+            <Button variant="contained" color="info" startIcon={<PaidIcon />}>
+              Đã thanh toán
+            </Button>)
+          }
         </Stack>
       </Paper>
-    </Box>
+    </Box >
   );
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { React, useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {  getAllBookingsAPI, updateBookingApi } from '~/apis'
+import { getAllBookingsAPI, updateBookingApi } from '~/apis'
 import {
   Grid,
   Box,
@@ -15,7 +15,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination/TablePagination'
 import TableRow from '@mui/material/TableRow'
-import Notification from '~/components/Admin/Notification/Notification'
+
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import { toast } from 'react-toastify'
@@ -41,7 +41,7 @@ const defaultColumnWidths = {
   totalPrice: 130,
   status: 120,
   paymentStatus: 120,
-  paymentMethod: 120,
+  paymentMethod: 140,
   ACTIONS: 140,
 };
 
@@ -94,10 +94,9 @@ function GetBookings() {
       setLoading(true);
       const res = await getAllBookingsAPI();
       console.log('🚀 ~ fetchBookings ~ res:', res.tours)
-
       setTourRows(Array.isArray(res.tours) ? res.tours : []);
     } catch (error) {
-      sendNotification('Không thể tải dữ liệu booking');
+      toast.error('Không thể tải dữ liệu booking');
     } finally {
       setLoading(false);
     }
@@ -106,29 +105,6 @@ function GetBookings() {
   useEffect(() => {
     fetchBookings();
   }, []);
-
-  function sendNotification(text) {
-    const componentProps = {
-      type: "feedback",
-      message: text,
-      variant: "contained",
-      color: "success"
-    };
-    const options = {
-      type: "info",
-      position: toast.success,
-      progressClassName: classes.progress,
-      className: classes.notification,
-      timeOut: 1000
-    };
-    return toast(
-      <Notification
-        {...componentProps}
-        className={classes.notificationComponent}
-      />,
-      options
-    );
-  }
 
   const handleRequestSort = useCallback((event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -294,10 +270,11 @@ function GetBookings() {
                                     setLoading(true);
                                     try {
                                       await updateBookingApi(row._id, { status: 'confirmed' });
-                                      sendNotification('Đã xác nhận booking');
-                                      fetchBookings();
+                                      toast.success('Đã xác nhận booking');
+                                      await fetchBookings();
+                                      window.location.reload();
                                     } catch {
-                                      sendNotification('Lỗi xác nhận booking');
+                                      toast.error('Lỗi xác nhận booking');
                                     } finally {
                                       setLoading(false);
                                     }
@@ -320,9 +297,6 @@ function GetBookings() {
                               </MenuItem>
                             </Select>
                           </Box>
-
-
-
                         </TableCell>
                       </TableRow>
                     );
