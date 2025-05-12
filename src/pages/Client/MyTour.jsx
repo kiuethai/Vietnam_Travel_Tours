@@ -50,7 +50,7 @@ function MyTour() {
       <section className="tour-list-page py-100 rel z-1" style={{ "paddingTop": "50px" }}>
         <div className="container">
           <div className="row">
-            <div className="col-lg-3 col-md-6 col-sm-10 rmb-75">
+            {/* <div className="col-lg-3 col-md-6 col-sm-10 rmb-75">
               <div className="shop-sidebar mb-30">
                 <div
                   className="widget widget-filter"
@@ -74,7 +74,7 @@ function MyTour() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="col-lg-9">
               {loading ? (
                 <div>Đang tải...</div>

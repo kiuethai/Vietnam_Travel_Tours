@@ -5,8 +5,6 @@ import storage from 'redux-persist/lib/storage'
 import { combineReducers } from 'redux'
 import { persistReducer } from 'redux-persist'
 
-
-
 // Cấu hình persist
 const rootPersistConfig = {
   key: 'root', // key của cái persist do chúng ta chỉ định, cứ để mặc định là root

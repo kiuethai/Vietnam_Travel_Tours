@@ -114,7 +114,6 @@ function GetTour() {
         closeModal();
         return;
       }
-
       await updateTourApi(tourId, { _destroy: true });
       await fetchTours();
       closeModal();
@@ -133,7 +132,6 @@ function GetTour() {
         sendNotification('ID tour không hợp lệ');
         return;
       }
-
       await updateTourApi(tourId, { availability: !currentStatus });
       await fetchTours();
       sendNotification(`Tour đã được ${!currentStatus ? 'kích hoạt' : 'tạm ngừng'} thành công`);
@@ -150,7 +148,6 @@ function GetTour() {
       const res = await getAllToursAPI();
       const tours = Array.isArray(res) ? res : [];
       setTourRows(tours);
-
       // Tự động cập nhật trạng thái nếu đã hết hạn mà vẫn đang hoạt động
       tours.forEach(async (tour) => {
         if (
@@ -274,6 +271,12 @@ function GetTour() {
       </Dialog>
 
       <Grid item xs={12}>
+        {/* Tiêu đề trang */}
+        <Box p={5}>
+          <Typography variant="h5" weight="bold">
+            Quản lý danh sách tour
+          </Typography>
+        </Box>
         <Widget inheritHeight noBodyPadding>
           {loading ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">

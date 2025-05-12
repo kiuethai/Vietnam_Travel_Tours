@@ -81,7 +81,7 @@ function Destination2() {
                   </div>
                   <div className="content">
                     <h6>
-                      <Link to="destination-details">Parga, Greece</Link>
+                      <Link to="destination-details">Tour du lịch Delta Mê Kông</Link>
                     </h6>
                     <span className="time">
                       5352+ tours &amp; 856+ Hoạt động
@@ -112,7 +112,7 @@ function Destination2() {
                   <div className="content">
                     <h6>
                       <Link to="destination-details">
-                        Castellammare del Golfo, Italy
+                      Biển Đà Nẵng
                       </Link>
                     </h6>
                     <span className="time">
@@ -206,7 +206,7 @@ function Destination2() {
                   </div>
                   <div className="content">
                     <h6>
-                      <Link to="destination-details">Milos, Greece</Link>
+                      <Link to="destination-details">Thanh Hóa</Link>
                     </h6>
                     <span className="time">
                       5352+ tours &amp; 856+ Hoạt động

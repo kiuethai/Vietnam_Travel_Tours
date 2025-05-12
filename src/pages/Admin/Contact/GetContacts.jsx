@@ -183,7 +183,12 @@ function GetContacts() {
   };
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3}>{/* Tiêu đề trang */}
+      <Box p={3}>
+        <Typography variant="h5" weight="bold">
+          Quản lý danh sách liên hệ và phản hồi khách hàng
+        </Typography>
+      </Box>
       <Grid item xs={12}>
         <Widget inheritHeight noBodyPadding>
           {loading ? (

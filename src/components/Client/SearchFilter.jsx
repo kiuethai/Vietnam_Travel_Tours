@@ -11,49 +11,39 @@ const SearchFilter = () => {
           <div className="icon">
             <i className="fal fa-map-marker-alt" />
           </div>
-          <span className="title">Destinations</span>
+          <span className="title">Điểm đến</span>
           <select name="city" id="city">
-            <option value="value1">City or Region</option>
+            <option value="value1">Chọn điểm đến</option>
             <option value="value2">City</option>
             <option value="value2">Region</option>
           </select>
         </div>
-        <div className="filter-item clearfix">
-          <div className="icon">
-            <i className="fal fa-flag" />
-          </div>
-          <span className="title">All Activity</span>
-          <select name="activity" id="activity">
-            <option value="value1">Choose Activity</option>
-            <option value="value2">Daily</option>
-            <option value="value2">Monthly</option>
-          </select>
-        </div>
+        
         <div className="filter-item clearfix">
           <div className="icon">
             <i className="fal fa-calendar-alt" />
           </div>
-          <span className="title">Departure Date</span>
+          <span className="title">Ngày khởi hành</span>
           <select name="date" id="date">
-            <option value="value1">Date from</option>
+            <option value="value1">Chọn ngày đi</option>
             <option value="value2">10</option>
             <option value="value2">20</option>
           </select>
         </div>
         <div className="filter-item clearfix">
           <div className="icon">
-            <i className="fal fa-users" />
+            <i className="fal fa-calendar-alt" />
           </div>
-          <span className="title">Guests</span>
-          <select name="cuests" id="cuests">
-            <option value="value1">0</option>
-            <option value="value2">1</option>
-            <option value="value2">2</option>
+          <span className="title">Ngày kết thúc</span>
+          <select name="date" id="date">
+          <option value="value1">Chọn ngày kết thúc</option>
+            <option value="value2">10</option>
+            <option value="value2">20</option>
           </select>
         </div>
         <div className="search-button">
           <button className="theme-btn">
-            <span data-hover="Search">Search</span>
+            <span data-hover="Search">Tìm kiếm</span>
             <i className="far fa-search" />
           </button>
         </div>

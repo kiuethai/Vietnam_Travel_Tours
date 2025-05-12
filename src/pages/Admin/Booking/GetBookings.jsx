@@ -19,14 +19,13 @@ import TableRow from '@mui/material/TableRow'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import { toast } from 'react-toastify'
-import { Chip } from '~/components/Admin/Wrappers/Wrappers'
+import {Typography, Chip } from '~/components/Admin/Wrappers/Wrappers'
 import useStyles from '~/pages/Admin/Tours/styles'
 import { getComparator, stableSort } from '~/utils/arrange'
 import iconMomo from '~/assets/images/icons/icon_momo.png'
 import iconPaypal from '~/assets/images/icons/icon_paypal.png'
 import iconOffice from '~/assets/images/icons/icon_office.png'
 import EnhancedTableHead from '~/components/Admin/Tour/EnhancedTableHead'
-
 // Initialize default column widths - these values can be adjusted
 const defaultColumnWidths = {
   index: 60,
@@ -154,6 +153,12 @@ function GetBookings() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
+        {/* Tiêu đề trang */}
+        <Box p={5}>
+          <Typography variant="h5" weight="bold">
+            Quản lý danh sách đặt tour
+          </Typography>
+        </Box>
         <Widget inheritHeight noBodyPadding>
           {loading ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">

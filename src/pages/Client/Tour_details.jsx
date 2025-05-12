@@ -252,10 +252,23 @@ function Tour_details() {
                   <div>Chưa có lịch trình cho tour này.</div>
                 )}
               </Accordion>
-
-
-
-
+              {/* Child cost and cancellation policy */}
+              <div className="tour-extra-info mt-25 mb-60">
+                <h4>Chi phí trẻ em</h4>
+                <ul className="child-cost-list list-unstyled mt-20">
+                  <li><strong>Em bé:</strong> Được mua bảo hiểm du lịch, có chỗ ngồi trên xe, ngủ ghép với gia đình, chi phí phát sinh trên tour gia đình tự chi trả.</li>
+                  <li><strong>Trẻ em:</strong> Dịch vụ như người lớn, ngủ ghép với gia đình.</li>
+                  <li><strong>Trẻ em đủ 11 tuổi trở lên:</strong> Dịch vụ như người lớn.</li>
+                  <li><strong>Trường hợp 1 trẻ em đi chung với 1 người lớn hoặc không đủ người lớn trong nhóm để ngủ ghép phòng:</strong> vui lòng nâng dịch vụ trẻ em lên để lấy thêm suất ngủ.</li>
+                </ul>
+                <h4>Quy định hủy tour</h4>
+                <ul className="cancel-policy-list list-unstyled mt-20">
+                  <li><strong>Ngay sau khi kí hợp đồng:</strong> 50% giá tour.</li>
+                  <li><strong>Từ 45 ngày đến 30 ngày:</strong> 70% giá tour.</li>
+                  <li><strong>Từ 29 đến 15 ngày:</strong> 90% giá tour.</li>
+                  <li><strong>Trong vòng 14 ngày:</strong> 100% giá tour.</li>
+                </ul>
+              </div>
 
               <h3>Khách hàng đánh giá</h3>
               <div className="clients-reviews bgc-black mt-30 mb-60">

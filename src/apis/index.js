@@ -175,3 +175,8 @@ export const getDashboardDataSummaryAPI = async() => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/dashboard/summary`)
   return response.data
 }
+
+export const getDashboardAllDataAPI = async() => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/dashboard`)
+  return response.data
+}

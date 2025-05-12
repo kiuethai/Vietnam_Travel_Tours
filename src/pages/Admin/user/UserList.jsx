@@ -48,7 +48,7 @@ const headCells = [
   { id: 'username', numeric: false, disablePadding: false, label: 'USERNAME' },
   { id: 'email', numeric: false, disablePadding: false, label: 'EMAIL' },
   { id: 'address', numeric: false, disablePadding: false, label: 'ADDRESS' },
-  { id: 'isActive', numeric: false, disablePadding: false, label: 'ACTIVE?' },
+  { id: 'isActive', numeric: false, disablePadding: false, label: 'KÍCH HOẠT' },
   { id: 'actions', numeric: false, disablePadding: false, label: 'ACTIONS' },
 ];
 
@@ -69,8 +69,8 @@ function EnhancedTableHead(props) {
         {headCells.map(headCell => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'left' : 'right'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -271,7 +271,12 @@ const UserList = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
+      {/* Tiêu đề trang */}
+      <Box p={5}>
+        <Typography variant="h5" weight="bold">
+          Quản lý người dùng
+        </Typography>
+      </Box>
       <Grid item xs={12}>
         <Widget inheritHeight noBodyPadding>
           {loading ? (
