@@ -12,7 +12,7 @@ function Tour_list() {
   const [isPriceFilter, setIsPriceFilter] = useState(false);
   const [sortType, setSortType] = useState("default");
   const [selectedRegion, setSelectedRegion] = useState(""); // "" là tất cả
-
+  const [selectedRating, setSelectedRating] = useState(null)
   useEffect(() => {
     const fetchTours = async () => {
       try {
@@ -28,15 +28,21 @@ function Tour_list() {
     fetchTours();
   }, []);
 
-  // Lọc tour theo giá
-  const filteredTours = tours.filter(tour => {
-    const inPrice =
-      !isPriceFilter ||
-      ((tour.priceAdult || 0) >= priceRange[0] && (tour.priceAdult || 0) <= priceRange[1]);
-    const inRegion =
-      !selectedRegion || tour.domain === selectedRegion;
-    return inPrice && inRegion;
+  const filteredTours = tours.filter(t => {
+    const p = t.priceAdult || 0;
+    // Giá phải nằm trong khoảng priceRange
+    if (p < priceRange[0] || p > priceRange[1]) return false;
+    // Region filter
+    if (selectedRegion && t.domain !== selectedRegion) return false;
+    // Rating filter
+    if (selectedRating != null) {
+      const avg = t.averageRating || 0;
+      console.log('🚀 ~ Tour_list ~ avg:', avg)
+      if (Math.round(avg) <  selectedRating) return false;
+    }
+    return true;
   });
+     
 
   const sortedTour = [...filteredTours].sort((a, b) => {
     if (sortType === "hight-to-low") {
@@ -61,9 +67,11 @@ function Tour_list() {
           <div className="row">
             <TourSidebar
               value={priceRange}
-              setValue={handlePriceChange}
+              setValue={setPriceRange}
               selectedRegion={selectedRegion}
               setSelectedRegion={setSelectedRegion}
+              selectedRating={selectedRating}
+              setSelectedRating={setSelectedRating}
             />
             <div className="col-lg-9">
               <div className="shop-shorter rel z-3 mb-20">
@@ -79,8 +87,6 @@ function Tour_list() {
                     </a>
                   </li>
                 </ul>
-
-
                 <div className="sort-text mb-15 me-4 me-xl-auto">
                   {filteredTours.length} Tours found
                 </div>
@@ -114,9 +120,9 @@ function Tour_list() {
                           <div className="image">
                             {tour?.availability
                               ?
-                              <span className="badge bgc-pink">Available</span>
+                              <span className="badge bgc-primary">Có sẵn</span>
                               :
-                              <span className="badge bgc-red">Not Available</span>
+                              <span className="badge bgc-red">Đã hoàn thành</span>
                             }
                             <a href="#" className="heart">
                               <i className="fas fa-heart" />
@@ -132,11 +138,20 @@ function Tour_list() {
                               <span className="location">
                                 <i className="fal fa-map-marker-alt" /> {tour?.destination || "Location not specified"}
                               </span>
-                              <div className="ratting">
-                                {[...Array(5)].map((_, i) => (
-                                  <i key={i} className="fas fa-star" />
-                                ))}
-                              </div>
+                              {tour?.averageRating > 0 && (
+                                <div className="ratting">
+                                  {Array.from({ length: 5 }).map((_, idx) => (
+                                    <i
+                                      key={idx}
+                                      className={
+                                        idx < Math.round(tour?.averageRating)
+                                          ? "fas fa-star"
+                                          : "far fa-star"
+                                      }
+                                    />
+                                  ))}
+                                </div>
+                              )}
                             </div>
                             <h5>
                               <Link to={`/tour-details/${tour?._id}`}>

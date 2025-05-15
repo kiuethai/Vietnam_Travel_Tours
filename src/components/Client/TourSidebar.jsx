@@ -3,8 +3,14 @@ import { Link } from 'react-router-dom';
 import Slider from "rc-slider";
 import { getDashboardDataAPI, getAllToursAPI } from "~/apis";
 
-const   TourSidebar = ({ value, setValue, selectedRegion, setSelectedRegion }) => {
-
+const TourSidebar = ({
+  value,
+  setValue,
+  selectedRegion,
+  setSelectedRegion,
+  selectedRating,
+  setSelectedRating
+}) => {
   const [Domain, setDomain] = useState([]);
 
 
@@ -53,7 +59,6 @@ const   TourSidebar = ({ value, setValue, selectedRegion, setSelectedRegion }) =
             </div>
             <div className="price">
               <span>Giá</span>
-              {/* <input type="text" value={value[0]} id="price" readOnly="" /> */}
               <p className="mb-0 fw-bold">
                 {value[0].toLocaleString()} VNĐ
               </p>
@@ -139,90 +144,38 @@ const   TourSidebar = ({ value, setValue, selectedRegion, setSelectedRegion }) =
           <ul className="radio-filter">
             <li>
               <input
-                className="form-check-input"
-                type="radio"
-                defaultChecked=""
-                name="ByReviews"
-                id="review1"
-              />
-              <label htmlFor="review1">
-                <span className="ratting">
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                </span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
                 type="radio"
                 name="ByReviews"
-                id="review2"
+                id="review0"
+                checked={selectedRating == null}
+                onChange={() => setSelectedRating(null)}
               />
-              <label htmlFor="review2">
-                <span className="ratting">
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star-half-alt white" />
-                </span>
-              </label>
+              <label htmlFor="review0">Tất cả</label>
             </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByReviews"
-                id="review3"
-              />
-              <label htmlFor="review3">
-                <span className="ratting">
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star white" />
-                  <i className="fas fa-star-half-alt white" />
-                </span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByReviews"
-                id="review4"
-              />
-              <label htmlFor="review4">
-                <span className="ratting">
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star white" />
-                  <i className="fas fa-star white" />
-                  <i className="fas fa-star-half-alt white" />
-                </span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByReviews"
-                id="review5"
-              />
-              <label htmlFor="review5">
-                <span className="ratting">
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star white" />
-                  <i className="fas fa-star white" />
-                  <i className="fas fa-star white" />
-                  <i className="fas fa-star-half-alt white" />
-                </span>
-              </label>
-            </li>
+            {[5, 4, 3, 2, 1].map((n) => (
+              <li key={n}>
+                <input
+                  type="radio"
+                  name="ByReviews"
+                  id={`review${n}`}
+                  checked={selectedRating === n}
+                  onChange={() => setSelectedRating(n)}
+                />
+                <label htmlFor={`review${n}`}>
+                  <span className="ratting">
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <i
+                        key={idx}
+                        className={
+                          idx < n ? "fas fa-star" : "far fa-star"
+                        }
+                      />
+                    ))}
+                  </span>
+                  <span className="ms-2">{n} sao trở lên</span>
+                </label>
+              </li>
+            ))}
           </ul>
         </div>
 

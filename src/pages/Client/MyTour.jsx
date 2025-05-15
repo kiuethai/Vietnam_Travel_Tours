@@ -122,7 +122,7 @@ function MyTour() {
                           </Link>
                         </h5>
                         <p>
-                          {booking?.tourDetails?.destination || "No description available"}
+                          {booking?.tourDetails?.destination || "Không có mô tả nào"}
                         </p>
                         <ul className="blog-meta">
                           <li>

@@ -116,6 +116,18 @@ export const replyUserAPI = async ( data) => {
   return response.data
 }
 
+/* Contact reviews APIS */
+export const reviewsAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/reviews`, data)
+  toast.success('Phản hồi thành công!', { theme: 'colored' })
+  return response.data
+}
+
+export const getReviewByTourIdAPI = async (tourId) => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/reviews/${tourId}`)
+  return response.data
+}
+
 /* Booking tour APIS */
 export const addBookingTourApi = async (data) => {
   const response = await authorizedAxiosInstance.post(

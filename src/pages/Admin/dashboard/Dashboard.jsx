@@ -79,7 +79,7 @@ function getSorting(order, orderBy) {
 }
 
 const headCells = [
-  { id: "id", numeric: true, disablePadding: true, label: "Mã đặt tour" },
+    { id: "id", numeric: true, disablePadding: true, label: "Mã đặt tour" },
   { id: "customer", numeric: true, disablePadding: false, label: "Khách hàng" },
   { id: "tour", numeric: true, disablePadding: false, label: "Tour" },
   { id: "adults", numeric: true, disablePadding: false, label: "Người lớn" },

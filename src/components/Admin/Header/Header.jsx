@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentAdmin, logoutAdminAPI } from '~/redux/admin/adminSlice'
 import { useConfirm } from 'material-ui-confirm'
-
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 import {
   Menu as MenuIcon,
@@ -26,6 +26,7 @@ import {
   useLayoutDispatch,
   toggleSidebar,
 } from '~/context/LayoutContext';
+import Notification from '../Notification/Notification';
 
 export default function Header(props) {
   let classes = useStyles();
@@ -102,6 +103,9 @@ export default function Header(props) {
           ADMIN KTTravel
         </Typography>
         <div className={classes.grow} />
+
+        {/* <NotificationsActiveIcon /> */}
+        <Notification />
         <IconButton
           aria-haspopup='true'
           color='inherit'

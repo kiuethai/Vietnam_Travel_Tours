@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import Banner from "~/components/Client/Banner";
 import { getTourByIdAPI, addBookingTourApi, getDataPaypal, getTourBookingByUserId, addMomoPayment, updateBookingApi } from "~/apis";
@@ -11,6 +11,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 const transIdMomo = null; // hoặc giá trị thực tế
 
 function Booking() {
+  const navigate = useNavigate();
   const currentUser = useSelector(selectCurrentUser)
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -216,8 +217,9 @@ function Booking() {
 
   const handleCancelTour = async () => {
     setCancelLoading(true);
+    console.log(">>> userBooking.status =", userBooking?.status);
     try {
-      await updateBookingApi(userBooking.bookingId, { status: "cancelled" });
+      await updateBookingApi(userBooking.bookingId, { _destroy: "true" });
       toast.success("Đã hủy tour thành công!");
       window.location.reload();
     } catch {
@@ -227,6 +229,61 @@ function Booking() {
       setShowCancelDialog(false);
     }
   }
+
+
+  const renderActionButton = () => {
+    if (userBooking) {
+      if (userBooking.status === "completed") {
+        return (
+          <button
+            type="submit"
+            className="theme-btn style-two w-100 mt-15 mb-5"
+            onClick={() => navigate(`/tour-details/${tour?._id}`)}
+            disabled={cancelLoading}
+          >
+            Đánh giá tour
+          </button>
+        );
+      }
+      return (
+        <button
+          className="theme-btn style-two w-100 mt-15 mb-5 btn-danger"
+          type="button"
+          onClick={() => setShowCancelDialog(true)}
+        >
+          <span>Hủy tour</span>
+        </button>
+      );
+    }
+
+    if (form.payment === "paypal-payment" && paypalReady) {
+      return (
+        <PayPalScriptProvider options={{ ...paypalOptions, currency: "USD" }}>
+          <PayPalButtons
+            style={{ layout: "vertical" }}
+            forceReRender={[paypalAmountUSD]}
+            createOrder={(data, actions) =>
+              actions.order.create({
+                purchase_units: [{ amount: { value: paypalAmountUSD.toString() } }],
+              })
+            }
+            onApprove={handlePaypalApprove}
+          />
+        </PayPalScriptProvider>
+      );
+    }
+
+    return (
+      <button
+        type="submit"
+        className="theme-btn style-two w-100 mt-15 mb-5"
+        onClick={handleSubmit}
+      >
+        <span data-hover="Book Now">Đặt ngay</span>
+        <i className="fal fa-arrow-right" />
+      </button>
+    );
+  };
 
   return (
     <>
@@ -546,39 +603,7 @@ function Booking() {
                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(paypalAmount)}
                       </span>
                     </h6>
-                    {userBooking ? (
-                      <>
-                        <button
-                          className="theme-btn style-two w-100 mt-15 mb-5 btn-danger"
-                          type="button"
-                          onClick={() => setShowCancelDialog(true)}
-                        >
-                          <span>Hủy tour</span>
-                        </button>
-                      </>
-                    ) : (
-                      form.payment === "paypal-payment" && paypalReady ? (
-                        <PayPalScriptProvider options={{ ...paypalOptions, currency: "USD" }}>
-                          <PayPalButtons
-                            style={{ layout: "vertical" }}
-                            forceReRender={[paypalAmountUSD]}
-                            createOrder={(data, actions) => actions.order.create({
-                              purchase_units: [{ amount: { value: paypalAmountUSD.toString() } }]
-                            })}
-                            onApprove={handlePaypalApprove}
-                          />
-                        </PayPalScriptProvider>
-                      ) : (
-                        <button
-                          type="submit"
-                          className="theme-btn style-two w-100 mt-15 mb-5"
-                          onClick={handleSubmit}
-                        >
-                          <span data-hover="Book Now">Đặt ngay</span>
-                          <i className="fal fa-arrow-right" />
-                        </button>
-                      )
-                    )}
+                    {renderActionButton()}
                   </form>
                 </div>
               </div>
@@ -629,6 +654,7 @@ function Booking() {
               >
                 {cancelLoading ? 'Đang xử lý...' : 'Xác nhận'}
               </button>
+
             </div>
           </div>
         </div>

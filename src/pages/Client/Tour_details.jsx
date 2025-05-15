@@ -4,24 +4,61 @@ import { useEffect } from "react"; // Add this if it's not already imported
 import { Link } from 'react-router-dom'
 import { useState } from "react";
 import { Accordion } from "react-bootstrap";
-import { getTourByIdAPI } from "~/apis";
+import { getTourByIdAPI, getReviewByTourIdAPI, reviewsAPI } from "~/apis";
 import draftToHtml from 'draftjs-to-html';
-
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '~/redux/user/userSlice'
 function Tour_details() {
   const [tour, setTour] = useState(null);
+  const [rating, setRating] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [commentText, setCommentText] = useState('');
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
-
+  const currentUser = useSelector(selectCurrentUser)
   const formatDate = d =>
     d ? new Date(d).toLocaleDateString('vi-VN') : "";
+
+
+  const handleStarClick = (n) => () => setRating(n);   // <-- new
+  const handleSubmit = async (e) => {                   // <-- new
+    e.preventDefault();
+    if (!currentUser || !tour) return;
+    try {
+      await reviewsAPI({
+        tourId: tour._id,
+        userId: currentUser._id,
+        rating,
+        comment: commentText
+      });
+      // refresh reviews
+      const resp = await getReviewByTourIdAPI(id);
+      setReviews(resp.reviews || []);
+      setRating(0);
+      setCommentText('');
+    } catch (err) {
+      console.error('Lỗi không thể gửi bài đánh giá:', err);
+    }
+  };
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const resp = await getReviewByTourIdAPI(id);
+        setReviews(resp.reviews || []);
+      } catch (err) {
+        console.error("Error fetching reviews:", err);
+      }
+    };
+    if (id) fetchReviews();
+  }, [id]);
 
   useEffect(() => {
     const fetchTour = async () => {
       try {
         const response = await getTourByIdAPI(id);
         // console.log('🚀 ~ fetchTour ~ response.data:', response.data)
-        // console.log('🚀 ~ fetchTour ~ response:', response)
-        setTour(response.tour || null);
+        console.log('🚀 ~ fetchTour ~ response:', response)
+        setTour(response || null);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching tour details:", error);
@@ -34,6 +71,24 @@ function Tour_details() {
     }
   }, [id]);
   const [active, setActive] = useState("collapse0");
+  const totalRating = reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
+  const avgRating = reviews.length ? totalRating / reviews.length : 0;
+
+  const RatingStars = () => {
+    return Array.from({ length: 5 }).map((_, idx) => {
+      if (idx < Math.floor(avgRating)) {
+        return <i key={idx} className="fas fa-star" />;
+      }
+      if (
+        idx === Math.floor(avgRating) &&
+        avgRating % 1 >= 0.5
+      ) {
+        return <i key={idx} className="fas fa-star-half-alt" />;
+      }
+      return <i key={idx} className="far fa-star" />;
+    });
+  };
+
   return (
     <>
       <section className="page-banner-two rel z-1">
@@ -145,11 +200,7 @@ function Tour_details() {
                   </h2>
                 </div>
                 <div className="ratting">
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star-half-alt" />
+                  <RatingStars />
                 </div>
               </div>
             </div>
@@ -270,97 +321,113 @@ function Tour_details() {
                 </ul>
               </div>
 
-              <h3>Khách hàng đánh giá</h3>
+              <h3>Khách hàng đánh giá sau khi trải nghiệm chuyến du lịch</h3>
               <div className="clients-reviews bgc-black mt-30 mb-60">
                 <div className="left">
-                  <b>4.9</b>
-                  <span>(1 reviews)</span>
+                  <b>{avgRating.toFixed(1)}</b>
+                  <span>({reviews.length} đánh giá)</span>
                   <div className="ratting">
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star-half-alt" />
+                    <RatingStars />
                   </div>
                 </div>
                 <div className="right">
                   <div className="ratting-item">
-                    <span className="title">Dịch vụ</span>
+                    <span className="title">Tổng đánh giá chung</span>
                     <span className="line">
-                      <span style={{ width: "90%" }} />
+                      <span style={{ width: `${(avgRating / 5) * 100}%` }} />
                     </span>
                     <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star-half-alt" />
+                      <RatingStars />
                     </div>
                   </div>
                 </div>
               </div>
               <h3>Nhận xét của khách hàng</h3>
               <div className="comments mt-30 mb-60">
-                <div
-                  className="comment-body"
-                  data-aos="fade-up"
-                  data-aos-duration={1500}
-                  data-aos-offset={50}
-                >
-                  <div className="author-thumb">
-                    <img
-                      src="https://res.cloudinary.com/dbkhjufja/image/upload/v1742119408/samples/logo.png"
-                      alt="Author"
-                    />
-                  </div>
-                  <div className="content">
-                    <h6>Hoa</h6>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star-half-alt" />
+                {reviews.length > 0 ? (
+                  reviews.map((r, i) => (
+                    <div
+                      key={i}
+                      className="comment-body"
+                      data-aos="fade-up"
+                      data-aos-duration={1500}
+                      data-aos-offset={50}
+                    >
+                      <div className="author-thumb">
+                        <img
+                          src={r.avatar}
+                          alt={r.username}
+                        />
+                      </div>
+                      <div className="content">
+                        <h6>{r.username}</h6>
+
+                        <div className="ratting" style={{
+                          display: 'flex',
+                          fontSize: '20px'
+                        }}>
+                          {Array.from({ length: 5 }).map((_, idx) => (
+                            <i
+                              key={idx}
+                              className={
+                                (idx < r.rating ? "fas" : "far")
+                                + " fa-star fa-2x"
+                              }
+                            />
+                          ))}
+
+                        </div>
+                        <span className="time">
+                          {formatDate(r.timestamp)}
+                        </span>
+                        <p>
+                          {r.comment}
+                        </p>
+
+                      </div>
                     </div>
-                    <span className="time">
-                      Phú Quốc, 3 ngày 2 đêm
-                    </span>
-                    <p>
-                      Dịch vụ tốt, hướng dẫn viên nhiệt tình, vui vẻ. Chúng tôi đã có một chuyến đi tuyệt vời.
-                    </p>
-                    <a className="read-more" href="#">
-                      Reply <i className="far fa-angle-right" />
-                    </a>
-                  </div>
-                </div>
+                  ))
+                )
+                  :
+                  (
+                    <p>Chưa có nhận xét nào cho tour này.</p>
+                  )
+                }
+
 
               </div>
-              <h3>Thêm đánh giá</h3>
+              <h3>Thêm đánh giá khi bạn đã trải nghiệm chuyến du lịch</h3>
               <form
                 id="comment-form"
                 className="comment-form bgc-lighter z-1 rel mt-30"
-                name="review-form"
-                action="#"
-                method="post"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
+                onSubmit={handleSubmit}
               >
                 <div className="comment-review-wrap">
                   <div className="comment-ratting-item">
                     <span className="title">Đánh giá</span>
-                    <div className="ratting">
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star" />
-                      <i className="fas fa-star-half-alt" />
+                    <div className="ratting" >
+                      {Array.from({ length: 5 }).map((_, idx) => {
+                        const starNum = idx + 1;
+                        return (
+                          <i
+                            key={idx}
+                            className={
+                              starNum <= rating
+                                ? "fas fa-star"
+                                : "far fa-star"
+                            }
+                            onClick={handleStarClick(starNum)}
+                            style={{ cursor: 'pointer' ,fontSize: '25px'  }}
+                           
+                          />
+                        )
+                      })}
                     </div>
                   </div>
 
                 </div>
                 <hr className="mt-30 mb-40" />
-                <h5>Để lại phả hồi</h5>
+                <h5>Để lại cảm nhận của bạn nhé</h5>
                 <div className="row gap-20 mt-20">
                   <div className="col-md-12">
                     <div className="form-group">
@@ -371,7 +438,14 @@ function Tour_details() {
                         className="form-control"
                         rows={5}
                         required=""
-                        defaultValue={""}
+                        value={commentText}
+                        onChange={e => setCommentText(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleSubmit(e);
+                          }
+                        }}
                       />
                     </div>
                   </div>
