@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import dayjs from 'dayjs'
 import Banner from "~/components/Client/Banner"
 import Subscribe from "~/components/Client/Subscribe"
 import TourSidebar from "~/components/Client/TourSidebar"
 import { Link } from 'react-router-dom'
 import { getAllToursAPI } from '~/apis'
 
-function Tour_list() {
+export default function Tour_list() {
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [priceRange, setPriceRange] = useState([1000000, 10000000]);
@@ -13,6 +15,12 @@ function Tour_list() {
   const [sortType, setSortType] = useState("default");
   const [selectedRegion, setSelectedRegion] = useState(""); // "" là tất cả
   const [selectedRating, setSelectedRating] = useState(null)
+  const location = useLocation()
+  const params = new URLSearchParams(location.search)
+  const qDestination = params.get('destination')
+  const qStart = params.get('startDate')
+  const qEnd = params.get('endDate')
+
   useEffect(() => {
     const fetchTours = async () => {
       try {
@@ -29,20 +37,36 @@ function Tour_list() {
   }, []);
 
   const filteredTours = tours.filter(t => {
-    const p = t.priceAdult || 0;
-    // Giá phải nằm trong khoảng priceRange
-    if (p < priceRange[0] || p > priceRange[1]) return false;
-    // Region filter
-    if (selectedRegion && t.domain !== selectedRegion) return false;
-    // Rating filter
-    if (selectedRating != null) {
-      const avg = t.averageRating || 0;
-      console.log('🚀 ~ Tour_list ~ avg:', avg)
-      if (Math.round(avg) <  selectedRating) return false;
+    // 1. filter theo destination substring
+    if (qDestination && !t.title?.toLowerCase().includes(qDestination.toLowerCase())) {
+      return false
     }
-    return true;
-  });
-     
+
+    // 2. filter theo range ngày metadata
+    if (qStart) {
+      const tourStart = dayjs(t.startDate)
+      const queryStart = dayjs(qStart)
+      if (tourStart.isBefore(queryStart, 'day')) {
+        return false
+      }
+    }
+    if (qEnd) {
+      const tourEnd = dayjs(t.endDate)
+      const queryEnd = dayjs(qEnd)
+      if (tourEnd.isAfter(queryEnd, 'day')) {
+        return false
+      }
+    }
+
+    // 3. các filter price / region / rating…
+    const p = t.priceAdult || 0
+    if (p < priceRange[0] || p > priceRange[1]) return false
+    if (selectedRegion && t.domain !== selectedRegion) return false
+    if (selectedRating != null && Math.round(t.averageRating || 0) < selectedRating) return false
+
+    return true
+  })
+
 
   const sortedTour = [...filteredTours].sort((a, b) => {
     if (sortType === "hight-to-low") {
@@ -88,7 +112,7 @@ function Tour_list() {
                   </li>
                 </ul>
                 <div className="sort-text mb-15 me-4 me-xl-auto">
-                  {filteredTours.length} Tours found
+                  {filteredTours.length} chuyến tham quan
                 </div>
                 <div className="sort-text mb-15 me-4">Sắp xếp theo giá tiền:</div>
                 <select
@@ -235,5 +259,3 @@ function Tour_list() {
     </div >
   )
 }
-
-export default Tour_list

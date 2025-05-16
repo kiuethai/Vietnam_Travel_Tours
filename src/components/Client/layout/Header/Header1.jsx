@@ -9,6 +9,7 @@ import Login from '../../../../pages/Client/Auth/Login';
 import Profiles from '../../Menus/Profiles';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../../redux/user/userSlice';
+import Search from './Search';
 
 function Header1({ sidebarClick }) {
   const [toggleSearch, setToggleSearch] = useState(false);
@@ -49,28 +50,7 @@ function Header1({ sidebarClick }) {
                 {/* Main Menu End*/}
               </div>
               {/* Nav Search */}
-              <div className="nav-search">
-                <button
-                  className="far fa-search"
-                  onClick={() => setToggleSearch(!toggleSearch)}
-                />
-                <form
-                  action="#"
-                  className={toggleSearch ? "" : "hide"}
-                  ref={domNode}
-                >
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="searchbox"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="searchbutton far fa-search"
-                  />
-                </form>
-              </div>
+              <Search />
               {/* Menu Button */}
               <div className="menu-btns py-10">
                 <Link

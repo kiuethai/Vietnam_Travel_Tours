@@ -1,16 +1,17 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import Menu from './Menu';
 import SideBar from './SideBar';
 import Profiles from '../../Menus/Profiles';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../../redux/user/userSlice';
-
+import Search from './Search';
 function Header3({ sidebarClick }) {
   // Check if user is logged in
   const currentUser = useSelector(selectCurrentUser);
   const isLoggedIn = !!currentUser;
+
 
   return (
     <Fragment>
@@ -35,6 +36,8 @@ function Header3({ sidebarClick }) {
                 <Menu />
                 {/* Main Menu End*/}
               </div>
+              {/* Nav Search */}
+              <Search />
               {/* Menu Button */}
               <div className="menu-btns py-10">
                 <Link
@@ -61,7 +64,7 @@ function Header3({ sidebarClick }) {
       </header>
       <SideBar sidebarClick={sidebarClick} />
     </Fragment>
-  );
+  )
 }
 
 export default Header3
