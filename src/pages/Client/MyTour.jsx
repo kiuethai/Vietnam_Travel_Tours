@@ -2,7 +2,7 @@ import Banner from "~/components/Client/Banner";
 import Subscribe from "~/components/Client/Subscribe";
 import TourSidebar from "~/components/Client/TourSidebar";
 import { Link } from 'react-router-dom'
-import { getTourBookingByUserId, updateBookingApi } from "~/apis";
+import { getTourBookingByUserId, updateBookingApi, getRecommends } from "~/apis";
 import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
@@ -11,6 +11,9 @@ function MyTour() {
   const currentUser = useSelector(selectCurrentUser);
   const [bookings, setBookings] = useState();
   const [loading, setLoading] = useState(true);
+  const [recommendedTours, setRecommendedTours] = useState([]);
+  // Add missing state variable
+  const [recommendationSource, setRecommendationSource] = useState('');
 
   useEffect(() => {
     const fetchBookingTour = async () => {
@@ -26,6 +29,39 @@ function MyTour() {
       fetchBookingTour();
     }
   }, [currentUser?._id]);
+
+  // Fixed effect to fetch recommended tours
+  useEffect(() => {
+    const fetchRecommendedTours = async () => {
+      try {
+        const viewedTours = JSON.parse(localStorage.getItem('viewedTours') || '[]');
+        const lastViewedTour = viewedTours[0];
+
+        // Only attempt personalized recommendations if we have history
+        if (lastViewedTour) {
+          try {
+            const tours = await getRecommends({ clickedTourId: lastViewedTour });
+            setRecommendedTours(tours);
+            setRecommendationSource('history');
+            console.log('Recommended tours based on last viewed:', tours);
+            return;
+          } catch (error) {
+            console.error('Error fetching personalized recommendations:', error);
+          
+          }
+        }
+
+        // Default recommendations (shared code path)
+        const tours = await getRecommends();
+        setRecommendedTours(tours);
+        setRecommendationSource('default');
+      } catch (error) {
+        console.error('Error fetching any recommendations:', error);
+      }
+    };
+
+    fetchRecommendedTours();
+  }, []);
 
   useEffect(() => {
     if (!bookings) return;
@@ -50,7 +86,7 @@ function MyTour() {
       <section className="tour-list-page py-100 rel z-1" style={{ "paddingTop": "50px" }}>
         <div className="container">
           <div className="row">
-            {/* <div className="col-lg-3 col-md-6 col-sm-10 rmb-75">
+            <div className="col-lg-3 col-md-6 col-sm-10 rmb-75">
               <div className="shop-sidebar mb-30">
                 <div
                   className="widget widget-filter"
@@ -59,22 +95,75 @@ function MyTour() {
                   data-aos-duration={1500}
                   data-aos-offset={50}
                 >
-                  <h6 className="widget-title">Tour phổ biến</h6>
-                  <div className="price-filter-wrap">
-                    <div className="price-slider-range">
-                      <input type="text" value={1000000} id="price" readOnly="" />
-                      <p className="mb-0 fw-bold">1.000.000 VNĐ</p>
-                      <p className="mb-0 fw-bold">10.000.000 VNĐ</p>
-                    </div>
-                    <div className="price">
-                      <span>Giá</span>
-                      <p className="mb-0 fw-bold">
-                      </p>
-                    </div>
-                  </div>
+                  {recommendedTours.length > 0 && (
+                    <>
+                      <h5 className="section-title mb-4 pb-2 border-bottom">
+                        <i className="fas fa-map-marked-alt me-2"></i>Tour Gợi Ý
+                      </h5>
+                      <div className="recommended-tours">
+                        {recommendedTours.map(t => (
+                          <div key={t._id} className="mb-4">
+                            <Link
+                              to={`/tour-details/${t._id}`}
+                              className="recommend-card d-block text-decoration-none"
+                              onClick={() => {
+                                window.scrollTo({
+                                  top: 0,
+                                  behavior: 'smooth'
+                                });
+                              }}
+                            >
+                              <div className="recommend-item p-3 rounded hover-shadow border border-light position-relative">
+                                <div className="recommend-img mb-3 position-relative">
+                                  <img
+                                    src={t.images?.[0] || '/placeholder-image.jpg'}
+                                    alt={t.title}
+                                    className="rounded-3 shadow-sm w-100"
+                                    style={{ height: 150, objectFit: 'cover' }}
+                                    onError={(e) => {
+                                      e.target.src = '/placeholder-image.jpg'; // Fallback image
+                                    }}
+                                  />
+                                  {/* Price badge with error handling */}
+                                  {t.priceAdult && (
+                                    <div className="tour-price-badge position-absolute top-0 end-0 m-2 px-2 py-1 bg-primary text-white rounded shadow-sm">
+                                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(t.priceAdult)}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="recommend-content">
+                                  <h6 className="tour-title text-dark mb-2 fw-bold">
+                                    {t.title}
+                                  </h6>
+                                  <div className="d-flex justify-content-between align-items-center">
+                                    <div className="tour-rating">
+                                      {Array.from({ length: 5 }).map((_, idx) => (
+                                        <i
+                                          key={idx}
+                                          className={`${idx < (t.rating || 4) ? "fas" : "far"} fa-star text-warning`}
+                                          style={{ fontSize: '14px' }}
+                                        />
+                                      ))}
+                                      <span className="ms-1 text-muted small">
+                                        ({t.reviewCount || 5})
+                                      </span>
+                                    </div>
+                                    <div className="tour-duration small text-muted">
+                                      <i className="far fa-clock me-1"></i>
+                                      {t.time || '3 ngày'}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-            </div> */}
+            </div>
             <div className="col-lg-9">
               {loading ? (
                 <div>Đang tải...</div>

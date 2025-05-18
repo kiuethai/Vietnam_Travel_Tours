@@ -27,7 +27,7 @@ import Home from './pages/Client/Home';
 
 import NotFound from './pages/NotFound';
 import Tour_details from './pages/Client/Tour_details';
-import Tour_list from './pages/Client/Tour_list';
+import Tour_list from '~/pages/Client/Tour_list';
 import Tour_guide from './pages/Client/Tour_guide';
 import Tour_sidebar from './pages/Client/Tour_sidebar';
 import ReveloLayout from "./components/Client/layout/ReveloLayout";

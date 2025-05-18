@@ -1,16 +1,51 @@
-import React from 'react'
+import React, { useState, useEffect, use } from 'react'
 // import { useInView } from 'react-intersection-observer'
 import Counter from "~/components/Client/Counter";
 import SearchFilter from "~/components/Client/SearchFilter";
 import SectionTitle from "~/components/Client/SectionTitle";
-import Testimonial from "~/components/Client/slider/Testimonial";
-import ReveloLayout from '../../components/Client/layout/ReveloLayout'
 import { Link } from 'react-router-dom';
 import 'aos/dist/aos.css'; // Nếu sử dụng AOS animation
-import Header1 from '../../components/Client/layout/Header/Header1';
-import Footer1 from '../../components/Client/layout/Footer/Footer1';
-
+import { getRecommends } from '~/apis';
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '~/redux/user/userSlice'
 function Home() {
+  const [recommendedTours, setRecommendedTours] = useState([]);
+  const [recommendationSource, setRecommendationSource] = useState('default');
+  const currentUser = useSelector(selectCurrentUser)
+  const token = currentUser?.accessToken || null
+  useEffect(() => {
+    // Lấy tour đã xem gần đây nhất từ localStorage
+    const viewedTours = JSON.parse(localStorage.getItem('viewedTours') || '[]');
+    const lastViewedTour = viewedTours[0]; // Tour gần đây nhất
+
+    // Nếu có tour đã xem, sử dụng ID đó để lấy đề xuất
+    if (lastViewedTour) {
+      getRecommends({ clickedTourId: lastViewedTour })
+        .then(tours => {
+          setRecommendedTours(tours);
+          setRecommendationSource('history');
+          console.log('Recommended tours based on last viewed:', tours);
+        })
+        .catch(error => {
+          console.error('Error fetching recommendations:', error);
+          // Nếu có lỗi, thử lấy đề xuất mặc định
+          getRecommends()
+            .then(tours => {
+              setRecommendedTours(tours);
+              setRecommendationSource('default');
+            })
+            .catch(console.error);
+        });
+    } else {
+      // Nếu không có tour đã xem, lấy đề xuất mặc định
+      getRecommends()
+        .then(tours => {
+          setRecommendedTours(tours);
+          setRecommendationSource('default');
+        })
+        .catch(console.error);
+    }
+  }, []);
 
 
   return (
@@ -56,175 +91,179 @@ function Home() {
             </div>
           </div>
           <div className="row justify-content-center">
-        
-            <div className="col-xxl-3 col-xl-4 col-md-6">
-              <div
-                className="destination-item"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <div className="ratting">
-                    <i className="fas fa-star" /> 4.8
-                  </div>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/visiting-place1.jpg"
-                    alt="Destination"
-                  />
+            {/* Recommendations Section start */}
+            {recommendedTours.length > 0 && (
+              <>
+                <div className="col-12 mb-4">
+                  <h4 className="text-center"
+                  style={{ 
+                    color: '#ffffff', 
+                    padding: '10px',
+                    marginBottom: '20px',
+                    fontWeight: 'bold',
+                    fontSize: '24px'
+                  }}
+                  >
+                    {recommendationSource === 'history'
+                      ? 'Tour gợi ý dựa trên lịch sử xem của bạn'
+                      : 'Tour gợi ý cho bạn'}
+                  </h4>
                 </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Miền Bắc, Hà Nội
-                  </span>
-                  <h5>
-                    <Link to="/destination-details">
-                      Việt Phủ Thành Chương - Sapa - Bản Cát Cát - Fansipan - Hạ Long - Yên Tử - KDL Tràng An - Bái Đính
-                    </Link>
-                  </h5>
-                  <span className="time">3 ngày 2 đêm</span>
-                </div>
-                <div className="destination-footer">
-                  <span className="price">
-                    <span>10.690.000 ₫</span>/Khách
-                  </span>
-                  <a href="#" className="read-more">
-                    Đặt ngay <i className="fal fa-angle-right" />
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="col-xxl-3 col-xl-4 col-md-6">
-              <div
-                className="destination-item"
-                data-aos="fade-up"
-                data-aos-delay={100}
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <div className="ratting">
-                    <i className="fas fa-star" /> 4.8
-                  </div>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/visiting-place2.jpg"
-                    alt="Destination"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Miền Trung, Nha Trang Phú Yên
-                  </span>
-                  <h5>
-                    <Link to="/destination-details">
-                      Nha Trang - Phú Yên: Khu Du Lịch Dốc Lết - Gành Đá Dĩa - Mũi Điện - Tháp Nghinh Phong - Vinwonders Nha Trang
-                    </Link>
-                  </h5>
-                  <span className="time">3 ngày 2 đêm</span>
-                </div>
-                <div className="destination-footer">
-                  <span className="price">
-                    <span>4.490.000 ₫</span>/Khách
-                  </span>
-                  <a href="#" className="read-more">
-                    Đặt ngay <i className="fal fa-angle-right" />
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="col-xxl-3 col-xl-4 col-md-6">
-              <div
-                className="destination-item"
-                data-aos="fade-up"
-                data-aos-delay={200}
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <div className="ratting">
-                    <i className="fas fa-star" /> 4.9
-                  </div>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/visiting-place3.jpg"
-                    alt="Destination"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Miền Tây Nam Bộ, Phú Quốc
-                  </span>
-                  <h5>
-                    <Link to="/destination-details">
-                      Phú Quốc: Hòn Thơm Nature Park - Thị trấn Hoàng Hôn - Kiss Bridge (Tặng vé cáp treo 3 dây vượt biển)
-                    </Link>
-                  </h5>
-                  <span className="time">3 Ngày 2 đêm</span>
-                </div>
-                <div className="destination-footer">
-                  <span className="price">
-                    <span>6.490.000 ₫</span>/Khách
-                  </span>
-                  <a href="#" className="read-more">
-                    Đặt ngay <i className="fal fa-angle-right" />
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="col-xxl-3 col-xl-4 col-md-6">
-              <div
-                className="destination-item"
-                data-aos="fade-up"
-                data-aos-delay={200}
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <div className="ratting">
-                    <i className="fas fa-star" /> 4.9
-                  </div>
-                  <a href="#" className="heart">
-                    <i className="fas fa-heart" />
-                  </a>
-                  <img
-                    src="assets/images/destinations/visiting-place3.jpg"
-                    alt="Destination"
-                  />
-                </div>
-                <div className="content">
-                  <span className="location">
-                    <i className="fal fa-map-marker-alt" /> Miền Tây Nam Bộ, Phú Quốc
-                  </span>
-                  <h5>
-                    <Link to="/destination-details">
-                      Phú Quốc: Hòn Thơm Nature Park - Thị trấn Hoàng Hôn - Kiss Bridge (Tặng vé cáp treo 3 dây vượt biển)
-                    </Link>
-                  </h5>
-                  <span className="time">3 Ngày 2 đêm</span>
-                </div>
-                <div className="destination-footer">
-                  <span className="price">
-                    <span>6.490.000 ₫</span>/Khách
-                  </span>
-                  <a href="#" className="read-more">
-                    Đặt ngay <i className="fal fa-angle-right" />
-                  </a>
-                </div>
-              </div>
-            </div>
+                <div className="col-12">
+                  <div
+                    className="recommendations-slider"
+                    style={{
+                      position: 'relative',
+                      marginBottom: '40px'
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        overflowX: 'auto',
+                        scrollBehavior: 'smooth',
+                        padding: '10px 0',
+                        WebkitOverflowScrolling: 'touch',
+                        msOverflowStyle: 'none',
+                        scrollbarWidth: 'none',
+                      }}
+                      className="recommendations-container"
+                    >
+                      {recommendedTours.map(t => (
+                        <div
+                          key={t._id}
+                          style={{
+                            flex: '0 0 320px',
+                            margin: '0 15px',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '480px',
+                            boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+                          }}
+                        >
+                          <div
+                            className="destination-item"
+                            data-aos="fade-up"
+                            data-aos-duration={1500}
+                            data-aos-offset={50}
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              height: '100%',
+                              position: 'relative'
+                            }}
+                          >
+                            <div
+                              className="image"
+                              style={{ height: '200px', overflow: 'hidden' }}
+                            >
+                              {t.averageRating > 0 && (
+                                <div className="ratting">
+                                  <i className="fas fa-star" /> {t.averageRating.toFixed(1)}
+                                </div>
+                              )}
+                              <Link to={`/tour-details/${t._id}`} className="heart">
+                                <i className="fas fa-heart" />
+                              </Link>
+                              <img
+                                src={t.images?.[0]}
+                                alt={t.title}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              />
+                            </div>
+                            <div
+                              className="content"
+                              style={{
+                                padding: '15px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                flex: 1
+                              }}
+                            >
+                              <span className="location">
+                                <i className="fal fa-map-marker-alt" /> {t.destination}
+                              </span>
+                              <h5 style={{ marginBottom: '15px' }}>
+                                <Link to={`/tour-details/${t._id}`}>{t.title}</Link>
+                              </h5>
 
-            
+                              <ul className="blog-meta" style={{ marginTop: 'auto', marginBottom: '10px' }}>
+                                <li><i className="far fa-clock" /> {t.time || '—'}</li>
+                                <li><i className="far fa-user" /> {t.quantity || 0} khách</li>
+                              </ul>
+                            </div>
+                            <div
+                              className="destination-footer"
+                              style={{
+                                padding: '12px 16px',
+                                borderTop: '1px solid #eee',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginTop: 'auto'
+                              }}
+                            >
+                              <span
+                                className="price"
+                                style={{
+                                  fontSize: '1.125rem',
+                                  fontWeight: '700',
+                                  color: '#e4e6ed',
+                                }}
+                              >
+                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(t.priceAdult)} / khách
+                              </span>
+                              <Link to={`/tour-details/${t._id}`} className="read-more">
+                                Đặt ngay <i className="fal fa-angle-right" />
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {recommendedTours.length > 4 && (
+                      <div className="slider-controls" style={{ textAlign: 'center', marginTop: '15px' }}>
+                        <button
+                          onClick={() => document.querySelector('.recommendations-container').scrollBy({ left: -300, behavior: 'smooth' })}
+                          style={{
+                            background: '#e4e6ed',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '40px',
+                            height: '40px',
+                            margin: '0 5px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <i className="fal fa-arrow-left"></i>
+                        </button>
+                        <button
+                          onClick={() => document.querySelector('.recommendations-container').scrollBy({ left: 300, behavior: 'smooth' })}
+                          style={{
+                            background: '#e4e6ed',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '40px',
+                            height: '40px',
+                            margin: '0 5px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <i className="fal fa-arrow-right"></i>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+            {/* Recommendations Section end */}
+
           </div>
         </div>
-      </section>
+      </section >
       {/* Destinations Area end */}
 
       {/* About Us Area start */}
@@ -742,7 +781,7 @@ function Home() {
         </div>
       </section>
       {/* CTA Area end */}
-    </div>
+    </div >
 
   )
 }

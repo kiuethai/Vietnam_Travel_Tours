@@ -71,7 +71,9 @@ function Booking() {
     const fetchTour = async () => {
       try {
         const response = await getTourByIdAPI(id);
-        setTour(response.tour || null);
+        console.log('🚀 ~ fetchTour ~ response:', response)
+
+        setTour(response || null);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching tour details:", error);
@@ -583,82 +585,120 @@ function Booking() {
                     </div>
                     <hr className="mb-25" />
                     <h6>Vé :</h6>
-                    <ul className="tickets clearfix">
-                      <li>
-                        Người lớn <span className="price">
-                          {form.numAdults} x {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceAdult)}
-                        </span>
-                      </li>
-                      <li>
-                        Trẻ em  <span className="price">
-                          {form.numChildren} x {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceChild)}
-                        </span>
-
-                      </li>
-                    </ul>
-                    <hr className="mb-25" />
-
-                    <h6>
-                      Tổng: <span className="price">
-                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(paypalAmount)}
-                      </span>
-                    </h6>
+                    {userBooking ? (
+                      <>
+                        <ul className="tickets clearfix">
+                          <li>
+                            Người lớn&nbsp;
+                            <span className="price">
+                              {userBooking.adults} x{' '}
+                              {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceAdult)}
+                            </span>
+                          </li>
+                          <li>
+                            Trẻ em&nbsp;
+                            <span className="price">
+                              {userBooking.children} x{' '}
+                              {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceChild)}
+                            </span>
+                          </li>
+                        </ul>
+                        <hr className="mb-25" />
+                        <h6>
+                          Tổng:&nbsp;
+                          <span className="price">
+                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
+                              (userBooking.adults || 0) * (tour?.priceAdult || 0) +
+                              (userBooking.children || 0) * (tour?.priceChild || 0)
+                            )}
+                          </span>
+                        </h6>
+                      </>
+                    ) : (
+                      <>
+                        <ul className="tickets clearfix">
+                          <li>
+                            Người lớn&nbsp;
+                            <span className="price">
+                              {form.numAdults} x{' '}
+                              {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceAdult)}
+                            </span>
+                          </li>
+                          <li>
+                            Trẻ em&nbsp;
+                            <span className="price">
+                              {form.numChildren} x{' '}
+                              {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tour?.priceChild)}
+                            </span>
+                          </li>
+                        </ul>
+                        <hr className="mb-25" />
+                        <h6>
+                          Tổng:&nbsp;
+                          <span className="price">
+                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(paypalAmount)}
+                          </span>
+                        </h6>
+                      </>
+                    )}
                     {renderActionButton()}
                   </form>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </div >
+        </div >
+      </section >
 
       {/* Đặt dialog xác nhận ở ngoài cùng */}
-      {showCancelDialog && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+      {
+        showCancelDialog && (
           <div
             style={{
-              background: '#fff',
-              borderRadius: '8px',
-              padding: '24px',
-              minWidth: '320px',
-              maxWidth: '400px',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              background: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 9999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            <h5 className="mb-4">Bạn chắc chắn muốn hủy tour này?</h5>
-            <div className="d-flex justify-content-end gap-2">
-              <button
-                className="btn btn-secondary"
-                onClick={() => setShowCancelDialog(false)}
-                disabled={cancelLoading}
-              >
-                Hủy
-              </button>
-              <button
-                className="btn btn-danger"
-                onClick={handleCancelTour}
-                disabled={cancelLoading}
-              >
-                {cancelLoading ? 'Đang xử lý...' : 'Xác nhận'}
-              </button>
+            <div
+              style={{
+                background: '#fff',
+                borderRadius: '8px',
+                padding: '24px',
+                minWidth: '320px',
+                maxWidth: '400px',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+              }}
+            >
+              <h5 className="mb-4">Bạn chắc chắn muốn hủy tour này?</h5>
+              <div className="d-flex justify-content-end gap-2">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowCancelDialog(false)}
+                  disabled={cancelLoading}
+                >
+                  Hủy
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={handleCancelTour}
+                  disabled={cancelLoading}
+                >
+                  {cancelLoading ? 'Đang xử lý...' : 'Xác nhận'}
+                </button>
 
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
     </>
   )
 }

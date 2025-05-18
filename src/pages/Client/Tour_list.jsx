@@ -7,7 +7,7 @@ import TourSidebar from "~/components/Client/TourSidebar"
 import { Link } from 'react-router-dom'
 import { getAllToursAPI } from '~/apis'
 
-export default function Tour_list() {
+function Tour_list() {
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [priceRange, setPriceRange] = useState([1000000, 10000000]);
@@ -15,6 +15,8 @@ export default function Tour_list() {
   const [sortType, setSortType] = useState("default");
   const [selectedRegion, setSelectedRegion] = useState(""); // "" là tất cả
   const [selectedRating, setSelectedRating] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
   const location = useLocation()
   const params = new URLSearchParams(location.search)
   const qDestination = params.get('destination')
@@ -83,6 +85,13 @@ export default function Tour_list() {
     setIsPriceFilter(true);
   };
 
+  // ==== Thêm trước return ====
+  const totalPages = Math.ceil(sortedTour.length / itemsPerPage);
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentTours = sortedTour.slice(indexOfFirst, indexOfLast);
+  // ==== Kết thúc thêm ====
+
   return (
     <div><Banner pageTitle={"Danh sách tour du lịch"} pageName={"Tour List"} search />
       {/* Tour List Area start */}
@@ -132,7 +141,7 @@ export default function Tour_list() {
                   {loading ? (
                     <div className="text-center">Loading tours...</div>
                   ) : (
-                    sortedTour.map((tour, index) => (
+                    currentTours.map((tour, index) => (
                       <div className="col-xl-4 col-md-6" key={tour?._id || index}>
                         <div
                           key={tour?._id || index}
@@ -140,6 +149,7 @@ export default function Tour_list() {
                           data-aos="fade-up"
                           data-aos-duration={1500}
                           data-aos-offset={50}
+
                         >
                           <div className="image">
                             {tour?.availability
@@ -214,43 +224,46 @@ export default function Tour_list() {
                   }
                 </div>
               </div>
+              {/* ==== Thay block pagination cũ bằng block sau ==== */}
               <ul
                 className="pagination pt-15 flex-wrap"
                 data-aos="fade-up"
                 data-aos-duration={1500}
                 data-aos-offset={50}
               >
-                <li className="page-item disabled">
-                  <span className="page-link">
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button
+                    className="page-link"
+                    onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+                  >
                     <i className="far fa-chevron-left" />
-                  </span>
+                  </button>
                 </li>
-                <li className="page-item active">
-                  <span className="page-link">
-                    1<span className="sr-only">(current)</span>
-                  </span>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    2
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    3
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    ...
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+                  <li
+                    key={number}
+                    className={`page-item ${currentPage === number ? 'active' : ''}`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => setCurrentPage(number)}
+                    >
+                      {number}
+                    </button>
+                  </li>
+                ))}
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button
+                    className="page-link"
+                    onClick={() =>
+                      currentPage < totalPages && setCurrentPage(currentPage + 1)
+                    }
+                  >
                     <i className="far fa-chevron-right" />
-                  </a>
+                  </button>
                 </li>
               </ul>
+              {/* ==== Kết thúc pagination ==== */}
             </div>
           </div>
         </div>
@@ -259,3 +272,6 @@ export default function Tour_list() {
     </div >
   )
 }
+
+
+export default Tour_list

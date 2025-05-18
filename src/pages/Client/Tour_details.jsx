@@ -4,24 +4,26 @@ import { useEffect } from "react"; // Add this if it's not already imported
 import { Link } from 'react-router-dom'
 import { useState } from "react";
 import { Accordion } from "react-bootstrap";
-import { getTourByIdAPI, getReviewByTourIdAPI, reviewsAPI } from "~/apis";
+import { getTourByIdAPI, getReviewByTourIdAPI, reviewsAPI, getRecommends } from "~/apis";
 import draftToHtml from 'draftjs-to-html';
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
-function Tour_details() {
+
+export default function Tour_details() {
   const [tour, setTour] = useState(null);
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [commentText, setCommentText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [recommendedTours, setRecommendedTours] = useState([]);
   const { id } = useParams();
   const currentUser = useSelector(selectCurrentUser)
   const formatDate = d =>
     d ? new Date(d).toLocaleDateString('vi-VN') : "";
 
 
-  const handleStarClick = (n) => () => setRating(n);   // <-- new
-  const handleSubmit = async (e) => {                   // <-- new
+  const handleStarClick = (n) => () => setRating(n);   
+  const handleSubmit = async (e) => {                   
     e.preventDefault();
     if (!currentUser || !tour) return;
     try {
@@ -56,20 +58,42 @@ function Tour_details() {
     const fetchTour = async () => {
       try {
         const response = await getTourByIdAPI(id);
-        // console.log('🚀 ~ fetchTour ~ response.data:', response.data)
         console.log('🚀 ~ fetchTour ~ response:', response)
         setTour(response || null);
         setLoading(false);
+
+        // Lưu ID tour vào localStorage
+        if (id) {
+          // Lấy danh sách tour đã xem từ localStorage
+          const viewedTours = JSON.parse(localStorage.getItem('viewedTours') || '[]');
+          // Thêm ID hiện tại vào đầu danh sách nếu chưa tồn tại
+          if (!viewedTours.includes(id)) {
+            // Giới hạn số lượng tour lưu trữ (5 tour gần nhất)
+            const updatedTours = [id, ...viewedTours.filter(tourId => tourId !== id)].slice(0, 5);
+            localStorage.setItem('viewedTours', JSON.stringify(updatedTours));
+          }
+        }
       } catch (error) {
         console.error("Error fetching tour details:", error);
         setLoading(false);
       }
     };
-    // console.log('🚀 ~ fetchTour ~ response:', tour)
+
     if (id) {
       fetchTour();
     }
   }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+    getRecommends({
+      clickedTourId: id,
+      token: currentUser?.accessToken
+    })
+      .then(setRecommendedTours)
+      .catch(console.error);
+  }, [id, currentUser]);
+
   const [active, setActive] = useState("collapse0");
   const totalRating = reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
   const avgRating = reviews.length ? totalRating / reviews.length : 0;
@@ -417,8 +441,8 @@ function Tour_details() {
                                 : "far fa-star"
                             }
                             onClick={handleStarClick(starNum)}
-                            style={{ cursor: 'pointer' ,fontSize: '25px'  }}
-                           
+                            style={{ cursor: 'pointer', fontSize: '25px' }}
+
                           />
                         )
                       })}
@@ -525,14 +549,87 @@ function Tour_details() {
                   </form>
                 </div>
               </div>
+              <div className="blog-sidebar tour-sidebar" style={{ marginTop: '20px' }}>
+
+                {/* Recommendations under booking widget */}
+                <div className="recommendations-section p-4 bg-white shadow-sm rounded">
+                  {recommendedTours.length > 0 && (
+                    <>
+                      <h5 className="section-title mb-4 pb-2 border-bottom">
+                        <i className="fas fa-map-marked-alt me-2"></i>Tour Gợi Ý
+                      </h5>
+                      <div className="recommended-tours">
+                        {recommendedTours.map(t => (
+                          <div key={t._id} className="mb-4">
+                            <Link
+                              to={`/tour-details/${t._id}`}
+                              className="recommend-card d-block text-decoration-none"
+                              onClick={() => {
+                                window.scrollTo({
+                                  top: 0,
+                                  behavior: 'smooth'
+                                });
+                              }}
+                            >
+                              <div className="recommend-item p-3 rounded hover-shadow border border-light position-relative">
+                                <div className="recommend-img mb-3 position-relative">
+                                  <img
+                                    src={t.images?.[0] || '/placeholder-image.jpg'}
+                                    alt={t.title}
+                                    className="rounded-3 shadow-sm w-100"
+                                    style={{ height: 150, objectFit: 'cover' }}
+                                    onError={(e) => {
+                                      e.target.src = '/placeholder-image.jpg'; // Fallback image
+                                    }}
+                                  />
+                                  {/* Price badge with error handling */}
+                                  {t.priceAdult && (
+                                    <div className="tour-price-badge position-absolute top-0 end-0 m-2 px-2 py-1 bg-primary text-white rounded shadow-sm">
+                                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(t.priceAdult)}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="recommend-content">
+                                  <h6 className="tour-title text-dark mb-2 fw-bold">
+                                    {t.title}
+                                  </h6>
+                                  <div className="d-flex justify-content-between align-items-center">
+                                    <div className="tour-rating">
+                                      {Array.from({ length: 5 }).map((_, idx) => (
+                                        <i
+                                          key={idx}
+                                          className={`${idx < (t.rating || 4) ? "fas" : "far"} fa-star text-warning`}
+                                          style={{ fontSize: '14px' }}
+                                        />
+                                      ))}
+                                      <span className="ms-1 text-muted small">
+                                        ({t.reviewCount || 5})
+                                      </span>
+                                    </div>
+                                    <div className="tour-duration small text-muted">
+                                      <i className="far fa-clock me-1"></i>
+                                      {t.time || '3 ngày'}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
       {/* Tour Details Area end */}
 
+
     </>
   )
 }
 
-export default Tour_details
+// export default Tour_details

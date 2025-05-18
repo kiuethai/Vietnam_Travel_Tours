@@ -98,6 +98,37 @@ export const addItineraryApi = async (tourId, data) => {
   return response.data
 }
 
+// export const getTourRecommendAPI = (params = {}) =>
+//   authorizedAxiosInstance.get(`${API_ROOT}/v1/tours/recommend`, { params })
+//        .then(res => res.data);
+
+export const getRecommends = async ({ clickedTourId, search } = {}) => {
+  // 1. Xây query string
+  const params = new URLSearchParams();
+  if (clickedTourId) params.append('clickedTourId', clickedTourId);
+  if (search)       params.append('search', search);
+
+  // 2. Gọi API mà chỉ include cookie
+  const res = await fetch(
+    `${API_ROOT}/v1/tours/recommend${params.toString() ? '?' + params : ''}`,
+    {
+      method: 'GET',
+      credentials: 'include', // <-- đảm bảo cookie (accessToken) được gửi
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
+  // 3. Xử lý lỗi và parse
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'Failed to fetch recommendations');
+  }
+  const { recommendations = [] } = await res.json();
+  return recommendations;
+};
+
 /* Contact tour APIS */
 export const contactAdminAPI = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/contact`, data)
