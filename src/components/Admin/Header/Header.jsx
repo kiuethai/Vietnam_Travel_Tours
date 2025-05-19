@@ -26,8 +26,7 @@ import {
   useLayoutDispatch,
   toggleSidebar,
 } from '~/context/LayoutContext';
-import Notification from '../Notification/Notification';
-
+import NotificationsIcon from '@mui/icons-material/Notifications';
 export default function Header(props) {
   let classes = useStyles();
   let theme = useTheme();
@@ -105,7 +104,7 @@ export default function Header(props) {
         <div className={classes.grow} />
 
         {/* <NotificationsActiveIcon /> */}
-        <Notification />
+        < NotificationsIcon />
         <IconButton
           aria-haspopup='true'
           color='inherit'
@@ -114,12 +113,12 @@ export default function Header(props) {
           onClick={(e) => setProfileMenu(e.currentTarget)}
         >
           <Avatar
-            alt={currentAdmin?.displayName}
+            alt={currentAdmin?.user?.displayName}
             // eslint-disable-next-line no-mixed-operators
-            src={currentAdmin?.avatar}
+            src={currentAdmin?.user?.avatar}
             classes={{ root: classes.headerIcon }}
           >
-            {currentAdmin?.displayName?.[0]}
+            {currentAdmin?.user?.displayName?.[0]}
           </Avatar>
         </IconButton>
         <Typography
@@ -128,7 +127,7 @@ export default function Header(props) {
         >
           <div className={classes.profileLabel}>Hi,&nbsp;</div>
           <Typography weight={'bold'} className={classes.profileLabel}>
-            {currentAdmin?.displayName}
+            {currentAdmin?.user?.displayName}
           </Typography>
         </Typography>
         <Menu
@@ -142,7 +141,7 @@ export default function Header(props) {
         >
           <div className={classes.profileMenuUser}>
             <Typography variant='h4' weight='medium'>
-              {currentAdmin?.displayName}
+              {currentAdmin?.user?.displayName}
             </Typography>
 
           </div>
@@ -153,7 +152,7 @@ export default function Header(props) {
             )}
           >
             <AccountIcon className={classes.profileMenuIcon} />
-            <Link to='/app/user/edit' style={{ textDecoration: 'none' }}>
+            <Link to='/admin/profile/account' style={{ textDecoration: 'none' }}>
               Profile
             </Link>
           </MenuItem>

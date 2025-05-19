@@ -87,9 +87,9 @@ function Booking() {
 
   useEffect(() => {
     const fetchUserBooking = async () => {
-      if (!currentUser?._id || !id) return;
+      if (!currentUser?.user?.id || !id) return;
       try {
-        const res = await getTourBookingByUserId(currentUser._id);
+        const res = await getTourBookingByUserId(currentUser?.user.id);
         const found = res.tours?.find(
           t => t.tourDetails && t.tourDetails._id === id
         );
@@ -156,7 +156,7 @@ function Booking() {
         tel: form.tel,
         totalPrice: calcTotal(form.numAdults, form.numChildren),
         tourId: id,
-        userId: currentUser?._id,
+        userId: currentUser?.user?.id,
       };
       try {
         if (form.payment === "momo-payment") {

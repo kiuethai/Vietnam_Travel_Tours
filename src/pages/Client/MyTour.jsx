@@ -9,6 +9,7 @@ import { selectCurrentUser } from '~/redux/user/userSlice'
 
 function MyTour() {
   const currentUser = useSelector(selectCurrentUser);
+  
   const [bookings, setBookings] = useState();
   const [loading, setLoading] = useState(true);
   const [recommendedTours, setRecommendedTours] = useState([]);
@@ -18,18 +19,20 @@ function MyTour() {
   useEffect(() => {
     const fetchBookingTour = async () => {
       try {
-        const response = await getTourBookingByUserId(currentUser?._id);
+        const response = await getTourBookingByUserId(currentUser?.user?.id);
         setBookings(response.tours || null);
         setLoading(false);
       } catch (error) {
         setLoading(false);
       }
+    
     };
-    if (currentUser?._id) {
+
+    if (currentUser?.user?.id) {
       fetchBookingTour();
     }
-  }, [currentUser?._id]);
-
+  }, [currentUser?.user?.id]);
+  console.log('🚀 ~ MyTour ~ currentUser:', currentUser)
   // Fixed effect to fetch recommended tours
   useEffect(() => {
     const fetchRecommendedTours = async () => {

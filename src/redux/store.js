@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { userReducer } from './user/userSlice'
 import { adminReducer } from './admin/adminSlice'
+import chatReducer from './chat/chatReducer'
 import storage from 'redux-persist/lib/storage'
 import { combineReducers } from 'redux'
 import { persistReducer } from 'redux-persist'
@@ -16,7 +17,8 @@ const rootPersistConfig = {
 // Combine các reducers trong dự án của chúng ta ở đây
 const reducers = combineReducers({
   user: userReducer,
-  admin: adminReducer
+  admin: adminReducer,
+  chat: chatReducer
 })
 
 // Thực hiện persist Reducer

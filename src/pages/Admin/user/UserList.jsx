@@ -28,6 +28,8 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Notification from '~/components/Admin/Notification/Notification'
 import { toast } from 'react-toastify'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 import { Typography, Chip, Avatar } from '~/components/Admin/Wrappers/Wrappers'
 import {
@@ -46,6 +48,7 @@ const headCells = [
   { id: 'avatar', numeric: false, disablePadding: false, label: 'AVATAR' },
   { id: 'displayName', numeric: false, disablePadding: false, label: 'DISPLAY NAME' },
   { id: 'username', numeric: false, disablePadding: false, label: 'USERNAME' },
+  { id: 'role', numeric: false, disablePadding: false, label: 'ROLE' },
   { id: 'email', numeric: false, disablePadding: false, label: 'EMAIL' },
   { id: 'address', numeric: false, disablePadding: false, label: 'ADDRESS' },
   { id: 'isActive', numeric: false, disablePadding: false, label: 'KÍCH HOẠT' },
@@ -103,6 +106,7 @@ const UserList = () => {
   const [usersRows, setUsersRows] = useState([])
   const [loading, setLoading] = useState(false)
 
+
   const managementDispatch = useManagementDispatch()
   const managementValue = useManagementState()
   const classes = useStyles();
@@ -121,53 +125,72 @@ const UserList = () => {
     [rowsPerPage, usersRows.length, page]
   );
 
-  const handleDelete = async () => {
+  // Thay thế 3 hàm riêng biệt bằng một hàm xử lý chung
+  const handleUserAction = async (actionType, userId, data = {}) => {
     try {
       setLoading(true);
-      const userId = managementValue.idToDelete;
 
       if (!userId || typeof userId !== 'string' || userId.length !== 24) {
-        sendNotification('ID người dùng không hợp lệ');
-        closeModal();
+        toast.error('ID người dùng không hợp lệ');
+        if (actionType === 'delete') closeModal();
         return;
       }
 
-      await UpdateUserAPI(userId, { _destroy: true });
+      let actionData = {};
+
+      switch (actionType) {
+        case 'delete':
+          actionData = { _destroy: true };
+          break;
+        case 'activate':
+          actionData = { isActive: true };
+          break;
+        case 'changeRole':
+          actionData = { role: data.role };
+          break;
+        default:
+          return;
+      }
+
+      await UpdateUserAPI(userId, actionData);
       await fetchListUsers();
-      closeModal();
-      sendNotification('User deleted successfully');
+
+      if (actionType === 'delete') closeModal();
+
+      const successMessages = {
+        delete: 'User deleted successfully',
+        activate: 'User activated successfully',
+        changeRole: 'Role updated successfully'
+      };
+
+      toast.success(successMessages[actionType] || 'Action completed successfully');
     } catch (error) {
-      sendNotification('Failed to delete user');
+      const errorMessages = {
+        delete: 'Failed to delete user',
+        activate: 'Failed to activate user',
+        changeRole: 'Failed to update role'
+      };
+
+      toast.error(errorMessages[actionType] || 'Action failed');
     } finally {
       setLoading(false);
     }
   };
 
-  const activateUser = async (userId) => {
-    try {
-      setLoading(true);
-      if (!userId || typeof userId !== 'string' || userId.length !== 24) {
-        sendNotification('ID người dùng không hợp lệ');
-        return;
-      }
-
-      await UpdateUserAPI(userId, { isActive: true });
-      await fetchListUsers();
-      sendNotification('User activated successfully');
-    } catch (error) {
-      sendNotification('Failed to activate user');
-    } finally {
-      setLoading(false);
-    }
+  const handleDelete = () => handleUserAction('delete', managementValue.idToDelete);
+  const activateUser = (userId) => handleUserAction('activate', userId);
+  const handleRoleChange = (e, userId) => {
+    e.stopPropagation();
+    handleUserAction('changeRole', userId, { role: e.target.value });
   };
 
   const fetchListUsers = async () => {
     try {
       setLoading(true);
       const res = await getAllUsersAPI();
-      setUsersRows(Array.isArray(res) ? res : []);
+      setUsersRows(Array.isArray(res.users) ? res.users : []);
     } catch (error) {
-      sendNotification('Failed to fetch user data');
+      toast.error('Failed to fetch user data');
     } finally {
       setLoading(false);
     }
@@ -177,28 +200,6 @@ const UserList = () => {
     fetchListUsers();
   }, []);
 
-  function sendNotification(text) {
-    const componentProps = {
-      type: "feedback",
-      message: text,
-      variant: "contained",
-      color: "success"
-    };
-    const options = {
-      type: "info",
-      position: toast.success,
-      progressClassName: classes.progress,
-      className: classes.notification,
-      timeOut: 1000
-    };
-    return toast(
-      <Notification
-        {...componentProps}
-        className={classes.notificationComponent}
-      />,
-      options
-    );
-  }
 
   const handleRequestSort = useCallback((event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -361,6 +362,23 @@ const UserList = () => {
                             {row.username}
                           </Typography>
                         </TableCell>
+                        <TableCell align="left" style={{ minWidth: '120px' }}>
+                        
+                          <Select
+                            labelId={`role-select-label-${row._id}`}
+                            id={`role-select-${row._id}`}
+                            value={row.role || ''} 
+                            displayEmpty
+                            onChange={(e) => handleRoleChange(e, row._id)}
+                            style={{ minWidth: '120px', width: '100%' }}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            
+                            <MenuItem value="user">User</MenuItem>
+                            <MenuItem value="admin">Admin</MenuItem>
+                          </Select>
+                        </TableCell>
+
                         <TableCell align="left">
                           <Typography
                             variant={'body2'}

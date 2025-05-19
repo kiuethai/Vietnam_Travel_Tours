@@ -64,12 +64,11 @@ const structure = [
     icon: <SupportIcon />,
     link: '/admin/contact',
   },
-  ,
   {
     id: 5,
-    label: 'Chat',
+    label: 'Chat với khách hàng',
     icon: <ChatIcon />,
-    // link: '/admin/bookings',
+    link: '/admin/chat',
   },
 ];
 

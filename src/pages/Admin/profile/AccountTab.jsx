@@ -26,7 +26,7 @@ function AccountTab() {
 
   // Những thông tin của user để init vào form (key tương ứng với register phía dưới Field)
   const initialGeneralForm = {
-    displayName: currentAdmin?.displayName,
+    displayName: currentAdmin?.user?.displayName,
   }
   // Sử dụng defaultValues để set giá trị mặc định cho các field cần thiết
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -37,7 +37,7 @@ function AccountTab() {
     const { displayName} = data
     // Nếu không có sự thay đổi gì về displayname thì không làm gì cả
     if (
-      displayName === currentAdmin?.displayName 
+      displayName === currentAdmin?.user?.displayName 
     ) return
     // Gọi API...
     toast.promise(
@@ -104,7 +104,7 @@ function AccountTab() {
             <Avatar
               sx={{ width: 84, height: 84, mb: 1 }}
               alt="Kieuthai"
-              src={currentAdmin?.avatar}
+              src={currentAdmin?.user?.avatar}
             />
             <Tooltip title="Upload a new image to update your avatar immediately.">
               <Button
@@ -118,8 +118,8 @@ function AccountTab() {
             </Tooltip>
           </Box>
           <Box>
-            <Typography variant="h6">{currentAdmin?.displayName}</Typography>
-            <Typography sx={{ color: 'grey' }}>@{currentAdmin?.username}</Typography>
+            <Typography variant="h6">{currentAdmin?.user?.displayName}</Typography>
+            <Typography sx={{ color: 'grey' }}>@{currentAdmin?.user?.username}</Typography>
           </Box>
         </Box>
 
@@ -128,7 +128,7 @@ function AccountTab() {
             <Box>
               <TextField
                 disabled
-                defaultValue={currentAdmin?.email}
+                defaultValue={currentAdmin?.user?.email}
                 fullWidth
                 label="Email của bạn"
                 type="text"
@@ -146,7 +146,7 @@ function AccountTab() {
             <Box>
               <TextField
                 disabled
-                defaultValue={currentAdmin?.username}
+                defaultValue={currentAdmin?.user?.username}
                 fullWidth
                 label="Tên người dùng của bạn"
                 type="text"

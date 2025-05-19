@@ -11,7 +11,7 @@ const initialState = {
 export const loginAdminAPI = createAsyncThunk(
   'admin/loginAdminAPI',
   async (data) => {
-    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/admin/login`, data)
+    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/admin/login`, data)
     // Lưu ý: axios sẽ trả kết quả về qua property của nó là data
     return response.data
   }
@@ -21,7 +21,7 @@ export const logoutAdminAPI = createAsyncThunk(
   'admin/logoutAdminAPI',
   async (showSuccessMessage = true) => {
    
-    const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/admin/logout`)
+    const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/users/admin/logout`)
     if (showSuccessMessage) {
       toast.success('Logged out successfully!')
       

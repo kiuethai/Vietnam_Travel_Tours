@@ -26,9 +26,9 @@ function AccountTab() {
 
   // Những thông tin của user để init vào form (key tương ứng với register phía dưới Field)
   const initialGeneralForm = {
-    displayName: currentUser?.displayName,
-    address: currentUser?.address,
-    phoneNumber: currentUser?.phoneNumber
+    displayName: currentUser?.user?.displayName,
+    address: currentUser?.user?.address,
+    phoneNumber: currentUser?.user?.phoneNumber
   }
   // Sử dụng defaultValues để set giá trị mặc định cho các field cần thiết
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -40,9 +40,9 @@ function AccountTab() {
 
     // Nếu không có sự thay đổi gì về displayname thì không làm gì cả
     if (
-      displayName === currentUser?.displayName &&
-      phoneNumber === currentUser?.phoneNumber &&
-      address === currentUser?.address) return
+      displayName === currentUser?.user?.displayName &&
+      phoneNumber === currentUser?.user?.phoneNumber &&
+      address === currentUser?.user?.address) return
 
     // Gọi API...
     toast.promise(
@@ -109,7 +109,7 @@ function AccountTab() {
             <Avatar
               sx={{ width: 84, height: 84, mb: 1 }}
               alt="Kieuthai"
-              src={currentUser?.avatar}
+              src={currentUser?.user?.avatar}
             />
             <Tooltip title="Upload a new image to update your avatar immediately.">
               <Button
@@ -123,8 +123,8 @@ function AccountTab() {
             </Tooltip>
           </Box>
           <Box>
-            <Typography variant="h6">{currentUser?.displayName}</Typography>
-            <Typography sx={{ color: 'grey' }}>@{currentUser?.username}</Typography>
+            <Typography variant="h6">{currentUser?.user?.displayName}</Typography>
+            <Typography sx={{ color: 'grey' }}>@{currentUser?.user?.username}</Typography>
           </Box>
         </Box>
 
@@ -133,7 +133,7 @@ function AccountTab() {
             <Box>
               <TextField
                 disabled
-                defaultValue={currentUser?.email}
+                defaultValue={currentUser?.user?.email}
                 fullWidth
                 label="Email của bạn"
                 type="text"
@@ -151,7 +151,7 @@ function AccountTab() {
             <Box>
               <TextField
                 disabled
-                defaultValue={currentUser?.username}
+                defaultValue={currentUser?.user?.displayName}
                 fullWidth
                 label="Tên người dùng của bạn"
                 type="text"
@@ -210,7 +210,7 @@ function AccountTab() {
             <Box>
               <TextField
                 fullWidth
-                label="Dịa chỉ của bạn"
+                label="Địa chỉ của bạn"
                 type="text"
                 variant="outlined"
                 InputProps={{

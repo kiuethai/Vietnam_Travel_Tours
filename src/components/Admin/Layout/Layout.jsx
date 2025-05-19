@@ -22,12 +22,6 @@ import ColorChangeThemePopper from './components/ColorChangeThemePopper';
 // pages
 import Dashboard from '~/pages/Admin/dashboard/Dashboard'
 
-// import Ecommerce from '../../pages/ecommerce'
-// import Product from '../../pages/ecommerce/Products'
-// import ProductsGrid from '../../pages/ecommerce/ProductsGrid'
-// import CreateProduct from '../../pages/ecommerce/CreateProduct'
-
-
 import BreadCrumbs from '~/components/Admin/BreadCrumbs/index'
 
 // context
@@ -47,6 +41,8 @@ import UpdateTour from '~/pages/Admin/Tours/UpdateTour';
 import GetBookings from '~/pages/Admin/Booking/GetBookings';
 import BookingDetail from '~/pages/Admin/Booking/BookingDetail';
 import GetContacts from '~/pages/Admin/Contact/GetContacts';
+import ChatAdmin from '~/pages/Admin/Chat/ChatAdmin.jsx';
+
 
 function Layout(props) {
   const classes = useStyles();
@@ -91,6 +87,8 @@ function Layout(props) {
           <Route path="booking-detail/:id" element={<BookingDetail />} />
 
           <Route path="contact" element={<GetContacts />} />
+
+          <Route path="chat" element={<ChatAdmin />} />
 
           <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
         </Routes>

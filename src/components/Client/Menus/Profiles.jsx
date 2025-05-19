@@ -53,7 +53,7 @@ function Profiles() {
           <Avatar
             sx={{ width: 35, height: 35 }}
             alt='Capy'
-            src={currentUser?.avatar} />
+            src={currentUser?.user?.avatar} />
         </IconButton>
       </Tooltip>
       <Menu
@@ -71,7 +71,7 @@ function Profiles() {
             <Avatar
               sx={{ width: 28, height: 28, mr: 2 }}
               alt='Capy'
-              src={currentUser?.avatar}
+              src={currentUser?.user?.avatar}
             /> Profile
           </MenuItem>
         </Link>
