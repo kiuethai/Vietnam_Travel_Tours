@@ -1,4 +1,3 @@
-// filepath: d:\react-bg\Vietnam_Travel_Tours\FULL_CODE\FE_Vietnam_Travel_Tours\travel_tour_vn\src\components\Client\Chat\ClientChat.jsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, IconButton, TextField, Button, Typography, Avatar, Badge } from '@mui/material';
@@ -13,90 +12,18 @@ import socketClient from '../../../utils/socketChat';
 import { selectCurrentUser } from '~/redux/user/userSlice';
 // Import action functions
 import { getMessages, sendMessage, initSocketConnection, disconnectSocketConnection } from '../../../redux/chat/chatApiFunctions';
-
 // Styled components
-const ChatButton = styled(IconButton)(({ theme }) => ({
-  position: 'fixed',
-  bottom: '2rem',
-  right: '2rem',
-  backgroundColor: theme.palette.primary.main,
-  color: '#fff',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-  zIndex: 1000,
-  '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
-  },
-}));
+import {
+  ChatButton,
+  ChatWindow,
+  ChatHeader,
+  MessageContainer,
+  MessageBubble,
+  MessageTime,
+  TypingIndicator,
+  InputArea
+} from './style';
 
-const ChatWindow = styled(Box)(({ theme }) => ({
-  position: 'fixed',
-  bottom: '6rem',
-  right: '2rem',
-  width: '350px',
-  height: '500px',
-  backgroundColor: '#fff',
-  borderRadius: '10px',
-  boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  zIndex: 1000,
-}));
-
-const ChatHeader = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-  color: '#fff',
-  padding: '16px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-}));
-
-const MessageContainer = styled(Box)(({ theme }) => ({
-  flexGrow: 1,
-  padding: '16px',
-  overflowY: 'auto',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '12px',
-}));
-
-const MessageBubble = styled(Box)(({ theme, isuser }) => ({
-  maxWidth: '80%',
-  padding: '10px 14px',
-  borderRadius: isuser === 'true' ? '16px 16px 0 16px' : '16px 16px 16px 0',
-  backgroundColor: isuser === 'true' ? theme.palette.primary.main : '#f1f0f0',
-  color: isuser === 'true' ? '#fff' : '#000',
-  alignSelf: isuser === 'true' ? 'flex-end' : 'flex-start',
-  wordBreak: 'break-word',
-  boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-}));
-
-const MessageTime = styled(Typography)(({ theme, isuser }) => ({
-  fontSize: '11px',
-  color: isuser === 'true' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.6)',
-  marginTop: '4px',
-  textAlign: isuser === 'true' ? 'right' : 'left',
-}));
-
-const TypingIndicator = styled(Box)(({ theme }) => ({
-  padding: '8px 12px',
-  fontSize: '13px',
-  color: 'rgba(0, 0, 0, 0.6)',
-  fontStyle: 'italic',
-  alignSelf: 'flex-start',
-  backgroundColor: '#f1f0f0',
-  borderRadius: '16px 16px 16px 0',
-  marginBottom: '8px',
-}));
-
-const InputArea = styled(Box)(({ theme }) => ({
-  borderTop: '1px solid #e0e0e0',
-  padding: '12px',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-}));
 
 // Component definition
 function ClientChat() {
@@ -112,6 +39,7 @@ function ClientChat() {
   // Get messages and typing status from redux store
   const messages = useSelector((state) => state.chat?.messages || []);
   const adminTyping = useSelector((state) => state.chat?.typingUsers?.admin || false);
+  const socketConnected = useSelector((state) => state.chat?.socketConnected);
 
   // Scroll to bottom effect
   const scrollToBottom = useCallback(() => {
@@ -120,16 +48,14 @@ function ClientChat() {
     }
   }, []);
 
+  // Effect for scrolling to bottom when messages change
   useEffect(() => {
-    if (messages.length > 0) {
-      scrollToBottom();
-    }
-  }, [messages, scrollToBottom]);
+    scrollToBottom();
+  }, [messages, scrollToBottom, adminTyping]);
 
   // Initialize socket only if user is logged in
   useEffect(() => {
     if (currentUser && currentUser.accessToken) {
-      // Use the centralized initSocketConnection from redux
       dispatch(initSocketConnection(currentUser.accessToken));
 
       // Cleanup function
@@ -145,6 +71,7 @@ function ClientChat() {
   // Load messages when chat window is opened
   useEffect(() => {
     if (isOpen && currentUser && currentUser?.user?.id) {
+      // Get messages when the chat is opened
       dispatch(getMessages('admin'));
 
       // Reset unread count when opening chat
@@ -161,11 +88,21 @@ function ClientChat() {
     }
   }, [isOpen, currentUser, dispatch]);
 
-  // Update unread count when receiving new messages
+  // Setup socket event listeners for new messages and update unread count
   useEffect(() => {
     const handleNewMessage = (message) => {
+      // If chat is closed and message is from admin, increment unread count
       if (!isOpen && message.senderID !== currentUser?.user?.id) {
         setUnreadCount((prev) => prev + 1);
+      }
+
+      // If chat is open, make sure to scroll down for the new message
+      if (isOpen) {
+        setTimeout(scrollToBottom, 100);
+      }
+
+      if (isOpen && currentUser && currentUser?.user?.id) {
+        dispatch(getMessages('admin'));
       }
     };
 
@@ -177,14 +114,14 @@ function ClientChat() {
         socket.off('new-message', handleNewMessage);
       };
     }
-  }, [isOpen, currentUser?.user?.id]);
+  }, [isOpen, currentUser?.user?.id, scrollToBottom, socketConnected, dispatch]);
 
   // Handle opening/closing chat window
   const toggleChat = () => {
     setIsOpen(!isOpen);
   };
 
-  // Debounced typing function - consistent with admin implementation
+  // Debounced typing function
   const debouncedTypingHandler = useCallback(
     (isTypingState) => {
       if (typingTimeoutRef.current) {
@@ -201,7 +138,7 @@ function ClientChat() {
           });
         }
         typingTimeoutRef.current = null;
-      }, 500);
+      }, 300); // Reduced debounce time for better responsiveness
     },
     [currentUser]
   );
@@ -212,10 +149,6 @@ function ClientChat() {
     setMessageInput(value);
 
     if (currentUser?.user?.id) {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-
       // Send typing indicator only if state changed
       if (value.length > 0 && !isTyping) {
         setIsTyping(true);
@@ -226,6 +159,10 @@ function ClientChat() {
       }
 
       // Set a timeout to clear typing indicator after inactivity
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+
       typingTimeoutRef.current = setTimeout(() => {
         if (isTyping) {
           setIsTyping(false);
@@ -252,14 +189,13 @@ function ClientChat() {
       _id: `temp_${Date.now()}`,
       message: messageInput.trim(),
       createdAt: new Date().toISOString(),
-     
       senderID: currentUser?.user?.id,
       sender: 'user',
       recipientID: 'admin',
       isTemp: true // Mark as temporary so we can replace it when the server responds
     };
 
-    // Add the message to the local state
+    // Dispatch the message immediately to update UI
     dispatch({
       type: 'CHAT_ACTIONS.SEND_MESSAGE_SUCCESS',
       payload: tempMessage
@@ -274,12 +210,15 @@ function ClientChat() {
 
     // Clear the typing indicator when sending a message
     if (isTyping) {
+      setIsTyping(false);
       debouncedTypingHandler(false);
     }
 
-    // Reset input and typing state
+    // Reset input
     setMessageInput('');
-    setIsTyping(false);
+
+    // Scroll to bottom after sending
+    setTimeout(scrollToBottom, 100);
   };
 
   // Handle enter key press
@@ -299,7 +238,7 @@ function ClientChat() {
   // Helper function to determine if a message is from the current user
   const isUserMessage = (msg) => {
     return (
-    
+
       msg.senderID === currentUser?.user?.id ||
       msg.sender === 'user'
     );
@@ -342,15 +281,15 @@ function ClientChat() {
               messages.map((msg, index) => {
                 const userMessage = isUserMessage(msg);
                 return (
-                  <MessageBubble 
+                  <MessageBubble
                     key={msg._id || index}
                     isuser={userMessage ? 'true' : 'false'}
                   >
                     <Typography variant="body2">
                       {msg.message}
                     </Typography>
-                    <MessageTime 
-                      isuser={userMessage ? 'true' : 'false'} 
+                    <MessageTime
+                      isuser={userMessage ? 'true' : 'false'}
                       variant="caption"
                     >
                       {moment(msg.createdAt || msg.createdDate).format('HH:mm DD/MM/YYYY')}

@@ -107,26 +107,40 @@ const chatReducer = (state = initialState, action) => {
         socketConnected: action.payload
       };
 
-    case CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED:
-      // Only add to messages if from the selected conversation
-      if (
-        (action.payload.userID === state.selectedUserId) ||
-        (action.payload.senderId === state.selectedUserId)
-      ) {
+    case CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED: {
+      // Show messages for the selected conversation more intelligently
+      const currentAdminId = action.payload.senderID === state.selectedUserId ?
+        action.payload.recipientID :
+        (action.payload.recipientID === state.selectedUserId ? action.payload.senderID : null);
+
+      // Log to help debug
+      console.log('Message received in reducer:', {
+        message: action.payload,
+        selectedUserId: state.selectedUserId,
+        isAdminMessage: currentAdminId !== null
+      });
+
+      // For admin chat, show all messages related to selected user
+      const isRelevantForAdmin = (
+        (action.payload.senderID === state.selectedUserId) ||
+        (action.payload.recipientID === state.selectedUserId)
+      );
+
+      if (isRelevantForAdmin) {
+        // Make sure we don't add duplicate messages
+        const messageExists = state.messages.some(m => m._id === action.payload._id);
+
+        if (messageExists) {
+          return state;
+        }
+
         return {
           ...state,
           messages: [...state.messages, action.payload]
         };
       }
       return state;
-    case CHAT_ACTIONS.SOCKET_TYPING:
-      return {
-        ...state,
-        typingUsers: {
-          ...state.typingUsers,
-          [action.payload.userId]: action.payload.isTyping
-        }
-      };
+    }
 
     case CHAT_ACTIONS.SOCKET_READ_RECEIPT:
       // Update read status of messages

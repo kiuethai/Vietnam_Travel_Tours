@@ -116,7 +116,7 @@ export const sendMessage = (messageData) => async (dispatch) => {
       // Fallback to HTTP if socket isn't connected
       console.log('Socket not connected, sending message via HTTP');
       const formattedData = {
-        recipientID: messageData.recipientId,
+        recipientID: messageData.recipientID,
         message: messageData.message,
         attachments: messageData.attachments || []
       };
@@ -169,31 +169,41 @@ export const initSocketConnection = (token) => (dispatch) => {
 
   if (socket) {    // Listen for new messages
     socket.on('new-message', (message) => {
-      console.log('Received new message:', message);
+  console.log('Received new message:', message);
 
-      // Process the message - ensure it has all required fields
-      const processedMessage = {
-        ...message,
-        // Add any missing fields from different response formats
+  // Process the message - ensure it has all required fields
+  const processedMessage = {
+    ...message,
+    // Add any missing fields from different response formats
+    message: message.message || '',
+    createdAt: message.createdAt || message.createdDate || new Date().toISOString(),
+    _id: message._id || message.id || Date.now().toString(),
+    // Ensure sender information is correct
+    senderID: message.senderID || '',
+    recipientID: message.recipientID || '',
+    senderRole: message.senderRole || (message.senderID === socket.user?.id ? 'admin' : 'user'),
+    // Default attachments to empty array if not present
+    attachments: message.attachments || []
+  };
 
-        message: message.message || '',
-        createdAt: message.createdAt || message.createdDate || new Date().toISOString(),
-        _id: message._id || message.id || Date.now().toString(),
-        // Ensure sender information is correct
-        senderID: message.senderID || '',
-        senderRole: message.senderRole || (message.senderID === socket.user?.id ? 'admin' : 'user'),
-        // Default attachments to empty array if not present
-        attachments: message.attachments || []
-      };
+  console.log('Processed message for dispatch:', processedMessage);
 
-      dispatch({
-        type: CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED,
-        payload: processedMessage
-      });
+  dispatch({
+    type: CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED,
+    payload: processedMessage
+  });
 
-      // Also update the conversation list when a new message arrives
-      dispatch(getConversations());
-    });
+  // Also update the conversation list when a new message arrives
+  dispatch(getConversations());
+  
+  // If this message relates to the currently selected conversation, refresh messages
+  const state = getState?.() || {}; // Get current state if possible
+  if (state.chat?.selectedUserId === processedMessage.senderID || 
+      state.chat?.selectedUserId === processedMessage.recipientID) {
+    // No need to reload all messages - the reducer will add this message to state
+    console.log('Message relevant to current conversation');
+  }
+});
 
     // Listen for chat history
     socket.on('chat-history', (messages) => {
@@ -207,11 +217,12 @@ export const initSocketConnection = (token) => (dispatch) => {
         _id: msg._id || msg.id || Date.now().toString(),
         // Ensure sender information is correct
         senderID: msg.senderID || '',
-
-        senderRole: msg.senderRole || '',
+        sender: msg.sender || msg.senderRole || '',
+        senderRole: msg.senderRole || msg.sender || '',
         // Default attachments to empty array if not present
         attachments: msg.attachments || []
       })) : [];
+      console.log('Processed messages:', processedMessages);
       dispatch({
         type: CHAT_ACTIONS.GET_MESSAGES_SUCCESS,
         payload: processedMessages

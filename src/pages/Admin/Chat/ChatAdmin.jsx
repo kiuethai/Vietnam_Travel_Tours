@@ -87,7 +87,7 @@ function ChatAdmin() {
     dispatch(getConversations())
 
     // Initialize socket connection if the admin is logged in
-    if (currentAdmin?._id) {
+    if (currentAdmin?.user?.id) {
       dispatch(initSocketConnection(localStorage.getItem('jwt_token')))
     }
 
@@ -98,7 +98,7 @@ function ChatAdmin() {
         clearTimeout(typingTimeoutRef.current)
       }
     }
-  }, [dispatch, currentAdmin?._id])
+  }, [dispatch, currentAdmin?.user?.id])
 
   // Memoize scroll effect to prevent unnecessary calls
   const scrollToBottom = useCallback(() => {
@@ -128,10 +128,11 @@ function ChatAdmin() {
   useEffect(() => {
     // Only fetch messages if the selected user has changed
     if (selectedUserId && selectedUserId !== previousSelectedUserRef.current) {
-      dispatch(getMessages(selectedUserId))
-      previousSelectedUserRef.current = selectedUserId
+      console.log('Selected new user, fetching messages:', selectedUserId);
+      dispatch(getMessages(selectedUserId));
+      previousSelectedUserRef.current = selectedUserId;
     }
-  }, [selectedUserId, dispatch])
+  }, [selectedUserId, dispatch]);
 
   const handleContactClick = useCallback((userId) => {
     dispatch(selectConversation(userId))
@@ -140,7 +141,7 @@ function ChatAdmin() {
   const handleSendMessage = useCallback(() => {
     if (messageInput.trim() && selectedUserId) {
       dispatch(sendMessage({
-        recipientId: selectedUserId,
+        recipientID: selectedUserId,
         message: messageInput.trim(),
         attachments: []
       }))
@@ -215,7 +216,9 @@ function ChatAdmin() {
   }, [contacts, selectedUserId])
 
   const isUserTyping = typingUsers[selectedUserId] || false
-
+  useEffect(() => {
+    console.log('Messages in ChatAdmin:', messages);
+  }, [messages]);
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -340,6 +343,32 @@ function ChatAdmin() {
                     </Box>
                     <PerfectScrollbar className={classes.messageContainer}>
                       <Box className={classes.messagesWrapper}>
+                        {/* Debug information - remove in production */}
+                        {process.env.NODE_ENV !== 'production' && (
+                          <Box sx={{ 
+                            p: 1, 
+                            mb: 2, 
+                            fontSize: '10px', 
+                            border: '1px dashed #ccc',
+                            borderRadius: 1,
+                            backgroundColor: '#f5f5f5'
+                          }}>
+                            <details>
+                              <summary>
+                                <Typography variant="caption">
+                                  Debug: {messages.length} messages, selected user: {selectedUserId}
+                                </Typography>
+                              </summary>
+                              <Box sx={{ maxHeight: '100px', overflow: 'auto' }}>
+                                <pre style={{ fontSize: '9px' }}>
+                                  {JSON.stringify(messages[0] || {}, null, 2)}
+                                </pre>
+                              </Box>
+                            </details>
+                          </Box>
+                        )}
+                        
+                        {/* Regular message display */}
                         {loading ? (
                           <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
                             <CircularProgress size={24} />
@@ -355,14 +384,16 @@ function ChatAdmin() {
                             <Box
                               key={message._id || index}
                               className={
-                                message.sender === 'admin' || message.senderID === currentAdmin?._id
-                                  ? classes.messageLeft
-                                  : classes.messageRight
+                                message.sender === 'admin' ||
+                                  message.senderRole === 'admin' ||
+                                  message.senderID === currentAdmin?.user?.id
+                                  ? classes.messageRight
+                                  : classes.messageLeft
                               }
                             >
                               <Typography variant="body2">{message.message}</Typography>
                               <Typography variant="caption" className={classes.messageTime}>
-                                {moment(message.createdAt).format('HH:mm DD/MM/YYYY')}
+                                {moment(message.createdAt || message.createdDate).format('HH:mm DD/MM/YYYY')}
                               </Typography>
                             </Box>
                           ))
