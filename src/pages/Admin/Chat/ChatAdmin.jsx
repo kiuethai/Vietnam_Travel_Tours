@@ -141,7 +141,7 @@ function ChatAdmin() {
     if (messageInput.trim() && selectedUserId) {
       dispatch(sendMessage({
         recipientId: selectedUserId,
-        text: messageInput.trim(),
+        message: messageInput.trim(),
         attachments: []
       }))
 
@@ -298,7 +298,7 @@ function ChatAdmin() {
                                     noWrap
                                     style={{ width: 180, display: 'inline-block' }}
                                   >
-                                    {lastMessage.text || 'Chưa có tin nhắn'}
+                                    {lastMessage.message || 'Chưa có tin nhắn'}
                                   </Typography>
                                   {lastMessage.createdAt && (
                                     <Typography
@@ -355,12 +355,12 @@ function ChatAdmin() {
                             <Box
                               key={message._id || index}
                               className={
-                                message.sender === 'admin' || message.senderId === currentAdmin?._id
-                                  ? classes.messageRight
-                                  : classes.messageLeft
+                                message.sender === 'admin' || message.senderID === currentAdmin?._id
+                                  ? classes.messageLeft
+                                  : classes.messageRight
                               }
                             >
-                              <Typography variant="body2">{message.text || message.message}</Typography>
+                              <Typography variant="body2">{message.message}</Typography>
                               <Typography variant="caption" className={classes.messageTime}>
                                 {moment(message.createdAt).format('HH:mm DD/MM/YYYY')}
                               </Typography>

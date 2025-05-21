@@ -265,7 +265,7 @@ function Dashboard() {
       try {
         const data = await getDashboardAllDataAPI();
         setDashboardData(data);
-        console.log("Dashboard data:", data);
+        // console.log("Dashboard data:", data);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       }

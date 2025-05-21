@@ -44,6 +44,11 @@ export const getConversations = () => async (dispatch) => {
       payload: error.message
     });
     // Silent fail for conversations, they might not exist yet
+
+    dispatch({
+      type: CHAT_ACTIONS.GET_CONVERSATIONS_SUCCESS,
+      payload: [] // Send empty array on failure
+    });
   }
 };
 
@@ -51,20 +56,34 @@ export const getMessages = (userId) => async (dispatch) => {
   dispatch({ type: CHAT_ACTIONS.GET_MESSAGES_REQUEST });
 
   try {
+    console.log('Getting messages with userId:', userId);
+
     // Check if socket is connected
     const socket = socketClient.getSocket();
     if (socket && socket.connected) {
-      // Use socket to get messages
-      socketClient.joinChat(null, userId);
+      // First join the chat room with this recipient
+      socketClient.joinChatRoom(userId);
+
+      // Wait a moment to ensure we've joined the room
+      setTimeout(() => {
+        // Then request chat history
+        socketClient.getChatHistory(userId);
+        console.log('Requested chat history through socket');
+      }, 300);
+
+      // Note: Socket events will be handled in initSocketConnection function
     } else {
       // Fallback to HTTP if socket isn't connected
+      console.log('Socket not connected, falling back to HTTP');
       const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/chat/messages/${userId}`);
+      console.log('HTTP response for messages:', response.data);
       dispatch({
         type: CHAT_ACTIONS.GET_MESSAGES_SUCCESS,
-        payload: response.data.messages
+        payload: response.data.messages || []
       });
     }
   } catch (error) {
+    console.error('Error getting messages:', error);
     dispatch({
       type: CHAT_ACTIONS.GET_MESSAGES_FAILURE,
       payload: error.message
@@ -80,18 +99,25 @@ export const sendMessage = (messageData) => async (dispatch) => {
     // Check if socket is connected
     const socket = socketClient.getSocket();
     if (socket && socket.connected) {
-      // Send message via socket
+      // First make sure we have joined the right chat room
+      socketClient.joinChatRoom(messageData.recipientID);
+
+      // Then send message via socket
       socketClient.sendSocketMessage({
         senderID: socket.user?.id,
-        recipientId: messageData.recipientId,
-        text: messageData.text,
+        recipientID: messageData.recipientID,
+        message: messageData.message,
         attachments: messageData.attachments || []
       });
+
+      // We'll automatically get new-message event from socket after sending
+      console.log('Message sent via socket:', messageData);
     } else {
       // Fallback to HTTP if socket isn't connected
+      console.log('Socket not connected, sending message via HTTP');
       const formattedData = {
-        recipientId: messageData.recipientId,
-        message: messageData.text, // Changed from 'text' to 'message' to match backend
+        recipientID: messageData.recipientId,
+        message: messageData.message,
         attachments: messageData.attachments || []
       };
 
@@ -102,6 +128,7 @@ export const sendMessage = (messageData) => async (dispatch) => {
       });
     }
   } catch (error) {
+    console.error('Error sending message:', error);
     dispatch({
       type: CHAT_ACTIONS.SEND_MESSAGE_FAILURE,
       payload: error.message
@@ -120,8 +147,8 @@ export const selectConversation = (userId) => (dispatch) => {
     // Join chat room and mark messages as read
     const socket = socketClient.getSocket();
     if (socket && socket.connected) {
-      // Join the chat room for this user
-      socketClient.joinChat(null, userId);
+      // Join the chat room for this user using the improved method
+      socketClient.joinChatRoom(userId);
 
       // Mark messages as read
       socketClient.markMessagesAsRead({
@@ -137,14 +164,31 @@ export const selectConversation = (userId) => (dispatch) => {
 
 // Initialize socket connection
 export const initSocketConnection = (token) => (dispatch) => {
+  console.log('Initializing socket connection with token');
   const socket = socketClient.initSocket(token);
 
-  if (socket) {
-    // Listen for new messages
+  if (socket) {    // Listen for new messages
     socket.on('new-message', (message) => {
+      console.log('Received new message:', message);
+
+      // Process the message - ensure it has all required fields
+      const processedMessage = {
+        ...message,
+        // Add any missing fields from different response formats
+
+        message: message.message || '',
+        createdAt: message.createdAt || message.createdDate || new Date().toISOString(),
+        _id: message._id || message.id || Date.now().toString(),
+        // Ensure sender information is correct
+        senderID: message.senderID || '',
+        senderRole: message.senderRole || (message.senderID === socket.user?.id ? 'admin' : 'user'),
+        // Default attachments to empty array if not present
+        attachments: message.attachments || []
+      };
+
       dispatch({
         type: CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED,
-        payload: message
+        payload: processedMessage
       });
 
       // Also update the conversation list when a new message arrives
@@ -153,14 +197,30 @@ export const initSocketConnection = (token) => (dispatch) => {
 
     // Listen for chat history
     socket.on('chat-history', (messages) => {
+      console.log('Received chat history, count:', Array.isArray(messages) ? messages.length : 0);
+      // Process messages to ensure consistent format
+      const processedMessages = Array.isArray(messages) ? messages.map(msg => ({
+        ...msg,
+
+        message: msg.message || '',
+        createdAt: msg.createdAt || msg.createdDate || new Date().toISOString(),
+        _id: msg._id || msg.id || Date.now().toString(),
+        // Ensure sender information is correct
+        senderID: msg.senderID || '',
+
+        senderRole: msg.senderRole || '',
+        // Default attachments to empty array if not present
+        attachments: msg.attachments || []
+      })) : [];
       dispatch({
         type: CHAT_ACTIONS.GET_MESSAGES_SUCCESS,
-        payload: messages
+        payload: processedMessages
       });
     });
 
     // Listen for typing indicators
     socket.on('typing', (data) => {
+      console.log('Typing indicator:', data);
       dispatch({
         type: CHAT_ACTIONS.SOCKET_TYPING,
         payload: data
@@ -169,6 +229,7 @@ export const initSocketConnection = (token) => (dispatch) => {
 
     // Listen for messages-read events
     socket.on('messages-read', (data) => {
+      console.log('Messages read event:', data);
       dispatch({
         type: CHAT_ACTIONS.SOCKET_READ_RECEIPT,
         payload: data

@@ -54,16 +54,34 @@ class SocketChatClient {
       console.log('Socket disconnected');
     }
   }
-
   // Join a chat room
   joinChat(userId, adminId) {
     if (!this.socket) return;
 
     if (adminId) {
+      console.log('Joining chat with adminId:', adminId);
       this.socket.emit('join-chat', { adminId });
     } else if (userId) {
+      console.log('Joining chat with userId:', userId);
       this.socket.emit('join-chat', { userId });
     }
+  }
+
+  // Get chat history
+  getChatHistory(recipientId) {
+    if (!this.socket) return;
+    
+    console.log('Getting chat history with:', recipientId);
+    this.socket.emit('get-chat-history', { recipientId });
+  }
+
+  // Join a chat room (improved version)
+  joinChatRoom(recipientId) {
+    if (!this.socket || !this.socket.connected) return;
+    
+    console.log('Joining chat room with recipient:', recipientId);
+    // Use the new dedicated event for joining chat rooms
+    this.socket.emit('join-chat-room', { recipientId });
   }
 
   // Send a message
