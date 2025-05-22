@@ -105,42 +105,53 @@ const chatReducer = (state = initialState, action) => {
       return {
         ...state,
         socketConnected: action.payload
-      };
+      }; case CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED: {
+        // Log to help debug
+        console.log('Message received in reducer:', {
+          message: action.payload,
+          selectedUserId: state.selectedUserId
+        });
 
-    case CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED: {
-      // Show messages for the selected conversation more intelligently
-      const currentAdminId = action.payload.senderID === state.selectedUserId ?
-        action.payload.recipientID :
-        (action.payload.recipientID === state.selectedUserId ? action.payload.senderID : null);
+        // For client chat, we need to handle both:
+        // 1. Messages from admin to this user
+        // 2. Messages from this user to admin
 
-      // Log to help debug
-      console.log('Message received in reducer:', {
-        message: action.payload,
-        selectedUserId: state.selectedUserId,
-        isAdminMessage: currentAdminId !== null
-      });
+        // Check if this is a client-chat message (either admin->user or user->admin)
+        const isClientChatMessage = (
+          // Message from admin to the currently selected user
+          (action.payload.senderRole === 'admin' && action.payload.recipientID === state.selectedUserId) ||
+          // Message from the user to admin
+          (action.payload.senderRole === 'user' && action.payload.recipientID === 'admin') ||
+          // When selectedUserId is 'admin', show all admin-related messages
+          (state.selectedUserId === 'admin' && (
+            action.payload.senderRole === 'admin' ||
+            action.payload.recipientID === 'admin'
+          ))
+        );
 
-      // For admin chat, show all messages related to selected user
-      const isRelevantForAdmin = (
-        (action.payload.senderID === state.selectedUserId) ||
-        (action.payload.recipientID === state.selectedUserId)
-      );
+        // For the user chat page, we treat 'admin' as the selectedUserId
+        const isUserToAdminMessage = state.selectedUserId === 'admin' && (
+          action.payload.senderRole === 'admin' || action.payload.recipientID === 'admin'
+        );
 
-      if (isRelevantForAdmin) {
-        // Make sure we don't add duplicate messages
-        const messageExists = state.messages.some(m => m._id === action.payload._id);
+        // Check if the message is relevant to the current conversation
+        const isRelevantMessage = isClientChatMessage || isUserToAdminMessage;
 
-        if (messageExists) {
-          return state;
+        if (isRelevantMessage) {
+          // Make sure we don't add duplicate messages
+          const messageExists = state.messages.some(m => m._id === action.payload._id);
+
+          if (messageExists) {
+            return state;
+          }
+
+          return {
+            ...state,
+            messages: [...state.messages, action.payload]
+          };
         }
-
-        return {
-          ...state,
-          messages: [...state.messages, action.payload]
-        };
+        return state;
       }
-      return state;
-    }
 
     case CHAT_ACTIONS.SOCKET_READ_RECEIPT:
       // Update read status of messages

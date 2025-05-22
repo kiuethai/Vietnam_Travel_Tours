@@ -10,8 +10,9 @@ import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import moment from 'moment';
 import socketClient from '../../../utils/socketChat';
 import { selectCurrentUser } from '~/redux/user/userSlice';
-// Import action functions
+// Import action functions and types
 import { getMessages, sendMessage, initSocketConnection, disconnectSocketConnection } from '../../../redux/chat/chatApiFunctions';
+import { CHAT_ACTIONS } from '../../../redux/chat/chatTypes';
 // Styled components
 import {
   ChatButton,
@@ -67,19 +68,25 @@ function ClientChat() {
       };
     }
   }, [currentUser, dispatch]);
-
   // Load messages when chat window is opened
   useEffect(() => {
     if (isOpen && currentUser && currentUser?.user?.id) {
+      console.log('Opening chat window, loading messages');
+
       // Get messages when the chat is opened
       dispatch(getMessages('admin'));
 
       // Reset unread count when opening chat
       setUnreadCount(0);
 
-      // Mark messages as read
+      // Join the admin chat room
       const socket = socketClient.getSocket();
       if (socket && socket.connected) {
+        // Join the chat room with admin
+        socket.emit('join-chat', {});
+        console.log('Joined admin chat room');
+
+        // Mark messages as read
         socketClient.markMessagesAsRead({
           userID: currentUser?.user?.id,
           adminID: 'admin'
@@ -87,10 +94,11 @@ function ClientChat() {
       }
     }
   }, [isOpen, currentUser, dispatch]);
-
   // Setup socket event listeners for new messages and update unread count
   useEffect(() => {
     const handleNewMessage = (message) => {
+      console.log('ClientChat received new message:', message);
+
       // If chat is closed and message is from admin, increment unread count
       if (!isOpen && message.senderID !== currentUser?.user?.id) {
         setUnreadCount((prev) => prev + 1);
@@ -101,17 +109,54 @@ function ClientChat() {
         setTimeout(scrollToBottom, 100);
       }
 
-      if (isOpen && currentUser && currentUser?.user?.id) {
-        dispatch(getMessages('admin'));
+      // Check if this message is relevant to our chat (from admin to this user)
+      const isRelevantMessage = (
+        // Admin sending to this user
+        (message.senderRole === 'admin' && message.recipientID === currentUser?.user?.id) ||
+        // This user sending to any admin
+        (message.senderID === currentUser?.user?.id && message.recipientID === 'admin')
+      );
+
+      // If message is relevant to this user's admin chat, update our messages
+      if (isRelevantMessage) {
+        console.log('Received relevant chat message:', message);
+        dispatch({
+          type: CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED,
+          payload: {
+            ...message,
+            _id: message._id || message.id || Date.now().toString(),
+            createdAt: message.createdAt || message.createdDate || new Date().toISOString(),
+          }
+        });
+      }
+    };
+
+    // Handle chat history updates
+    const handleChatHistory = (messages) => {
+      console.log('ClientChat received chat history, count:', Array.isArray(messages) ? messages.length : 0);
+      if (Array.isArray(messages) && messages.length > 0) {
+        dispatch({
+          type: CHAT_ACTIONS.GET_MESSAGES_SUCCESS,
+          payload: messages.map(msg => ({
+            ...msg,
+            _id: msg._id || msg.id || Date.now().toString(),
+            createdAt: msg.createdAt || msg.createdDate || new Date().toISOString(),
+          }))
+        });
       }
     };
 
     const socket = socketClient.getSocket();
     if (socket) {
+      // Listen for new messages
       socket.on('new-message', handleNewMessage);
+
+      // Listen for chat history updates
+      socket.on('chat-history', handleChatHistory);
 
       return () => {
         socket.off('new-message', handleNewMessage);
+        socket.off('chat-history', handleChatHistory);
       };
     }
   }, [isOpen, currentUser?.user?.id, scrollToBottom, socketConnected, dispatch]);
@@ -193,11 +238,9 @@ function ClientChat() {
       sender: 'user',
       recipientID: 'admin',
       isTemp: true // Mark as temporary so we can replace it when the server responds
-    };
-
-    // Dispatch the message immediately to update UI
+    };    // Dispatch the message immediately to update UI
     dispatch({
-      type: 'CHAT_ACTIONS.SEND_MESSAGE_SUCCESS',
+      type: CHAT_ACTIONS.SEND_MESSAGE_SUCCESS,
       payload: tempMessage
     });
 
@@ -260,7 +303,7 @@ function ClientChat() {
         <ChatWindow>
           <ChatHeader>
             <Box display="flex" alignItems="center">
-              <Avatar sx={{ mr: 1 }}>A</Avatar>
+              <Avatar sx={{ mr: 1 }} src='https://res.cloudinary.com/dbkhjufja/image/upload/v1746778897/aycgbvnmphrhmddyjfuw.png'></Avatar>
               <Typography variant="subtitle1">
                 {currentUser ? 'Hỗ trợ khách hàng' : 'Đăng nhập để chat'}
               </Typography>

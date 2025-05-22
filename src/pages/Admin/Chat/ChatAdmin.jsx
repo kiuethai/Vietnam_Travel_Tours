@@ -88,7 +88,7 @@ function ChatAdmin() {
 
     // Initialize socket connection if the admin is logged in
     if (currentAdmin?.user?.id) {
-      dispatch(initSocketConnection(localStorage.getItem('jwt_token')))
+      dispatch(initSocketConnection(currentAdmin?.accessToken))
     }
 
     // Cleanup socket connection when component unmounts
@@ -219,6 +219,33 @@ function ChatAdmin() {
   useEffect(() => {
     console.log('Messages in ChatAdmin:', messages);
   }, [messages]);
+
+  // Thêm useEffect để debug
+  useEffect(() => {
+    // Log chi tiết từng tin nhắn để phân tích
+    const adminMessages = messages.filter(msg =>
+      msg.sender === 'admin' || msg.senderRole === 'admin'
+    );
+
+    const userMessages = messages.filter(msg =>
+      msg.sender === 'user' || msg.senderRole === 'user'
+    );
+
+    console.log('Admin messages:', adminMessages.length);
+    console.log('User messages:', userMessages.length);
+    console.log('Total messages:', messages.length);
+
+    // In ra các ID để debug
+    console.log('User message recipient IDs:',
+      userMessages.map(m => `${m.recipientID}`).join(', '));
+    console.log('Admin ID:', currentAdmin?.user?.id);
+
+    // Kiểm tra các thuộc tính của tin nhắn để xác định lỗi
+    if (userMessages.length > 0) {
+      console.log('Sample user message:', userMessages[0]);
+    }
+  }, [messages, currentAdmin?.user?.id]);
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -336,19 +363,17 @@ function ChatAdmin() {
                         <Typography variant="subtitle1">
                           {selectedUser?.displayName || selectedUser?.email || 'Người dùng'}
                         </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          {selectedUser?.isOnline ? 'Đang hoạt động' : 'Không hoạt động'}
-                        </Typography>
+
                       </Box>
                     </Box>
                     <PerfectScrollbar className={classes.messageContainer}>
                       <Box className={classes.messagesWrapper}>
                         {/* Debug information - remove in production */}
                         {process.env.NODE_ENV !== 'production' && (
-                          <Box sx={{ 
-                            p: 1, 
-                            mb: 2, 
-                            fontSize: '10px', 
+                          <Box sx={{
+                            p: 1,
+                            mb: 2,
+                            fontSize: '10px',
                             border: '1px dashed #ccc',
                             borderRadius: 1,
                             backgroundColor: '#f5f5f5'
@@ -367,7 +392,7 @@ function ChatAdmin() {
                             </details>
                           </Box>
                         )}
-                        
+
                         {/* Regular message display */}
                         {loading ? (
                           <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>

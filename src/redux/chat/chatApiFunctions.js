@@ -56,30 +56,74 @@ export const getMessages = (userId) => async (dispatch) => {
   dispatch({ type: CHAT_ACTIONS.GET_MESSAGES_REQUEST });
 
   try {
-    console.log('Getting messages with userId:', userId);
+    console.log('Getting messages for userId:', userId);
 
     // Check if socket is connected
     const socket = socketClient.getSocket();
     if (socket && socket.connected) {
-      // First join the chat room with this recipient
-      socketClient.joinChatRoom(userId);
+      // For client chat with admin, we use 'join-chat' event directly
+      if (userId === 'admin') {
+        socket.emit('join-chat', {});
+        console.log('Joining admin chat room directly');
+      } else {
+        // Normal user-to-user chat scenario
+        socketClient.joinChatRoom(userId);
 
-      // Wait a moment to ensure we've joined the room
-      setTimeout(() => {
-        // Then request chat history
-        socketClient.getChatHistory(userId);
-        console.log('Requested chat history through socket');
-      }, 300);
+        // Wait a moment to ensure we've joined the room
+        setTimeout(() => {
+          // Then request chat history
+          socketClient.getChatHistory(userId);
+          console.log('Requested chat history through socket');
+        }, 300);
+      }
 
-      // Note: Socket events will be handled in initSocketConnection function
-    } else {
+      // Note: Socket events will be handled in initSocketConnection function    } else {
       // Fallback to HTTP if socket isn't connected
       console.log('Socket not connected, falling back to HTTP');
-      const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/chat/messages/${userId}`);
+
+      let endpoint;
+      // Luôn sử dụng đường dẫn admin/ cho cả hai trường hợp
+      if (userId === 'admin') {
+        // For admin chat, get the current user's ID
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        const currentUserId = currentUser?.user?.id;
+
+        if (currentUserId) {
+          endpoint = `${API_ROOT}/v1/chat/messages/admin/${currentUserId}`;
+        } else {
+          console.error('Cannot get messages - current user ID not available');
+          return;
+        }
+      } else {
+        // Khi admin chat với user, luôn dùng endpoint admin/
+        endpoint = `${API_ROOT}/v1/chat/messages/admin/${userId}`;
+      }
+
+      const response = await authorizedAxiosInstance.get(endpoint);
       console.log('HTTP response for messages:', response.data);
+
+      
+      if (Array.isArray(response.data.messages)) {
+        const userMessages = response.data.messages.filter(m => m.senderRole === 'user');
+        const adminMessages = response.data.messages.filter(m => m.senderRole === 'admin');
+        console.log('User messages in API response:', userMessages.length);
+        console.log('Admin messages in API response:', adminMessages.length);
+      }
+
+      // Log chi tiết hơn để debug
+      console.log('Messages array:', response.data.messages || []);
+
+      // Thêm xử lý để chuẩn hóa dữ liệu
+      const processedMessages = (response.data.messages || []).map(msg => ({
+        ...msg,
+        _id: msg._id || msg.id || Date.now().toString(),
+        createdAt: msg.createdAt || msg.createdDate || new Date().toISOString(),
+        sender: msg.sender || msg.senderRole || ''
+      }));
+
       dispatch({
         type: CHAT_ACTIONS.GET_MESSAGES_SUCCESS,
-        payload: response.data.messages || []
+        payload: processedMessages
       });
     }
   } catch (error) {
@@ -99,16 +143,28 @@ export const sendMessage = (messageData) => async (dispatch) => {
     // Check if socket is connected
     const socket = socketClient.getSocket();
     if (socket && socket.connected) {
-      // First make sure we have joined the right chat room
-      socketClient.joinChatRoom(messageData.recipientID);
+      // Handle admin chat case differently
+      if (messageData.recipientID === 'admin') {
+        // For admin chat, we don't need to join a room first
+        socket.emit('send-message', {
+          senderID: socket.user?.id,
+          recipientID: messageData.recipientID,
+          message: messageData.message,
+          attachments: messageData.attachments || []
+        });
+      } else {
+        // Normal user-to-user chat flow
+        // First make sure we have joined the right chat room
+        socketClient.joinChatRoom(messageData.recipientID);
 
-      // Then send message via socket
-      socketClient.sendSocketMessage({
-        senderID: socket.user?.id,
-        recipientID: messageData.recipientID,
-        message: messageData.message,
-        attachments: messageData.attachments || []
-      });
+        // Then send message via socket
+        socketClient.sendSocketMessage({
+          senderID: socket.user?.id,
+          recipientID: messageData.recipientID,
+          message: messageData.message,
+          attachments: messageData.attachments || []
+        });
+      }
 
       // We'll automatically get new-message event from socket after sending
       console.log('Message sent via socket:', messageData);
@@ -147,14 +203,26 @@ export const selectConversation = (userId) => (dispatch) => {
     // Join chat room and mark messages as read
     const socket = socketClient.getSocket();
     if (socket && socket.connected) {
-      // Join the chat room for this user using the improved method
-      socketClient.joinChatRoom(userId);
+      // Handle admin chat case differently
+      if (userId === 'admin') {
+        // For admin chat, emit join-chat directly
+        socket.emit('join-chat', {});
 
-      // Mark messages as read
-      socketClient.markMessagesAsRead({
-        userID: userId,
-        adminID: socket.user?.id
-      });
+        // Mark messages as read for admin chat
+        socketClient.markMessagesAsRead({
+          userID: socket.user?.id,
+          adminID: 'admin'
+        });
+      } else {
+        // Join the chat room for normal user-to-user chat
+        socketClient.joinChatRoom(userId);
+
+        // Mark messages as read
+        socketClient.markMessagesAsRead({
+          userID: userId,
+          adminID: socket.user?.id
+        });
+      }
     } else {
       // Fallback to HTTP if socket isn't connected
       dispatch(getMessages(userId));
@@ -163,66 +231,73 @@ export const selectConversation = (userId) => (dispatch) => {
 };
 
 // Initialize socket connection
-export const initSocketConnection = (token) => (dispatch) => {
+export const initSocketConnection = (token) => (dispatch, getState) => {
   console.log('Initializing socket connection with token');
   const socket = socketClient.initSocket(token);
 
-  if (socket) {    // Listen for new messages
-    socket.on('new-message', (message) => {
-  console.log('Received new message:', message);
-
-  // Process the message - ensure it has all required fields
-  const processedMessage = {
-    ...message,
-    // Add any missing fields from different response formats
-    message: message.message || '',
-    createdAt: message.createdAt || message.createdDate || new Date().toISOString(),
-    _id: message._id || message.id || Date.now().toString(),
-    // Ensure sender information is correct
-    senderID: message.senderID || '',
-    recipientID: message.recipientID || '',
-    senderRole: message.senderRole || (message.senderID === socket.user?.id ? 'admin' : 'user'),
-    // Default attachments to empty array if not present
-    attachments: message.attachments || []
-  };
-
-  console.log('Processed message for dispatch:', processedMessage);
-
   dispatch({
-    type: CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED,
-    payload: processedMessage
+    type: CHAT_ACTIONS.SOCKET_INIT,
+    payload: true
   });
 
-  // Also update the conversation list when a new message arrives
-  dispatch(getConversations());
-  
-  // If this message relates to the currently selected conversation, refresh messages
-  const state = getState?.() || {}; // Get current state if possible
-  if (state.chat?.selectedUserId === processedMessage.senderID || 
-      state.chat?.selectedUserId === processedMessage.recipientID) {
-    // No need to reload all messages - the reducer will add this message to state
-    console.log('Message relevant to current conversation');
-  }
-});
+  if (socket) {    // Listen for new messages
+    socket.on('new-message', (message) => {
+      console.log('Received new message:', message);
+
+      // Process the message - ensure it has all required fields
+      const processedMessage = {
+        ...message,
+        // Add any missing fields from different response formats
+        message: message.message || '',
+        createdAt: message.createdAt || message.createdDate || new Date().toISOString(),
+        _id: message._id || message.id || Date.now().toString(),
+        // Ensure sender information is correct
+        senderID: message.senderID || '',
+        recipientID: message.recipientID || '',
+        senderRole: message.senderRole || (message.senderID === socket.user?.id ? 'admin' : 'user'),
+        // Default attachments to empty array if not present
+        attachments: message.attachments || []
+      };
+
+      console.log('Processed message for dispatch:', processedMessage);
+
+      dispatch({
+        type: CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED,
+        payload: processedMessage
+      });
+
+      // Also update the conversation list when a new message arrives
+      dispatch(getConversations());
+
+      // If this message relates to the currently selected conversation, refresh messages
+      const state = getState?.() || {}; // Get current state if possible
+      if (state.chat?.selectedUserId === processedMessage.senderID ||
+        state.chat?.selectedUserId === processedMessage.recipientID) {
+        // No need to reload all messages - the reducer will add this message to state
+        console.log('Message relevant to current conversation');
+      }
+    });
 
     // Listen for chat history
     socket.on('chat-history', (messages) => {
-      console.log('Received chat history, count:', Array.isArray(messages) ? messages.length : 0);
+      console.log('Raw chat history from socket:', messages);
+
       // Process messages to ensure consistent format
       const processedMessages = Array.isArray(messages) ? messages.map(msg => ({
         ...msg,
-
         message: msg.message || '',
         createdAt: msg.createdAt || msg.createdDate || new Date().toISOString(),
         _id: msg._id || msg.id || Date.now().toString(),
         // Ensure sender information is correct
         senderID: msg.senderID || '',
-        sender: msg.sender || msg.senderRole || '',
-        senderRole: msg.senderRole || msg.sender || '',
+        recipientID: msg.recipientID || '',
+        sender: msg.senderRole || '', // Đảm bảo có trường sender
+        senderRole: msg.senderRole || '', // Đảm bảo có trường senderRole
         // Default attachments to empty array if not present
         attachments: msg.attachments || []
       })) : [];
-      console.log('Processed messages:', processedMessages);
+
+      console.log('Processed messages for chat history:', processedMessages);
       dispatch({
         type: CHAT_ACTIONS.GET_MESSAGES_SUCCESS,
         payload: processedMessages

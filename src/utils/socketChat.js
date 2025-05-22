@@ -59,29 +59,28 @@ class SocketChatClient {
     if (!this.socket) return;
 
     if (adminId) {
-      console.log('Joining chat with adminId:', adminId);
       this.socket.emit('join-chat', { adminId });
     } else if (userId) {
-      console.log('Joining chat with userId:', userId);
       this.socket.emit('join-chat', { userId });
     }
   }
 
-  // Get chat history
-  getChatHistory(recipientId) {
+  // Join a chat room - this method is used by chatApiFunctions.js
+  joinChatRoom(userId) {
     if (!this.socket) return;
-    
-    console.log('Getting chat history with:', recipientId);
-    this.socket.emit('get-chat-history', { recipientId });
+
+    this.socket.emit('join-chat', { userId });
+    console.log('Joining chat room with userId:', userId);
   }
 
-  // Join a chat room (improved version)
-  joinChatRoom(recipientId) {
-    if (!this.socket || !this.socket.connected) return;
-    
-    console.log('Joining chat room with recipient:', recipientId);
-    // Use the new dedicated event for joining chat rooms
-    this.socket.emit('join-chat-room', { recipientId });
+  // Get chat history - this method is used by chatApiFunctions.js
+  getChatHistory(userId) {
+    if (!this.socket) return;
+
+    // We don't need a separate event for this as 'join-chat' already returns chat history
+    // But we'll create it to match the API expectations
+    this.socket.emit('join-chat', { userId });
+    console.log('Getting chat history for userId:', userId);
   }
 
   // Send a message
@@ -90,13 +89,14 @@ class SocketChatClient {
 
     this.socket.emit('send-message', messageData);
   }
-
   // Mark messages as read
   markMessagesAsRead(data) {
     if (!this.socket) return;
 
+    console.log('Marking messages as read:', data);
     this.socket.emit('mark-as-read', data);
   }
+
   // Typing indicator
   sendTypingIndicator(data) {
     if (!this.socket) return;
