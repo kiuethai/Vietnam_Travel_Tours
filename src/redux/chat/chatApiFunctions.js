@@ -61,20 +61,20 @@ export const getMessages = (userId) => async (dispatch) => {
     // Check if socket is connected
     const socket = socketClient.getSocket();
     if (socket && socket.connected) {
-      // For client chat with admin, we use 'join-chat' event directly
+      // Đối với cuộc trò chuyện của khách hàng với quản trị viên, chúng tôi sử dụng sự kiện 'join-chat' trực tiếp
       if (userId === 'admin') {
-        socket.emit('join-chat', {});
-        console.log('Joining admin chat room directly');
+        // Sử dụng hàm mới để lấy tin nhắn admin
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        const currentUserId = currentUser?.user?.id;
+
+        if (currentUserId) {
+          socketClient.getAdminChat(currentUserId);
+          console.log('Requesting admin chat with user ID:', currentUserId);
+        }
       } else {
         // Normal user-to-user chat scenario
         socketClient.joinChatRoom(userId);
-
-        // Wait a moment to ensure we've joined the room
-        setTimeout(() => {
-          // Then request chat history
-          socketClient.getChatHistory(userId);
-          console.log('Requested chat history through socket');
-        }, 300);
+        socketClient.getChatHistory(userId);
       }
 
       // Note: Socket events will be handled in initSocketConnection function    } else {
@@ -102,7 +102,7 @@ export const getMessages = (userId) => async (dispatch) => {
       const response = await authorizedAxiosInstance.get(endpoint);
       console.log('HTTP response for messages:', response.data);
 
-      
+
       if (Array.isArray(response.data.messages)) {
         const userMessages = response.data.messages.filter(m => m.senderRole === 'user');
         const adminMessages = response.data.messages.filter(m => m.senderRole === 'admin');
@@ -166,7 +166,8 @@ export const sendMessage = (messageData) => async (dispatch) => {
         });
       }
 
-      // We'll automatically get new-message event from socket after sending
+      // Lưu ý: KHÔNG cần gửi action success ở đây vì ta đã tạo tin nhắn tạm thời trước đó
+      // Tin nhắn sẽ được thay thế khi nhận được sự kiện new-message từ socket
       console.log('Message sent via socket:', messageData);
     } else {
       // Fallback to HTTP if socket isn't connected
@@ -178,9 +179,20 @@ export const sendMessage = (messageData) => async (dispatch) => {
       };
 
       const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/chat/messages`, formattedData);
+
+      // Process response to ensure it has consistent format with socket messages
+      const processedMessage = {
+        ...response.data.message,
+        _id: response.data.message._id || response.data.message.id || Date.now().toString(),
+        createdAt: response.data.message.createdAt || response.data.message.createdDate || new Date().toISOString(),
+        sender: response.data.message.senderRole || '',
+        senderRole: response.data.message.senderRole || '',
+        isTemp: false
+      };
+
       dispatch({
         type: CHAT_ACTIONS.SEND_MESSAGE_SUCCESS,
-        payload: response.data.message
+        payload: processedMessage
       });
     }
   } catch (error) {
@@ -239,24 +251,26 @@ export const initSocketConnection = (token) => (dispatch, getState) => {
     type: CHAT_ACTIONS.SOCKET_INIT,
     payload: true
   });
-
   if (socket) {    // Listen for new messages
     socket.on('new-message', (message) => {
-      console.log('Received new message:', message);
+      console.log('Nhận tin nhắn mới từ socket:', message);
 
-      // Process the message - ensure it has all required fields
+      // Xử lý tin nhắn - đảm bảo có tất cả các trường cần thiết
       const processedMessage = {
         ...message,
-        // Add any missing fields from different response formats
+        // Thêm các trường bị thiếu từ nhiều định dạng phản hồi khác nhau
         message: message.message || '',
         createdAt: message.createdAt || message.createdDate || new Date().toISOString(),
         _id: message._id || message.id || Date.now().toString(),
-        // Ensure sender information is correct
-        senderID: message.senderID || '',
-        recipientID: message.recipientID || '',
+        // Đảm bảo thông tin người gửi được chuẩn hóa để phù hợp với reducer
+        senderID: message.senderID || message.senderId || '',
+        recipientID: message.recipientID || message.recipientId || '',
+        sender: message.sender || message.senderRole || (message.senderID === socket.user?.id ? 'admin' : 'user'),
         senderRole: message.senderRole || (message.senderID === socket.user?.id ? 'admin' : 'user'),
-        // Default attachments to empty array if not present
-        attachments: message.attachments || []
+        // Mảng đính kèm mặc định nếu không có
+        attachments: message.attachments || [],
+        // Đảm bảo tin nhắn không còn là tạm thời
+        isTemp: false
       };
 
       console.log('Processed message for dispatch:', processedMessage);
@@ -269,12 +283,14 @@ export const initSocketConnection = (token) => (dispatch, getState) => {
       // Also update the conversation list when a new message arrives
       dispatch(getConversations());
 
-      // If this message relates to the currently selected conversation, refresh messages
+      // If this message relates to the currently selected conversation, mark as read
       const state = getState?.() || {}; // Get current state if possible
-      if (state.chat?.selectedUserId === processedMessage.senderID ||
-        state.chat?.selectedUserId === processedMessage.recipientID) {
-        // No need to reload all messages - the reducer will add this message to state
-        console.log('Message relevant to current conversation');
+      if (state.chat?.selectedUserId === processedMessage.senderID) {
+        // Mark messages as read if they are from the selected user
+        socketClient.markMessagesAsRead({
+          userID: processedMessage.senderID,
+          adminID: socket.user?.id
+        });
       }
     });
 
@@ -289,10 +305,10 @@ export const initSocketConnection = (token) => (dispatch, getState) => {
         createdAt: msg.createdAt || msg.createdDate || new Date().toISOString(),
         _id: msg._id || msg.id || Date.now().toString(),
         // Ensure sender information is correct
-        senderID: msg.senderID || '',
-        recipientID: msg.recipientID || '',
-        sender: msg.senderRole || '', // Đảm bảo có trường sender
-        senderRole: msg.senderRole || '', // Đảm bảo có trường senderRole
+        senderID: msg.senderID || msg.senderId || '',
+        recipientID: msg.recipientID || msg.recipientId || '',
+        sender: msg.senderRole || (msg.senderID === socket.user?.id ? 'admin' : 'user'),
+        senderRole: msg.senderRole || (msg.senderID === socket.user?.id ? 'admin' : 'user'),
         // Default attachments to empty array if not present
         attachments: msg.attachments || []
       })) : [];
@@ -302,14 +318,20 @@ export const initSocketConnection = (token) => (dispatch, getState) => {
         type: CHAT_ACTIONS.GET_MESSAGES_SUCCESS,
         payload: processedMessages
       });
-    });
-
-    // Listen for typing indicators
+    });    // Listen for typing indicators
     socket.on('typing', (data) => {
-      console.log('Typing indicator:', data);
+      console.log('Typing indicator received:', data);
+
+      // Process typing data to ensure it has consistent format
+      const typingPayload = {
+        userId: data.userId || '',
+        adminId: data.adminId || '',
+        isTyping: !!data.isTyping // Convert to boolean
+      };
+
       dispatch({
         type: CHAT_ACTIONS.SOCKET_TYPING,
-        payload: data
+        payload: typingPayload
       });
     });
 

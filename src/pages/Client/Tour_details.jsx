@@ -29,7 +29,7 @@ export default function Tour_details() {
     try {
       await reviewsAPI({
         tourId: tour._id,
-        userId: currentUser?.user._id,
+        userId: currentUser?.user.id,
         rating,
         comment: commentText
       });

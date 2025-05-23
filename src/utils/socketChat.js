@@ -103,6 +103,17 @@ class SocketChatClient {
 
     this.socket.emit('typing', data);
   }
+  getAdminChat(userId) {
+    const socket = getSocket();
+    if (socket && socket.connected) {
+      socket.emit('get-admin-chat', { userId });
+      console.log('Requested admin chat messages for user:', userId);
+      return true;
+    }
+    return false;
+  }
+
+
 }
 
 // Create a singleton instance
