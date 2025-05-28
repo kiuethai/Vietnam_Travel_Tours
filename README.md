@@ -8,7 +8,7 @@
 ![HTML](https://img.shields.io/badge/HTML-3%25-orange)
 ![SCSS](https://img.shields.io/badge/SCSS-0.4%25-pink)
 
-<img src="https://i.imgur.com/placeholder-for-your-logo.png" alt="Vietnam Travel Tours Logo" width="300"/>
+<img src="https://res.cloudinary.com/dbkhjufja/image/upload/v1745105033/matlzpcdf9e8o8uufcft.png" alt="Vietnam Travel Tours Logo" width="300"/>
 
 *Khám phá vẻ đẹp Việt Nam với dịch vụ tour du lịch chất lượng cao*
   
