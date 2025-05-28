@@ -21,11 +21,11 @@ Vietnam Travel Tours là nền tảng web cung cấp dịch vụ du lịch tại
 ### ✨ Tính Năng Chính
 
 - 🔍 Tìm kiếm tour du lịch theo địa điểm, thời gian, ngân sách
+- 📱 Chat real-time với admin và người dùng
 - 🏨 Đặt tour và khách sạn trực tuyến
-- 💰 Thanh toán an toàn và đa dạng phương thức
+- 💰 Thanh toán an toàn momo va paypal và đa dạng phương thức
 - 🗺️ Xem lịch trình chi tiết và thông tin tour
 - 👤 Quản lý tài khoản người dùng
-- 📱 Giao diện thân thiện với người dùng và tương thích đa thiết bị
 
 ## 🖼️ Hình Ảnh Demo
 
@@ -52,10 +52,9 @@ Vietnam Travel Tours là nền tảng web cung cấp dịch vụ du lịch tại
 
 ## 🛠️ Công Nghệ Sử Dụng
 
-- **Frontend**: HTML, CSS, JavaScript, SCSS
-- **Responsive Design**: Media queries, Flexbox, Grid
-- **Thư Viện/Framework**: [Thêm vào nếu có]
-- **APIs**: [Thêm vào nếu có]
+- **Frontend**: HTML, CSS, JavaScript, SCSS, Bootstrap5, Material UI
+- **Thư Viện/Framework**: ReactJS
+- **APIs**: [[[https://github.com/kiuethai/API_travel_tour_vn]]
 - **Deployment**: [Thêm vào nếu có]
 
 ## 🚀 Hướng Dẫn Cài Đặt
@@ -92,24 +91,10 @@ Vietnam_Travel_Tours/
 
 Dự án được triển khai tại: [URL triển khai nếu có]
 
-## 🤝 Đóng Góp
-
-Chúng tôi rất hoan nghênh mọi đóng góp! Nếu bạn muốn đóng góp vào dự án, vui lòng:
-
-1. Fork repository
-2. Tạo branch mới (`git checkout -b feature/amazing-feature`)
-3. Commit thay đổi của bạn (`git commit -m 'Add some amazing feature'`)
-4. Push lên branch (`git push origin feature/amazing-feature`)
-5. Mở Pull Request
-
-## 📝 Giấy Phép
-
-Dự án này được cấp phép theo [Thêm loại giấy phép nếu có] - xem tệp LICENSE để biết thêm chi tiết.
-
 ## 📞 Liên Hệ
 
-- **Tên**: [Tên của bạn]
-- **Email**: [Email của bạn]
+- **Tên**: Kiều Văn Thái 
+- **Email**: kieuthai093@gmail.com
 - **Website**: [Website của bạn nếu có]
 
 ---
