@@ -20,20 +20,20 @@ export const loginAdminAPI = createAsyncThunk(
 export const logoutAdminAPI = createAsyncThunk(
   'admin/logoutAdminAPI',
   async (showSuccessMessage = true) => {
-   
+
     const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/users/admin/logout`)
     if (showSuccessMessage) {
       toast.success('Logged out successfully!')
-      
+
     }
     return response.data
   }
 )
 
-export const  updateAdminAPI = createAsyncThunk(
+export const updateAdminAPI = createAsyncThunk(
   'admin/updateAdminAPI',
   async (data) => {
-    const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/admin/update`, data)
+    const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/admin/update`, data)
     return response.data
   }
 )
@@ -49,6 +49,7 @@ export const adminSlice = createSlice({
     builder.addCase(loginAdminAPI.fulfilled, (state, action) => {
       // action.payload ở đây chính là cái responce.data trả về ở trên
       const admin = action.payload
+      console.log('🚀 ~ builder.addCase ~ admin:', admin)
       // console.log('admin',admin)
       state.currentAdmin = admin
       toast.success('Admin Đăng nhập thành công !')
@@ -65,7 +66,7 @@ export const adminSlice = createSlice({
       // console.log('🚀 ~ builder.addCase ~ admin:', admin)
 
       state.currentAdmin = admin
-      console.log('🚀 ~ builder.addCase ~ state.currentAdmin :', state.currentAdmin )
+      // console.log('🚀 ~ builder.addCase ~ state.currentAdmin :', state.currentAdmin)
     })
   }
 })
@@ -77,6 +78,5 @@ export const adminSlice = createSlice({
 export const selectCurrentAdmin = (state) => {
   return state.admin.currentAdmin
 }
-
 
 export const adminReducer = adminSlice.reducer

@@ -13,8 +13,6 @@ export const loginUserAPI = createAsyncThunk(
   async (data) => {
     const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/login`, data)
     // Lưu ý: axios sẽ trả kết quả về qua property của nó là data
-
-
     return response.data
   }
 )
@@ -78,6 +76,5 @@ export const userSlice = createSlice({
 export const selectCurrentUser = (state) => {
   return state.user.currentUser
 }
-
 
 export const userReducer = userSlice.reducer

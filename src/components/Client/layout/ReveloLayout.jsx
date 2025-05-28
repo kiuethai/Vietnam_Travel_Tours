@@ -4,6 +4,7 @@ import ImageView from "../popup/ImageView";
 import { roveloUtility } from "../../../utility";
 import Footer from "./Footer";
 import Header from "./Header";
+import ClientChat from '../Chat/ClientChat.jsx'
 
 const ReveloLayout = ({ children, header, footer, insta, sideBar }) => {
   useEffect(() => {
@@ -23,6 +24,7 @@ const ReveloLayout = ({ children, header, footer, insta, sideBar }) => {
       <Header header={header} />
       {children}
       <Footer footer={footer} insta={insta} />
+      <ClientChat />
     </div>
   );
 };
