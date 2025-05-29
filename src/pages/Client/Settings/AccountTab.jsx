@@ -108,7 +108,7 @@ function AccountTab() {
           <Box>
             <Avatar
               sx={{ width: 84, height: 84, mb: 1 }}
-              alt="Kieuthai"
+              alt={currentUser?.user?.displayName}
               src={currentUser?.user?.avatar}
             />
             <Tooltip title="Upload a new image to update your avatar immediately.">

@@ -20,6 +20,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { loginUserAPI } from '~/redux/user/userSlice'
+import { GoogleLogin } from '@react-oauth/google';
 
 // Import validators and other utilities
 import {
@@ -55,6 +56,29 @@ export default function Login() {
     })
   };
 
+  const handleGoogleLogin = async (credentialResponse) => {
+    if (credentialResponse.credential) {
+      try {
+        // Decode the JWT token from Google
+        const decodedToken = credentialResponse.credential
+        // console.log('🚀 ~ handleGoogleLogin ~ decodedToken:', decodedToken)
+
+        toast.promise(
+          dispatch(loginUserAPI({
+            decodedToken,
+            googleAuth: true,
+          })),
+          { pending: 'Logging in with Google...' }
+        ).then(res => {
+          if (!res.error) navigate('/')
+        });
+      } catch (error) {
+        console.error("Error decoding Google token:", error);
+        toast.error("Failed to authenticate with Google");
+      }
+    }
+  };
+
   return (
     <section
       className="pt-120 pb-120"
@@ -87,23 +111,41 @@ export default function Login() {
                   <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center' }}>
                     <Typography variant="h5" component="h1">Đăng nhập vào tài khoản của bạn</Typography>
                   </Box>
-                  <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 1em' }}>
-                    {verifiedEmail && (
+                  <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 3em' }}>
+                    <GoogleLogin
+                      sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 1em' }}
+                      onSuccess={handleGoogleLogin}
+
+                      onError={() => {
+                        console.log('Login Failed');
+                      }}
+                    />
+                    </Box>
+                  <Typography sx={{ textAlign: 'center', margin: '1em 0' }}>
+                    or
+                  </Typography>
+
+
+                  {verifiedEmail && (
+                    <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 1em' }}>
                       <Alert severity="success" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
                         Your email&nbsp;
                         <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{verifiedEmail}</Typography>
                         &nbsp;đã được xác minh<br />Bây giờ bạn có thể đăng nhập để tận hưởng dịch vụ của chúng tôi! Chúc bạn một ngày tốt lành!
                       </Alert>
-                    )}
-                    {registeredEmail && (
+                    </Box>
+                  )}
+                  {registeredEmail && (
+                    <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 1em' }}>
                       <Alert severity="info" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
                         An email has been sent to&nbsp;
                         <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{registeredEmail}</Typography>
                         <br />Vui lòng kiểm tra và xác minh tài khoản của bạn trước khi đăng nhập!
                       </Alert>
-                    )}
-                  </Box>
-                  <Box sx={{ padding: '1em' }}>
+                    </Box>
+                  )}
+
+                  <Box sx={{ paddingBottom: '1em' }}>
                     <Box sx={{ marginTop: '1em' }}>
                       <TextField
                         autoFocus

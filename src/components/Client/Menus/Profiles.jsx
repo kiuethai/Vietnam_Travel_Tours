@@ -27,7 +27,7 @@ function Profiles() {
 
   const dispatch = useDispatch()
   const currentUser = useSelector(selectCurrentUser)
-
+  console.log('currentUser: ', currentUser?.user?.avatar)
   const confirmLogout = useConfirm()
   const handleLogout = () => {
     confirmLogout({
@@ -38,6 +38,21 @@ function Profiles() {
       // Gọi API đăng xuất người dùng
       dispatch(logoutUserAPI())
     }).catch(() => { })
+  }
+
+  const getAvatar = () => {
+    if (!currentUser) return null;
+
+    // Debug để tìm ra cấu trúc chính xác
+    console.log("Current user structure:", JSON.stringify(currentUser, null, 2));
+
+    // Kiểm tra tất cả khả năng
+    if (currentUser.user?.avatar) return currentUser.user.avatar;
+    if (currentUser.avatar) return currentUser.avatar;
+    if (currentUser.success && currentUser.user?.avatar) return currentUser.user.avatar;
+
+    // Một số trường hợp đặc biệt khác
+    return null;
   }
   return (
     <Box>
@@ -52,8 +67,8 @@ function Profiles() {
         >
           <Avatar
             sx={{ width: 35, height: 35 }}
-            alt='Capy'
-            src={currentUser?.user?.avatar} />
+            alt={currentUser?.user?.displayName}
+            src={getAvatar()}/>
         </IconButton>
       </Tooltip>
       <Menu
@@ -70,8 +85,9 @@ function Profiles() {
           <MenuItem sx={{ '&:hover': { color: 'success.light' } }}>
             <Avatar
               sx={{ width: 28, height: 28, mr: 2 }}
-              alt='Capy'
-              src={currentUser?.user?.avatar}
+              alt='Kieuthai'
+              src={getAvatar()}
+
             /> Profile
           </MenuItem>
         </Link>

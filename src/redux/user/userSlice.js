@@ -11,9 +11,18 @@ const initialState = {
 export const loginUserAPI = createAsyncThunk(
   'user/loginUserAPI',
   async (data) => {
-    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/login`, data)
-    // Lưu ý: axios sẽ trả kết quả về qua property của nó là data
-    return response.data
+    // Check if this is a Google login
+    if (data.googleAuth) {
+      // Special handling for Google authentication
+      const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/login-google`, {
+        credential: data.decodedToken
+      });
+      return response.data;
+    } else {
+      // Regular email/password login
+      const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/login`, data);
+      return response.data;
+    }
   }
 )
 

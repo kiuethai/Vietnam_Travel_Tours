@@ -28,7 +28,7 @@ const persistor = persistStore(store)
 import App from './App';
 import 'aos/dist/aos.css';
 import AOS from 'aos';
-
+import { GoogleOAuthProvider } from '@react-oauth/google'
 AOS.init();
 // Kỹ thuật Inject Store
 import { injectStore } from './utils/authorizeAxios'
@@ -49,22 +49,24 @@ function ThemedApp() {
     </ThemeProviderV5>
   );
 }
-
+const clientId = import.meta.env.VITE_REACT_APP_GG_CLIENT_ID
 const root = createRoot(document.getElementById('root'))
 root.render(
-  <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <LayoutProvider>
-        <UserProvider>
-          <StyledEngineProvider injectFirst>
-            <ThemeChangeProvider>
-              <BrowserRouter basename='/'>
-                <ThemedApp />
-              </BrowserRouter>
-            </ThemeChangeProvider>
-          </StyledEngineProvider>
-        </UserProvider>
-      </LayoutProvider>
-    </PersistGate>
-  </Provider>
+  <GoogleOAuthProvider clientId={clientId}>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <LayoutProvider>
+          <UserProvider>
+            <StyledEngineProvider injectFirst>
+              <ThemeChangeProvider>
+                <BrowserRouter basename='/'>
+                  <ThemedApp />
+                </BrowserRouter>
+              </ThemeChangeProvider>
+            </StyledEngineProvider>
+          </UserProvider>
+        </LayoutProvider>
+      </PersistGate>
+    </Provider>
+  </GoogleOAuthProvider>
 )

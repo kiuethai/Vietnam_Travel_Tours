@@ -62,7 +62,7 @@ function ClientChat() {
         const socket = socketClient.getSocket();
         if (socket && socket.connected && isUserTyping) { // Use isUserTyping (client's state)
           socketClient.sendTypingIndicator({
-            userId: currentUser.user?.id, // This is the client's ID
+            userId: currentUser?.user?.id, // This is the client's ID
             adminId: 'admin', // Assuming client always chats with a generic 'admin'
             isTyping: false,
           });
@@ -85,10 +85,10 @@ function ClientChat() {
 
       const socket = socketClient.getSocket();
       if (socket && socket.connected) { // Double check, though socketConnected selector helps
-        // Example: socket.emit('join-chat', { userId: currentUser.user.id, recipientId: 'admin' });
+        // Example: socket.emit('join-chat', { userId: currentUser?.user.id, recipientId: 'admin' });
         console.log('ClientChat: Joined admin chat room (if applicable).');
         socketClient.markMessagesAsRead({
-          userID: currentUser.user.id,
+          userID: currentUser?.user.id,
           adminID: 'admin',
         });
       }
@@ -130,25 +130,25 @@ function ClientChat() {
         _id: newMessage._id || newMessage.id || `msg_${Date.now()}`,
         createdAt: newMessage.createdAt || newMessage.createdDate || new Date().toISOString(),
         // Determine sender based on senderID or role, assuming admin is not this currentUser
-        sender: newMessage.senderID === currentUser.user.id ? 'user' : 'admin',
-        senderRole: newMessage.senderID === currentUser.user.id ? 'user' : 'admin',
+        sender: newMessage.senderID === currentUser?.user.id ? 'user' : 'admin',
+        senderRole: newMessage.senderID === currentUser?.user.id ? 'user' : 'admin',
       };
 
       // Check if the message is relevant (from admin or this user's own confirmed message)
       const isRelevant =
-        (processedMsg.senderRole === 'admin' && (processedMsg.recipientID === currentUser.user.id || !processedMsg.recipientID)) || // Admin to this user (or broadcast from admin)
-        (processedMsg.senderID === currentUser.user.id && processedMsg.recipientID === 'admin'); // This user to admin
+        (processedMsg.senderRole === 'admin' && (processedMsg.recipientID === currentUser?.user.id || !processedMsg.recipientID)) || // Admin to this user (or broadcast from admin)
+        (processedMsg.senderID === currentUser?.user.id && processedMsg.recipientID === 'admin'); // This user to admin
 
       if (isRelevant) {
         dispatch({ type: CHAT_ACTIONS.SOCKET_MESSAGE_RECEIVED, payload: processedMsg });
         // Option: If SOCKET_MESSAGE_RECEIVED fully updates state, getMessages might be redundant
         // dispatch(getMessages('admin')); // Or remove if above action is sufficient
 
-        if (!isOpen && processedMsg.senderID !== currentUser.user.id) {
+        if (!isOpen && processedMsg.senderID !== currentUser?.user.id) {
           setUnreadCount((prev) => prev + 1);
         }
         if (isOpen) {
-          socketClient.markMessagesAsRead({ userID: currentUser.user.id, adminID: 'admin' });
+          socketClient.markMessagesAsRead({ userID: currentUser?.user.id, adminID: 'admin' });
         }
       }
     };
@@ -200,7 +200,7 @@ function ClientChat() {
     const socket = socketClient.getSocket();
     if (socket && socket.connected) {
       socketClient.sendTypingIndicator({
-        userId: currentUser.user.id, // Client's ID
+        userId: currentUser?.user.id, // Client's ID
         adminId: 'admin', // Target is admin
         isTyping: isTypingState,
       });
@@ -243,7 +243,7 @@ function ClientChat() {
       _id: `temp_${Date.now()}`,
       message: messageInput.trim(),
       createdAt: new Date().toISOString(),
-      senderID: currentUser.user.id,
+      senderID: currentUser?.user.id,
       sender: 'user', // Or derive based on currentUser.role if available
       recipientID: 'admin',
       isTemp: true,
