@@ -10,7 +10,7 @@ function Menu() {
         <div className="navbar-header">
           <div className="mobile-logo">
             <Link to="/">
-              <img src="assets/images/logos/logo.png" alt="Logo" title="Logo" />
+              <img src="https://res.cloudinary.com/dbkhjufja/image/upload/v1744543947/b88zgpwgvx6pd51fw4zz.png" alt="Logo" title="Logo" />
             </Link>
           </div>
           {/* Toggle Button */}
