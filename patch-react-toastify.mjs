@@ -15,7 +15,7 @@ try {
 
   // Thay thế dòng import isValidElement
   content = content.replace(
-    `import{isValidElement as $t}from"react";`,
+    /import\s*\{\s*isValidElement\s+as\s+\$t\s*\}\s*from\s*["']react["']\s*;/,
     `const $t = (obj) => obj && obj.$$typeof;` 
   );
 
@@ -25,4 +25,6 @@ try {
   console.log('React-toastify đã được sửa thành công!');
 } catch (error) {
   console.error('Lỗi khi sửa react-toastify:', error);
+  // Tiếp tục build dù có lỗi
+  process.exit(0);
 }
