@@ -54,11 +54,11 @@ function ClientChat() {
   // Initialize and cleanup socket connection
   useEffect(() => {
     if (currentUser && currentUser.accessToken) {
-      console.log('ClientChat: Initializing socket connection.');
+      // console.log('ClientChat: Initializing socket connection.');
       dispatch(initSocketConnection(currentUser.accessToken));
 
       return () => {
-        console.log('ClientChat: Cleaning up socket connection.');
+        // console.log('ClientChat: Cleaning up socket connection.');
         const socket = socketClient.getSocket();
         if (socket && socket.connected && isUserTyping) { // Use isUserTyping (client's state)
           socketClient.sendTypingIndicator({
@@ -79,14 +79,14 @@ function ClientChat() {
   // Load messages and handle chat open/close actions
   useEffect(() => {
     if (isOpen && currentUser?.user?.id && socketConnected) {
-      console.log('ClientChat: Window opened, loading messages.');
+      // console.log('ClientChat: Window opened, loading messages.');
       dispatch(getMessages('admin')); // Assuming 'admin' is the recipientID for history
       setUnreadCount(0);
 
       const socket = socketClient.getSocket();
       if (socket && socket.connected) { // Double check, though socketConnected selector helps
         // Example: socket.emit('join-chat', { userId: currentUser?.user.id, recipientId: 'admin' });
-        console.log('ClientChat: Joined admin chat room (if applicable).');
+        // console.log('ClientChat: Joined admin chat room (if applicable).');
         socketClient.markMessagesAsRead({
           userID: currentUser?.user.id,
           adminID: 'admin',
@@ -123,7 +123,7 @@ function ClientChat() {
     if (!socket) return;
 
     const handleNewMessage = (newMessage) => {
-      console.log('ClientChat: Received new message:', newMessage);
+      // console.log('ClientChat: Received new message:', newMessage);
 
       const processedMsg = {
         ...newMessage,
@@ -154,7 +154,7 @@ function ClientChat() {
     };
 
     const handleChatHistory = (historyMessages) => {
-      console.log('ClientChat: Received chat history, count:', Array.isArray(historyMessages) ? historyMessages.length : 0);
+      // console.log('ClientChat: Received chat history, count:', Array.isArray(historyMessages) ? historyMessages.length : 0);
       if (Array.isArray(historyMessages)) { // Allow empty history
         dispatch({
           type: CHAT_ACTIONS.GET_MESSAGES_SUCCESS,
@@ -278,7 +278,7 @@ function ClientChat() {
   };
 
   const handleFileUpload = () => {
-    console.log('ClientChat: File upload TBD.');
+    // console.log('ClientChat: File upload TBD.');
     // Implement file upload logic here
   };
 
@@ -345,12 +345,6 @@ function ClientChat() {
           <InputArea component="form" onSubmit={handleSendMessage}>
             {currentUser ? (
               <>
-                <IconButton size="small" onClick={handleFileUpload} title="Đính kèm tệp">
-                  <AttachFileIcon fontSize="small" />
-                </IconButton>
-                <IconButton size="small" title="Chèn biểu tượng"> {/* Emoji picker can be added here */}
-                  <InsertEmoticonIcon fontSize="small" />
-                </IconButton>
                 <TextField
                   inputRef={messageInputRef} // Assign ref for focus management
                   fullWidth

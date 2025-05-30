@@ -27,7 +27,7 @@ function Profiles() {
 
   const dispatch = useDispatch()
   const currentUser = useSelector(selectCurrentUser)
-  console.log('currentUser: ', currentUser?.user?.avatar)
+  // console.log('currentUser: ', currentUser?.user?.avatar)
   const confirmLogout = useConfirm()
   const handleLogout = () => {
     confirmLogout({
@@ -44,7 +44,7 @@ function Profiles() {
     if (!currentUser) return null;
 
     // Debug để tìm ra cấu trúc chính xác
-    console.log("Current user structure:", JSON.stringify(currentUser, null, 2));
+    // console.log("Current user structure:", JSON.stringify(currentUser, null, 2));
 
     // Kiểm tra tất cả khả năng
     if (currentUser.user?.avatar) return currentUser.user.avatar;

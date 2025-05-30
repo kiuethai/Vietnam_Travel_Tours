@@ -34,14 +34,14 @@ function AccountTab() {
   })
 
   const submitChangeGeneralInformation = (data) => {
-    const { displayName} = data
+    const { displayName } = data
     // Nếu không có sự thay đổi gì về displayname thì không làm gì cả
     if (
-      displayName === currentAdmin?.user?.displayName 
+      displayName === currentAdmin?.user?.displayName
     ) return
     // Gọi API...
     toast.promise(
-      dispatch(updateAdminAPI({ displayName})),
+      dispatch(updateAdminAPI({ displayName })),
       { pending: 'Updating...' }
     ).then(res => {
       if (!res.error) {
@@ -107,7 +107,7 @@ function AccountTab() {
               src={currentAdmin?.user?.avatar}
             />
             <Tooltip title="Upload a new image to update your avatar immediately.">
-              <Button
+              <Button 
                 component="label"
                 variant="contained"
                 size="small"

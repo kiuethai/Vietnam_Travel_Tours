@@ -24,7 +24,7 @@ function Home() {
         .then(tours => {
           setRecommendedTours(tours);
           setRecommendationSource('history');
-          console.log('Recommended tours based on last viewed:', tours);
+          // console.log('Recommended tours based on last viewed:', tours);
         })
         .catch(error => {
           console.error('Error fetching recommendations:', error);

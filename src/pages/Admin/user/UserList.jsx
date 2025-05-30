@@ -363,17 +363,17 @@ const UserList = () => {
                           </Typography>
                         </TableCell>
                         <TableCell align="left" style={{ minWidth: '120px' }}>
-                        
+
                           <Select
                             labelId={`role-select-label-${row._id}`}
                             id={`role-select-${row._id}`}
-                            value={row.role || ''} 
+                            value={row.role || ''}
                             displayEmpty
                             onChange={(e) => handleRoleChange(e, row._id)}
                             style={{ minWidth: '120px', width: '100%' }}
                             onClick={(e) => e.stopPropagation()}
                           >
-                            
+
                             <MenuItem value="user">User</MenuItem>
                             <MenuItem value="admin">Admin</MenuItem>
                           </Select>

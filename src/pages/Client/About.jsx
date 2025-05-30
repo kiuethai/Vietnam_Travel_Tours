@@ -2,8 +2,7 @@ import React from 'react'
 import Banner from "~/components/Client/Banner";
 import Counter from "~/components/Client/Counter";
 import SectionTitle from "~/components/Client/SectionTitle";
-import Client from "~/components/Client/slider/Client";
-import Testimonial from "~/components/Client/slider/Testimonial";
+
 import { Link } from 'react-router-dom';
 function About() {
   return (

@@ -103,7 +103,7 @@ function BookingDetail() {
   useEffect(() => {
     fetchBookings();
   }, []);
-  console.log("invoice_booking", invoice_booking)
+  // console.log("invoice_booking", invoice_booking)
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>

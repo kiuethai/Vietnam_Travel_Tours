@@ -71,7 +71,7 @@ function Booking() {
     const fetchTour = async () => {
       try {
         const response = await getTourByIdAPI(id);
-        console.log('🚀 ~ fetchTour ~ response:', response)
+        // console.log('🚀 ~ fetchTour ~ response:', response)
 
         setTour(response || null);
         setLoading(false);
@@ -219,7 +219,7 @@ function Booking() {
 
   const handleCancelTour = async () => {
     setCancelLoading(true);
-    console.log(">>> userBooking.status =", userBooking?.status);
+    // console.log(">>> userBooking.status =", userBooking?.status);
     try {
       await updateBookingApi(userBooking.bookingId, { _destroy: "true" });
       toast.success("Đã hủy tour thành công!");

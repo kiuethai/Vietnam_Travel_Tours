@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { mockUser } from './mock';
 import config from '../config';
 import { showSnackbar } from '~/components/Admin/Snackbar/index';
 
@@ -211,34 +210,7 @@ const actions = {
     };
   },
 
-  doFind: (id) => async (dispatch) => {
-    if (!config.isBackend) {
-      dispatch({
-        type: 'USERS_FORM_FIND_SUCCESS',
-        payload: mockUser,
-      });
-    } else {
-      try {
-        dispatch({
-          type: 'USERS_FORM_FIND_STARTED',
-        });
-
-        axios.get(`/users/${id}`).then((res) => {
-          const currentUser = res.data;
-          dispatch({
-            type: 'USERS_FORM_FIND_SUCCESS',
-            payload: currentUser,
-          });
-        });
-      } catch (error) {
-        showSnackbar({ type: 'error', message: 'Error' });
-        console.log(error);
-        dispatch({
-          type: 'USERS_FORM_FIND_ERROR',
-        });
-      }
-    }
-  },
+  
 
   doCreate: (values, history) => async (dispatch) => {
     try {
@@ -309,43 +281,6 @@ const actions = {
       }
     },
 
-  doFetch:
-    (filter, keepPagination = false) =>
-    async (dispatch) => {
-      if (!config.isBackend) {
-        dispatch({
-          type: 'USERS_LIST_FETCH_SUCCESS',
-          payload: {
-            rows: [mockUser],
-            count: 1,
-          },
-        });
-      } else {
-        try {
-          dispatch({
-            type: 'USERS_LIST_FETCH_STARTED',
-            payload: { filter, keepPagination },
-          });
-
-          const response = await list();
-
-          dispatch({
-            type: 'USERS_LIST_FETCH_SUCCESS',
-            payload: {
-              rows: response.rows,
-              count: response.count,
-            },
-          });
-        } catch (error) {
-          showSnackbar({ type: 'error', message: 'Error' });
-          console.log(error);
-
-          dispatch({
-            type: 'USERS_LIST_FETCH_ERROR',
-          });
-        }
-      }
-    },
 
   doDelete: (id) => async (dispatch) => {
     if (!config.isBackend) {

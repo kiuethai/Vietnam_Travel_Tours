@@ -1,22 +1,16 @@
 import React from 'react'
-import useClickOutside from "../../../../utility/useClickOutside";
 import { Link, useLocation } from 'react-router-dom';
-import { Fragment, useState } from "react";
-import { Accordion } from "react-bootstrap";
+import { Fragment } from "react";
+
 import Menu from './Menu';
 import SideBar from './SideBar';
-import Login from '../../../../pages/Client/Auth/Login';
+
 import Profiles from '../../Menus/Profiles';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../../redux/user/userSlice';
 import Search from './Search';
 
 function Header1({ sidebarClick }) {
-  const [toggleSearch, setToggleSearch] = useState(false);
-  const domNode = useClickOutside(() => {
-    setToggleSearch(false);
-  });
-
   // Get current location to check if we're on login page
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";

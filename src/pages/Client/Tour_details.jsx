@@ -58,7 +58,7 @@ export default function Tour_details() {
     const fetchTour = async () => {
       try {
         const response = await getTourByIdAPI(id);
-        console.log('🚀 ~ fetchTour ~ response:', response)
+        // console.log('🚀 ~ fetchTour ~ response:', response)
         setTour(response || null);
         setLoading(false);
 

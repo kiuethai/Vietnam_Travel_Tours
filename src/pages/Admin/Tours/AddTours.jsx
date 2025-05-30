@@ -80,7 +80,7 @@ const AddTour = () => {
 
 
   const handleAcceptedFiles = useCallback((files) => {
-    console.log('Files being added:', files);
+    // console.log('Files being added:', files);
     const newFiles = files.map(file => Object.assign(file, {
       preview: URL.createObjectURL(file),
       formattedSize: formatBytes(file.size),

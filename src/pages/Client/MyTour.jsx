@@ -32,7 +32,7 @@ function MyTour() {
       fetchBookingTour();
     }
   }, [currentUser?.user?.id]);
-  console.log('🚀 ~ MyTour ~ currentUser:', currentUser)
+  // console.log('🚀 ~ MyTour ~ currentUser:', currentUser)
   // Fixed effect to fetch recommended tours
   useEffect(() => {
     const fetchRecommendedTours = async () => {
@@ -46,7 +46,7 @@ function MyTour() {
             const tours = await getRecommends({ clickedTourId: lastViewedTour });
             setRecommendedTours(tours);
             setRecommendationSource('history');
-            console.log('Recommended tours based on last viewed:', tours);
+            // console.log('Recommended tours based on last viewed:', tours);
             return;
           } catch (error) {
             console.error('Error fetching personalized recommendations:', error);

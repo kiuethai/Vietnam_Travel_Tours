@@ -12,7 +12,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import Dropzone from "react-dropzone"
 
 function ImageUploader({ selectedFiles, handleAcceptedFiles, handleRemoveFile, isEditMode, isLoading }) {
-  console.log("ImageUploader rendered with files:", { selectedFiles, isEditMode });
+  // console.log("ImageUploader rendered with files:", { selectedFiles, isEditMode });
   const hasExistingImages = selectedFiles.some(f => f.existingImage);
   const minRequiredImages = isEditMode ? (hasExistingImages ? 1 : 5) : 5;
   return (

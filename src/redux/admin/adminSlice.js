@@ -49,7 +49,12 @@ export const adminSlice = createSlice({
     builder.addCase(loginAdminAPI.fulfilled, (state, action) => {
       // action.payload ở đây chính là cái responce.data trả về ở trên
       const admin = action.payload
-      console.log('🚀 ~ builder.addCase ~ admin:', admin)
+      // console.log('🚀 ~ builder.addCase ~ admin:', admin)
+
+      // Lưu token  vào localStorage
+      if( admin?.accessToken) {
+        localStorage.setItem('accessToken', admin.accessToken)
+      }
       // console.log('admin',admin)
       state.currentAdmin = admin
       toast.success('Admin Đăng nhập thành công !')

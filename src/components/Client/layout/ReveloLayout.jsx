@@ -19,7 +19,8 @@ const ReveloLayout = ({ children, header, footer, insta, sideBar }) => {
 
   return (
     <div className={`page-wrapper ${sideBar ? "for-sidebar-menu" : ""}`}>
-      <EmbedPopup />
+     
+    
       <ImageView />
       <Header header={header} />
       {children}

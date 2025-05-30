@@ -9,8 +9,8 @@ import { Editor } from "react-draft-wysiwyg"
 import { EditorState } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 function ItineraryEditor({ tour, itineraries, handleItineraryChange, isEditMode, isLoading }) {
-  console.log("ItineraryEditor rendered with:", tour);
-  console.log("ItineraryEditor itineraries with:", itineraries);
+  // console.log("ItineraryEditor rendered with:", tour);
+  // console.log("ItineraryEditor itineraries with:", itineraries);
 
   return (
     <>

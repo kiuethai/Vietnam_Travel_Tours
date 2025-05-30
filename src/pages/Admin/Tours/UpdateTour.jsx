@@ -320,7 +320,7 @@ const UpdateTour = () => {
         if (tourDetails.itinerary && tourDetails.itinerary.length > 0) {
           // Save original itinerary
           setOriginalItineraries([...tourDetails.itinerary]);
-          console.log("Original itinerary from API:", tourDetails.itinerary);
+          // console.log("Original itinerary from API:", tourDetails.itinerary);
 
           const formattedItineraries = tourDetails.itinerary.map(item => ({
             ...item,
@@ -329,7 +329,7 @@ const UpdateTour = () => {
                 const parsedContent = JSON.parse(item.description);
                 return EditorState.createWithContent(convertFromRaw(parsedContent));
               } catch (e) {
-                console.log('🚀 ~ emptyItineraries ~ emptyItineraries:', emptyItineraries)
+                // console.log('🚀 ~ emptyItineraries ~ emptyItineraries:', emptyItineraries)
                 return EditorState.createWithContent(
                   ContentState.createFromText(item.description || '')
                 );
@@ -337,7 +337,7 @@ const UpdateTour = () => {
             })() : EditorState.createEmpty()
           }));
 
-          console.log('Formatted itineraries after processing:', formattedItineraries);
+          // console.log('Formatted itineraries after processing:', formattedItineraries);
           setItineraries(formattedItineraries);
         } else {
           // If no itinerary, create empty ones based on tour duration

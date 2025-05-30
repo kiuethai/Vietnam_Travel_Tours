@@ -18,7 +18,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 
 function TourBasicInfoForm({ formData, handleInputChange, editorState, onEditorStateChange, startDate, setStartDate, endDate, setEndDate, isEditMode, isLoading }) {
-  console.log("TourBasicInfoForm rendered with data:", { formData, isEditMode });
+  // console.log("TourBasicInfoForm rendered with data:", { formData, isEditMode });
   return (
     <>
       {isEditMode && (

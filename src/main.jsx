@@ -11,11 +11,10 @@ import { ThemeProvider as ThemeProviderV5 } from '@mui/material/styles';
 
 import { StyledEngineProvider } from '@mui/material/styles';
 import { LayoutProvider } from './context/LayoutContext';
-import { UserProvider } from './context/UserContext';
+
 import { ManagementProvider } from './context/ManagementContext';
 import {
   ThemeProvider as ThemeChangeProvider,
-  ThemeStateContext,
   useThemeState
 } from './context/ThemeContext';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -56,7 +55,6 @@ root.render(
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <LayoutProvider>
-          <UserProvider>
             <StyledEngineProvider injectFirst>
               <ThemeChangeProvider>
                 <BrowserRouter basename='/'>
@@ -64,7 +62,6 @@ root.render(
                 </BrowserRouter>
               </ThemeChangeProvider>
             </StyledEngineProvider>
-          </UserProvider>
         </LayoutProvider>
       </PersistGate>
     </Provider>

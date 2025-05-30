@@ -1,7 +1,3 @@
-import useClickOutside from "../../../utility/useClickOutside";
-import { Link } from 'react-router-dom';
-import { Fragment, useState } from "react";
-import { Accordion } from "react-bootstrap";
 import Header1 from "./Header/Header1";
 import Header2 from "./Header/Header2";
 import Header3 from "./Header/Header3";

@@ -58,6 +58,11 @@ export const userSlice = createSlice({
       // action.payload ở đây chính là cái responce.data trả về ở trên
       const user = action.payload
       // console.log('user',user)
+      
+      // Lưu token vào localStorage
+      if (user?.accessToken) {
+        localStorage.setItem('accessToken', user.accessToken)
+      }
       state.currentUser = user
       toast.success('Đăng nhập thành công !')
     })

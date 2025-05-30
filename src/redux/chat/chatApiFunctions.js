@@ -111,7 +111,7 @@ export const getMessages = (userId) => async (dispatch) => {
       }
 
       // Log chi tiết hơn để debug
-      console.log('Messages array:', response.data.messages || []);
+      // console.log('Messages array:', response.data.messages || []);
 
       // Thêm xử lý để chuẩn hóa dữ liệu
       const processedMessages = (response.data.messages || []).map(msg => ({

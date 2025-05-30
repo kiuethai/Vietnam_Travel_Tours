@@ -92,7 +92,7 @@ function GetBookings() {
     try {
       setLoading(true);
       const res = await getAllBookingsAPI();
-      console.log('🚀 ~ fetchBookings ~ res:', res.tours)
+      // console.log('🚀 ~ fetchBookings ~ res:', res.tours)
       setTourRows(Array.isArray(res.tours) ? res.tours : []);
     } catch (error) {
       toast.error('Không thể tải dữ liệu booking');
