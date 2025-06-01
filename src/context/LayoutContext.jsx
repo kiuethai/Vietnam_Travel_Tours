@@ -1,7 +1,7 @@
 import React from 'react';
-
-let LayoutStateContext = React.createContext();
-let LayoutDispatchContext = React.createContext();
+import { createContext } from "react";
+let LayoutStateContext = createContext();
+let LayoutDispatchContext = createContext();
 
 function layoutReducer(state, action) {
   switch (action.type) {

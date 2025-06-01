@@ -1,8 +1,8 @@
 import React from 'react';
 import Themes from '../themes';
-
-const ThemeStateContext = React.createContext();
-const ThemeDispatchContext = React.createContext();
+import { createContext } from "react";
+const ThemeStateContext = createContext();
+const ThemeDispatchContext = createContext();
 
 function ThemeProvider({ children }) {
   let [theme, setTheme] = React.useState(

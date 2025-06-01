@@ -1,4 +1,5 @@
 import React from 'react';
+import { createContext } from "react";
 import axios from 'axios';
 import config from '../config';
 import { showSnackbar } from '~/components/Admin/Snackbar/index';
@@ -8,8 +9,8 @@ async function list() {
   return response.data;
 }
 
-let ManagementStateContext = React.createContext();
-let ManagementDispatchContext = React.createContext();
+let ManagementStateContext = createContext();
+let ManagementDispatchContext = createContext();
 const initialData = {
   findLoading: false,
   saveLoading: false,
