@@ -797,6 +797,19 @@
   dependencies:
     dequal "^2.0.3"
 
+"@rollup/plugin-commonjs@^28.0.3":
+  version "28.0.3"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-28.0.3.tgz#44c2cc7c955c6113b96696b55e6bc2446bd67913"
+  integrity sha512-pyltgilam1QPdn+Zd9gaCfOLcnjMEJ9gV+bTw6/r73INdvzf1ah9zLIJBm+kW7R6IUFIQ1YO+VqZtYxZNWFPEQ==
+  dependencies:
+    "@rollup/pluginutils" "^5.0.1"
+    commondir "^1.0.1"
+    estree-walker "^2.0.2"
+    fdir "^6.2.0"
+    is-reference "1.2.1"
+    magic-string "^0.30.3"
+    picomatch "^4.0.2"
+
 "@rollup/plugin-inject@^5.0.1":
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-inject/-/plugin-inject-5.0.5.tgz#616f3a73fe075765f91c5bec90176608bed277a3"
@@ -971,7 +984,7 @@
   resolved "https://registry.yarnpkg.com/@types/d3-timer/-/d3-timer-3.0.2.tgz#70bbda77dc23aa727413e22e214afa3f0e852f70"
   integrity sha512-Ps3T8E8dZDam6fUyNiMkekK3XUsaUEik+idO9/YjPtfj2qruF8tFBXS7XhtE4iIXBLxhmLjP3SXpLhVf21I9Lw==
 
-"@types/estree@1.0.7", "@types/estree@^1.0.0", "@types/estree@^1.0.6":
+"@types/estree@*", "@types/estree@1.0.7", "@types/estree@^1.0.0", "@types/estree@^1.0.6":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.7.tgz#4158d3105276773d5b7695cd4834b1722e4f37a8"
   integrity sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==
@@ -1329,6 +1342,11 @@ combined-stream@^1.0.8:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+commondir@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
+  integrity sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -1994,6 +2012,11 @@ fbjs@^2.0.0:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.18"
 
+fdir@^6.2.0:
+  version "6.4.5"
+  resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.4.5.tgz#328e280f3a23699362f95f2e82acf978a0c0cb49"
+  integrity sha512-4BG7puHpVsIYxZUbiUE3RqGloLaSSwzYie5jvasC4LWuBWzZawynvYouhjbQKw2JuIGYdm0DzIxl8iVidKlUEw==
+
 file-entry-cache@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-8.0.0.tgz#7787bddcf1131bffb92636c69457bbc0edd6d81f"
@@ -2390,6 +2413,13 @@ is-number-object@^1.1.1:
   dependencies:
     call-bound "^1.0.3"
     has-tostringtag "^1.0.2"
+
+is-reference@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/is-reference/-/is-reference-1.2.1.tgz#8b2dac0b371f4bc994fdeaba9eb542d03002d0b7"
+  integrity sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==
+  dependencies:
+    "@types/estree" "*"
 
 is-regex@^1.2.1:
   version "1.2.1"
