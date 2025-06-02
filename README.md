@@ -27,29 +27,6 @@ Vietnam Travel Tours là nền tảng web cung cấp dịch vụ du lịch tại
 - 🗺️ Xem lịch trình chi tiết và thông tin tour
 - 👤 Quản lý tài khoản người dùng
 
-## 🖼️ Hình Ảnh Demo
-
-<div align="center">
-  <table>
-    <tr>
-      <td align="center"><strong>Trang Chủ</strong></td>
-      <td align="center"><strong>Trang Chi Tiết Tour</strong></td>
-    </tr>
-    <tr>
-      <td><img src="https://i.imgur.com/placeholder-home.png" width="400"/></td>
-      <td><img src="https://i.imgur.com/placeholder-detail.png" width="400"/></td>
-    </tr>
-    <tr>
-      <td align="center"><strong>Trang Đặt Tour</strong></td>
-      <td align="center"><strong>Trang Blog</strong></td>
-    </tr>
-    <tr>
-      <td><img src="https://i.imgur.com/placeholder-booking.png" width="400"/></td>
-      <td><img src="https://i.imgur.com/placeholder-blog.png" width="400"/></td>
-    </tr>
-  </table>
-</div>
-
 ## 🛠️ Công Nghệ Sử Dụng
 
 - **Frontend**: HTML, CSS, JavaScript, SCSS, Bootstrap5, Material UI
