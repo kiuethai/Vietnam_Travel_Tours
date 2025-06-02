@@ -31,8 +31,8 @@ Vietnam Travel Tours là nền tảng web cung cấp dịch vụ du lịch tại
 
 - **Frontend**: HTML, CSS, JavaScript, SCSS, Bootstrap5, Material UI
 - **Thư Viện/Framework**: ReactJS
-- **APIs**: [[[https://github.com/kiuethai/API_travel_tour_vn]]
-- **Deployment**: [Thêm vào nếu có]
+- **APIs**: https://github.com/kiuethai/API_travel_tour_vn
+- **Deployment**: https://vietnam-travel-tours.vercel.app/
 
 ## 🚀 Hướng Dẫn Cài Đặt
 
